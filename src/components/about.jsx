@@ -11,7 +11,7 @@ export default class About extends Component {
                 <div className="row row-bottom-padded-sm animate-box" data-animate-effect="fadeInLeft">
                 <div className="col-md-12">
                     <div className="about-desc">
-                        <span className="heading-meta">About Us</span>
+                        <span className="heading-meta">About Me</span>
                         <h2 className="colorlib-heading">Who Am I?</h2>
                         <p>I'm Ryan, a senior software engineer at ThousandEyes (part of Cisco) with a passion for democratizing tech.</p>
                         <p>My current work involves the Enterprise Agent at ThousandEyes. This software is designed to be a turn-key solution, which makes it simple for users to understand and react to network issues no matter where they are. This is increasingly important as companies transition away from traditional on-premise servers to the cloud (where visibility would normally be limited).</p>
