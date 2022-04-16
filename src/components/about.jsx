@@ -38,7 +38,7 @@ export default class About extends Component {
                 </span>
                 <div className="desc">
                     <h3>Backend Development</h3>
-                    <p>I have experience developing backend applications in C++, Python, Java, and PHP</p>
+                    <p>I have experience developing backend applications in C++, Python, Java, and PHP.</p>
                 </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@ export default class About extends Component {
                 </span>
                 <div className="desc">
                     <h3>Data Structures & Algorithms</h3>
-                    <p>Coming from a CS background, I have a strong grasp of data structures and algorithms</p>
+                    <p>My background in computer science provides me with a detailed understanding of the fundamentals.</p>
                 </div>
                 </div>
             </div>
@@ -59,8 +59,8 @@ export default class About extends Component {
                     <i className="icon-data" />
                 </span>
                 <div className="desc">
-                    <h3>Low Level Development</h3>
-                    <p>Experience with "low level" development, including filesystems, kernel drivers, robotics, and more.</p>
+                    <h3>Cloud Development</h3>
+                    <p>Experience developing applications for the cloud including technologies like Docker and Kubernetes.</p>
                 </div>
                 </div>
             </div>

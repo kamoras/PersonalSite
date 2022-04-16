@@ -17,11 +17,22 @@ export default class Timeline extends Component {
                 <div className="timeline-centered">
                   <article className="timeline-entry animate-box" data-animate-effect="fadeInLeft">
                     <div className="timeline-entry-inner">
+                      <div className="timeline-icon color-5">
+                        <i className="icon-pen2" />
+                      </div>
+                      <div className="timeline-label">
+                        <h2>Senior Software Engineer at ThousandEyes (part of Cisco) <span>San Francisco, California (Remote) (April 2022 - Present)</span></h2>
+                        <p>As a member of the Enterprise Agents team, I am working on a C++ service which collects network data to help visualize and monitor the local network and beyond.</p>
+                      </div>
+                    </div>
+                  </article>
+                  <article className="timeline-entry animate-box" data-animate-effect="fadeInLeft">
+                    <div className="timeline-entry-inner">
                       <div className="timeline-icon color-3">
                         <i className="icon-pen2" />
                       </div>
                       <div className="timeline-label">
-                        <h2>Senior Software Engineer at Datto <span>Norwalk, Connecticut (October 2019 - Present)</span></h2>
+                        <h2>Senior Software Engineer at Datto <span>Norwalk, Connecticut (October 2019 - April 2022)</span></h2>
                         <p>Datto (NYSE: MSP) is a leader in supporting MSPs (managed service providers) in their mission to support small and medium businesses' IT needs. As a member of the BCDR (Business Continuity and Data Recovery) agents team, I maintain the software which performs backups of protected systems. A key concern for the project is creating fault tolerant, secure, cross-platform software (in modern C++) that will reliably create backups for our customers. Innovation is key as we continue to lead this growing industry.</p>
                       </div>
                     </div>
