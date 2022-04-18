@@ -86,7 +86,7 @@ export default class Timeline extends Component {
                         <i className="icon-pen2" />
                       </div>
                       <div className="timeline-label">
-                        <h2>Software Engineer Intern <span>Guilford, Connecticut (May 2016 - August 2016)</span></h2>
+                        <h2>Software Engineer Intern at Thermo Fisher Scientific <span>Guilford, Connecticut (May 2016 - August 2016)</span></h2>
                         <p>Internship for the summer of 2016 working with a team of about 5 people maintaining the software for genetic sequencing devices by Ion Torrent</p>
                         <p>My responsibilities involved software development, troubleshooting technical issues with the machines, and the testing of both new hardware and software. During this time, I improved my skills in C++, Java, Python, and Linux. </p>
                         <p>Selected accomplishments: </p>
