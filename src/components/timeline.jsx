@@ -28,14 +28,7 @@ ThousandEyes is a key part of Cisco as it continually strives to enhance Network
 As a member of a team in hyper-growth mode, I have had to take ownership for every aspect of the software. After learning these systems, I quickly became a teacher and mentor for new engineers joining the team. After a few months, my team had grown so large that we split into two teams. 
 
 It has been rewarding to be able to work at ThousandEyes, where I can take projects from conception through execution and own the effort end to end.
-
-Key skills:
- * Microservice architecture
- * Code in C++, Rust, Java, Python, and more
- * Google protobuf
- * Run infrastructure using Docker and Kubernetes
- * Agent software distributed as a Linux package on Ubuntu, RHEL, CentOS, and others
- * Part of an on-call rotation for keeping critical, customer-facing services running 24/7</p>
+</p>
                       </div>
                     </div>
                   </article>
