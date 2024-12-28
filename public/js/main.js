@@ -157,7 +157,6 @@
 
 		    if ( navbar.is(':visible')) {
 		    	navbar.removeClass('in');
-		    	navbar.attr('aria-expanded', 'false');
 		    	$('.js-colorlib-nav-toggle').removeClass('active');
 		    }
 
