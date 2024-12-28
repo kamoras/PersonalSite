@@ -15,13 +15,26 @@ export default class Timeline extends Component {
             <div className="row">
               <div className="col-md-12">
                 <div className="timeline-centered">
+                <article className="timeline-entry animate-box" data-animate-effect="fadeInLeft">
+                    <div className="timeline-entry-inner">
+                      <div className="timeline-icon color-4">
+                        <i className="icon-pen2" />
+                      </div>
+                      <div className="timeline-label">
+                        <h2>Senior Software Engineer II at Cisco ThousandEyes <span>San Francisco, California (Remote) (April 2022 - November 2022)</span></h2>
+                        <p>
+                        Continuing to work on major projects as a senior member of the Enterprise Agents engineering team. I primarily work in C++, Java, and Python to work on high-impact projects for the business. A key concern has been support for our software on new platforms and operating systems. Working cross-team and driving projects through completion have been key skills for me in this role.
+                        </p>
+                      </div>
+                    </div>
+                  </article>
                   <article className="timeline-entry animate-box" data-animate-effect="fadeInLeft">
                     <div className="timeline-entry-inner">
                       <div className="timeline-icon color-5">
                         <i className="icon-pen2" />
                       </div>
                       <div className="timeline-label">
-                        <h2>Senior Software Engineer at ThousandEyes (part of Cisco) <span>San Francisco, California (Remote) (April 2022 - Present)</span></h2>
+                        <h2>Senior Software Engineer I at Cisco ThousandEyes <span>San Francisco, California (Remote) (April 2022 - November 2022)</span></h2>
                         <p>
 ThousandEyes is a key part of Cisco as it continually strives to enhance Network Assurance. My team works on the core ThousandEyes product, the Enterprise Agent. This agent collects network data, which it sends to a cloud backend, to create insightful views for customers. We make the entire internet as visible to the customer as their local network.
 
@@ -39,7 +52,7 @@ It has been rewarding to be able to work at ThousandEyes, where I can take proje
                       </div>
                       <div className="timeline-label">
                         <h2>Senior Software Engineer at Datto <span>Norwalk, Connecticut (October 2019 - April 2022)</span></h2>
-                        <p>Datto (NYSE: MSP) is a leader in supporting MSPs (managed service providers) in their mission to support small and medium businesses' IT needs. As a member of the BCDR (Business Continuity and Data Recovery) agents team, I maintain the software which performs backups of protected systems. A key concern for the project is creating fault tolerant, secure, cross-platform software (in modern C++) that will reliably create backups for our customers. Innovation is key as we continue to lead this growing industry.</p>
+                        <p>I joined Datto, a rapidly growing startup, in 2019. A year later, I watched as CEO Tim Weller rang the NYSE bell as the company went public (NYSE:MSP). I worked on the core software of Datto, the data backup and recovery product (BCDR). Using C++ and PHP, I led OKRs each quarter to enhance this central part of Datto's business. I used data to drive my development, reporting my successes in numerical terms using visualizations like Grafana. During my time at Datto, we doubled our customer base while reducing support ticket volume. The product evolved from a fledgling R&D project, into a mature piece of software.</p>
                       </div>
                     </div>
                   </article>
@@ -50,9 +63,11 @@ It has been rewarding to be able to work at ThousandEyes, where I can take proje
                       </div>
                       <div className="timeline-label">
                         <h2>Software Development Engineer at PerkinElmer <span>Shelton, Connecticut (October 2018 - October 2019)</span></h2>
-                        <p>As a software engineer at PerkinElmer I worked on a desktop app for Windows, called Syngistix. Development was done in C# and C++. We followed agile and TDD practices. Lots of work involved updating a legacy software product into something more modern. </p>
-                        <p>Creator of the first PoC for PerkinElmer instrument cloud platform. I worked with minimal requirements and help, creating a first of its kind instrument cloud within the company. I learned many new technologies for cloud development, such as: kubernetes, docker, python flask, and node.js. I also taught my team how to use these technologies as I was learning them. </p>
-                        <p>While working to modernize our software and tools, I was a leader in migrating to GitHub and TeamCity from Perforce and Jenkins.</p>
+                        <p>As a software engineer at PerkinElmer I worked on a desktop app for Windows, called Syngistix. Development was done in C# and C++. We followed agile and TDD practices. Lots of work involved updating a legacy software product into something more modern. 
+
+Creator of the first PoC for PerkinElmer instrument cloud platform. I worked with minimal requirements and help, creating a first of its kind instrument cloud within the company. I learned many new technologies for cloud development, such as: kubernetes, docker, python flask, and node.js. I also taught my team how to use these technologies as I was learning them. 
+
+While working to modernize our software and tools, I was a leader in migrating to GitHub and TeamCity from Perforce and Jenkins.</p>
                       </div>
                     </div>
                   </article>
