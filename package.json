@@ -5,7 +5,7 @@
   "homepage": "https://ryan-mack.dev",
   "dependencies": {
     "gh-pages": "^6.3.0",
-    "react": "^16.8.3",
+    "react": "^19.1.0",
     "react-dom": "^16.8.3",
     "react-scripts": "^5.0.1",
     "travis": "^0.1.1",
