@@ -9,9 +9,9 @@ const App: React.FC = () => {
   useInitializeTemplateScripts();
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto lg:ml-64">
         <div className="flex flex-col min-h-screen">
           <Introduction />
           <About />
