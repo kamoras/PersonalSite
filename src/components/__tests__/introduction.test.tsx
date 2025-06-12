@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import Introduction from '../introduction';
 
 describe('Introduction Component', () => {
@@ -24,16 +24,14 @@ describe('Introduction Component', () => {
     
     const projectsLink = screen.getByRole('link', { name: /View Projects/i });
     expect(projectsLink).toHaveAttribute('href', 'https://github.com/ryan-mack');
-  });
-
-  it('has proper section structure', () => {
+  });  it('has proper section structure', () => {
     render(<Introduction />);
     
-    const heroSection = document.getElementById('colorlib-hero');
-    expect(heroSection).toHaveClass('js-fullheight');
+    const heroSection = screen.getByRole('region', { name: /introduction/i });
+    expect(heroSection).toHaveClass('min-h-screen');
     expect(heroSection).toHaveAttribute('data-section', 'home');
     
-    const slides = document.querySelectorAll('.slides li');
+    const slides = screen.getAllByRole('listitem');
     expect(slides).toHaveLength(2);
   });
 
@@ -65,29 +63,39 @@ describe('Introduction Component', () => {
     expect(cvButton).toHaveAttribute('href', expect.stringContaining('docs.google.com'));
     expect(projectsButton).toHaveAttribute('href', 'https://github.com/ryan-mack');
   });
-
   it('renders all slider sections', () => {
     render(<Introduction />);
     
-    const slides = document.querySelectorAll('.slides > li');
-    expect(slides.length).toBe(2);
+    const slides = screen.getAllByRole('listitem');
+    expect(slides).toHaveLength(2);
+    
+    slides.forEach(slide => {
+      expect(slide).toHaveClass('relative', 'min-h-screen', 'bg-cover', 'bg-center');
+    });
   });
 
   it('has proper background images and overlay', () => {
     render(<Introduction />);
     
-    const slides = document.querySelectorAll('.slides > li');
+    const slides = screen.getAllByRole('listitem');
     slides.forEach(slide => {
-      expect(slide).toHaveStyle({ backgroundImage: 'url(images/img_bg.jpg)' });
-      expect(slide.querySelector('.overlay')).toBeInTheDocument();
+      const overlay = within(slide).getByTestId('slide-overlay');
+      expect(overlay).toHaveClass('absolute', 'inset-0', 'bg-black', 'bg-opacity-50');
     });
-  });
-
-  it('has proper flex layout classes', () => {
+  });  it('has proper flex layout classes', () => {
     render(<Introduction />);
+
+    const container = screen.getByRole('region', { name: /introduction/i });
+    expect(container).toHaveClass('min-h-screen', 'relative');
     
-    expect(document.querySelector('.js-fullheight')).toBeInTheDocument();
-    expect(document.querySelector('.slider-text-inner')).toBeInTheDocument();
-    expect(document.querySelector('.slider-text')).toBeInTheDocument();
+    const contentContainers = screen.getAllByTestId('slide-content');
+    contentContainers.forEach(content => {
+      expect(content).toHaveClass('flex', 'flex-col', 'items-center', 'justify-center', 'min-h-screen', 'relative', 'text-center', 'text-white', 'z-10');
+    });
+
+    const buttonContainer = screen.getAllByTestId('action-buttons');
+    buttonContainer.forEach(container => {
+      expect(container).toHaveClass('flex', 'gap-4', 'mt-8');
+    });
   });
 });

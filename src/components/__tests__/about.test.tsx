@@ -30,17 +30,17 @@ describe('About Component', () => {
     services.forEach(service => {
       expect(screen.getByText(service)).toBeInTheDocument();
     });
-  });
-
-  it('has proper animations classes', () => {
+  });  it('has proper animation classes', () => {
     render(<About />);
 
-    const animatedElements = document.querySelectorAll('.animate-box');
+    const animatedElements = document.querySelectorAll('[class*="transform"]');
     expect(animatedElements.length).toBeGreaterThan(0);
     
-    const effects = ['fadeInLeft', 'fadeInRight', 'fadeInTop', 'fadeInBottom'];
-    effects.forEach(effect => {
-      expect(document.querySelector(`[data-animate-effect="${effect}"]`)).toBeInTheDocument();
+    animatedElements.forEach(element => {
+      expect(element).toHaveClass('transform', 'transition-all', 'duration-500');
     });
+
+    const fadeElements = document.querySelectorAll('[class*="opacity-0"]');
+    expect(fadeElements.length).toBeGreaterThan(0);
   });
 });

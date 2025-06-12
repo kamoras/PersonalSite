@@ -6,88 +6,50 @@ describe('Sidebar Component', () => {
   it('renders personal information correctly', () => {
     render(<Sidebar />);
     
-    // Test name and email
+    const profilePic = screen.getByRole('img', { name: /ryan mack profile picture/i });
+    expect(profilePic).toBeInTheDocument();
+    expect(profilePic).toHaveClass('w-32', 'h-32', 'rounded-full');
+    
+    expect(screen.getByText('Ryan Mack')).toBeInTheDocument();
     expect(screen.getByText('mack.ryanm@gmail.com')).toBeInTheDocument();
-    // Find name in the logo link
-    expect(screen.getByRole('link', { name: 'Ryan Mack' })).toBeInTheDocument();
   });
 
   it('renders navigation menu items', () => {
     render(<Sidebar />);
     
-    // Test navigation links
-    expect(screen.getByText('Introduction')).toBeInTheDocument();
-    expect(screen.getByText('About')).toBeInTheDocument();
-    expect(screen.getByText('Timeline')).toBeInTheDocument();
+    ['Introduction', 'About', 'Timeline'].forEach(item => {
+      const link = screen.getByRole('link', { name: item });
+      expect(link).toHaveAttribute('href', expect.stringMatching(new RegExp(`#${item.toLowerCase()}`)));
+    });
   });
+
   it('renders social media links', () => {
     render(<Sidebar />);
     
-    // Test social media links by href
-    const socialLinks = screen.getAllByRole('link').filter(link => 
-      link.getAttribute('href')?.includes('github.com') || 
-      link.getAttribute('href')?.includes('linkedin.com')
-    );
-    
-    expect(socialLinks).toHaveLength(2);
-    expect(socialLinks[0]).toHaveAttribute('href', 'https://www.github.com/ryan-mack');
-    expect(socialLinks[1]).toHaveAttribute('href', 'https://www.linkedin.com/in/ryan-mack');
-  });  it('has proper navigation structure and accessibility attributes', () => {
-    render(<Sidebar />);
-    
-    // Test toggle navigation using class name since it's the toggle button nav
-    const toggleNav = document.querySelector('nav.js-colorlib-nav-toggle');
-    expect(toggleNav).toHaveClass('colorlib-nav-toggle');
-    expect(toggleNav).toHaveAttribute('data-toggle', 'collapse');
-    expect(toggleNav).toHaveAttribute('data-target', '#navbar');
-    expect(toggleNav).toHaveAttribute('aria-expanded', 'false');
-    expect(toggleNav).toHaveAttribute('aria-controls', 'navbar');
-    expect(toggleNav).toHaveAttribute('role', 'navigation');
-    
-    // Test main navigation menu using ID
-    const mainNav = document.getElementById('colorlib-main-menu');
-    expect(mainNav).toHaveClass('navbar');
-    expect(mainNav).toHaveAttribute('role', 'navigation');
-    
-    // Test navigation links structure
-    const navLinks = screen.getAllByRole('link', { name: /(Introduction|About|Timeline)/ });
-    expect(navLinks).toHaveLength(3);
-    navLinks.forEach(link => {
-      expect(link).toHaveAttribute('data-nav-section');
-      expect(link).toHaveAttribute('href');
-    });
+    expect(screen.getByRole('link', { name: /github/i })).toHaveAttribute('href', 'https://www.github.com/ryan-mack');
+    expect(screen.getByRole('link', { name: /linkedin/i })).toHaveAttribute('href', 'https://www.linkedin.com/in/ryan-mack');
+  });
 
-    // Test image accessibility
-    expect(screen.getByRole('img', { name: 'Ryan Mack profile picture' })).toBeInTheDocument();
-  });  it('has proper navbar collapse structure', () => {
+  it('has proper navigation structure and accessibility attributes', () => {
     render(<Sidebar />);
     
-    // Test navbar collapse container
-    const collapseContainer = document.getElementById('navbar');
-    expect(collapseContainer).toHaveClass('collapse');
+    const navButton = screen.getByRole('button', { name: /toggle navigation/i });
+    expect(navButton).toHaveClass('fixed', 'z-50', 'top-4', 'right-4');
+    expect(navButton).toHaveAttribute('aria-expanded', 'false');
+    expect(navButton).toHaveAttribute('aria-controls', 'navbar');
     
-    // Test main menu
-    const mainMenu = document.getElementById('colorlib-main-menu');
-    expect(mainMenu).toBeInTheDocument();
-    expect(mainMenu).toHaveClass('navbar');
+    const mainNav = screen.getByRole('navigation', { name: /main navigation/i });
+    expect(mainNav).toHaveClass('mt-8');
+  });
+
+  it('has proper navbar structure', () => {
+    render(<Sidebar />);
     
-    // Test list structure
-    const navList = within(collapseContainer!).getByRole('list');
-    expect(navList.tagName).toBe('UL');
+    const mainNavList = within(screen.getByRole('navigation', { name: /main navigation/i }))
+      .getByRole('list');
+    expect(mainNavList).toHaveClass('space-y-2');
     
-    // Test list items
-    const listItems = within(navList).getAllByRole('listitem');
-    expect(listItems).toHaveLength(3);
-    
-    // Test active state
-    expect(listItems[0]).toHaveClass('active');
-    
-    // Test each nav section has proper attributes and href
-    const links = within(navList).getAllByRole('link');
-    links.forEach(link => {
-      const section = link.getAttribute('data-nav-section');
-      expect(section).toBeTruthy();
-      expect(link).toHaveAttribute('href', `#${section}`);
-    });
+    const socialLinks = screen.getByRole('list', { name: /social links/i });
+    expect(socialLinks).toHaveClass('flex', 'justify-center', 'space-x-4');
   });
 });

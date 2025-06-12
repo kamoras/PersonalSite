@@ -9,10 +9,10 @@ describe('Timeline Component', () => {
     expect(screen.getByText('Timeline')).toBeInTheDocument();
     expect(screen.getByText('highlights')).toBeInTheDocument();
   });
+
   it('renders timeline entries in correct order', () => {
     render(<Timeline />);
     
-    // Get all job titles and skip the Timeline heading
     const entries = screen.getAllByRole('heading', { level: 2 })
       .filter(h2 => !h2.textContent?.includes('Timeline'));
       
@@ -23,106 +23,90 @@ describe('Timeline Component', () => {
   it('renders timeline entry details correctly', () => {
     render(<Timeline />);
     
-    // Test first entry details
     expect(screen.getByText(/ThousandEyes is a key part of Cisco/)).toBeInTheDocument();
     expect(screen.getByText(/San Francisco, California \(Remote\)/)).toBeInTheDocument();
     
-    // Test date ranges
     expect(screen.getByText(/April 2022 - November 2022/)).toBeInTheDocument();
     expect(screen.getByText(/October 2019 - April 2022/)).toBeInTheDocument();
-  });  it('applies correct animation classes', () => {
+  });
+
+  it('applies correct animation classes', () => {
     render(<Timeline />);
     
     const entries = screen.getAllByTestId('timeline-entry');
     expect(entries.length).toBeGreaterThan(0);
     entries.forEach(entry => {
-      expect(entry).toHaveClass('animate-box');
-      expect(entry).toHaveAttribute('data-animate-effect');
-    });
-    
-    // Check specific animation effects
-    expect(entries[0]).toHaveAttribute('data-animate-effect', 'fadeInLeft');
-    expect(entries[1]).toHaveAttribute('data-animate-effect', 'fadeInTop');
-  });  it('renders timeline icons with correct colors', () => {
-    render(<Timeline />);
-    
-    // Get all icons except the end marker
-    const icons = screen.getAllByTestId('timeline-icon')
-      .filter(icon => !icon.closest('.begin'));
-    expect(icons.length).toBeGreaterThan(0);
-    
-    // Check specific color classes
-    icons.forEach(icon => {
-      expect(icon).toHaveClass('color-4');
+      expect(entry).toHaveClass('transform', 'transition-all', 'duration-500', 'ease-out');
     });
   });
-  it('renders the timeline end marker', () => {
+
+  it('renders timeline icons with correct styles', () => {
     render(<Timeline />);
     
-    const endMarker = screen.getByTestId('timeline-end-marker');
-    expect(endMarker).toBeInTheDocument();
-    expect(endMarker).toHaveClass('timeline-entry', 'begin', 'animate-box');
-    const icon = within(endMarker).getByTestId('timeline-icon');
-    expect(icon).toHaveClass('color-none');
+    const icons = screen.getAllByTestId('timeline-icon')
+      .filter(icon => !icon.closest('[data-testid="timeline-end-marker"]'));
+    expect(icons.length).toBeGreaterThan(0);
+    
+    icons.forEach(icon => {
+      expect(icon).toHaveClass(
+        'absolute',
+        'left-[-2.5rem]',
+        'w-12',
+        'h-12',
+        'rounded-full',
+        'border-4',
+        'border-white',
+        'bg-blue-400'
+      );
+    });
   });
   it('maintains chronological structure', () => {
     render(<Timeline />);
     
-    const timelineContainer = screen.getByTestId('timeline-container');
-    expect(timelineContainer).toHaveClass('timeline-centered');
+    const timelineContainer = screen.getByTestId('timeline-content');
+    expect(timelineContainer).toHaveClass('max-w-4xl', 'mx-auto', 'px-4', 'py-8');
     
-    // Verify timeline structure and order
-    const entries = screen.getAllByTestId('timeline-entry-inner');
+    const entries = screen.getAllByTestId('timeline-entry');
     expect(entries.length).toBeGreaterThan(1);
+    expect(entries[0]).toHaveClass('relative', 'pl-10', 'border-l-4', 'border-blue-400');
     
-    // Verify dates are in chronological order
     const dates = screen.getAllByText(/\d{4}/);
+    expect(dates.length).toBeGreaterThan(1);
+    
+    // Verify chronological order (newest to oldest)
     const years = dates.map(date => {
       const match = date.textContent?.match(/\d{4}/);
       return match ? parseInt(match[0]) : 0;
     });
-    expect([...years]).toEqual([...years].sort((a, b) => b - a)); // Should be in descending order
+    expect([...years]).toEqual([...years].sort((a, b) => b - a));
   });
 
-  it('renders all description paragraphs for each timeline entry', () => {
+  it('renders timeline entry content correctly', () => {
     render(<Timeline />);
     
-    // Check ThousandEyes description paragraphs
-    const thousandEyesDescriptions = [
-      "ThousandEyes is a key part of Cisco as it continually strives to enhance Network Assurance.",
-      "As a member of a team in hyper-growth mode,",
-      "It has been rewarding to be able to work at ThousandEyes,"
-    ];
-    thousandEyesDescriptions.forEach(desc => {
-      expect(screen.getByText(new RegExp(desc))).toBeInTheDocument();
-    });
+    const entries = screen.getAllByTestId('timeline-entry');
+    entries.forEach(entry => {
+      const date = within(entry).getByTestId('timeline-date');
+      expect(date).toHaveClass('text-gray-600', 'mb-2');
 
-    // Check Datto description
-    expect(screen.getByText(/I joined Datto, a rapidly growing startup/)).toBeInTheDocument();
-  });  it('meets accessibility requirements', () => {
+      const title = within(entry).getByRole('heading', { level: 2 });
+      expect(title).toHaveClass('font-bold', 'text-xl', 'mb-2');
+
+      const description = within(entry).getByTestId('timeline-description');
+      expect(description).toHaveClass('text-gray-700');
+    });
+  });
+
+  it('meets accessibility requirements', () => {
     render(<Timeline />);
     
-    // Check section landmarks
     const timelineSection = screen.getByRole('region', { name: /timeline/i });
     expect(timelineSection).toBeInTheDocument();
 
-    // Verify headings hierarchy - first heading is title, rest are in timeline entries
     const headings = screen.getAllByRole('heading', { level: 2 });
-    expect(headings[0]).toHaveClass('colorlib-heading');
-    
-    // Timeline entry headings should be within timeline-label divs
-    const entryHeadings = headings.slice(1);
-    entryHeadings.forEach(heading => {
-      expect(heading.closest('.timeline-label')).toBeTruthy();
-    });
-
-    // Check for proper ARIA attributes and animation
-    const timelineEntries = screen.getAllByTestId('timeline-entry');
-    timelineEntries.forEach(entry => {
-      expect(entry).toHaveAttribute('data-animate-effect');
-      expect(entry).toHaveClass('animate-box');
-    });
+    expect(headings[0]).toHaveClass('text-3xl', 'font-bold', 'mt-2', 'mb-4');
   });
+
   it('has proper timeline entry structure', () => {
     render(<Timeline />);
     
@@ -135,20 +119,20 @@ describe('Timeline Component', () => {
       expect(innerElement).toBeInTheDocument();
       expect(icon).toBeInTheDocument();
       expect(label).toBeInTheDocument();
+      
+      expect(label).toHaveClass('bg-white', 'p-6', 'rounded-lg', 'shadow-md');
     });
   });
   it('renders with proper layout classes', () => {
-    const { container } = render(<Timeline />);
+    render(<Timeline />);
     
-    // Check for responsive layout classes
-    const narrowContent = container.querySelector('.colorlib-narrow-content');
-    expect(narrowContent).toHaveClass('colorlib-narrow-content');
+    const section = screen.getByRole('region', { name: /timeline/i });
+    expect(section).toHaveClass('py-16', 'bg-gray-50');
     
-    const rows = container.getElementsByClassName('row');
-    expect(rows.length).toBeGreaterThan(0);
+    const container = screen.getByTestId('timeline-content');
+    expect(container).toHaveClass('max-w-4xl', 'mx-auto', 'px-4', 'py-8');
     
-    // Verify column classes for responsive design
-    const column = container.querySelector('.col-md-6');
-    expect(column).toHaveClass('col-md-offset-3', 'col-md-pull-3');
+    const timelineList = screen.getByRole('list');
+    expect(timelineList).toHaveClass('space-y-8');
   });
 });

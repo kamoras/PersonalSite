@@ -1,35 +1,17 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html"
-  ],
+  darkMode: 'class', // enable class-based dark mode
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        sans: [
-          '-apple-system',
-          'BlinkMacSystemFont',
-          '"Segoe UI"',
-          'Roboto',
-          'Oxygen',
-          'Ubuntu',
-          'Cantarell',
-          '"Fira Sans"',
-          '"Droid Sans"',
-          '"Helvetica Neue"',
-          'sans-serif'
-        ],
-        mono: [
-          'source-code-pro',
-          'Menlo',
-          'Monaco',
-          'Consolas',
-          '"Courier New"',
-          'monospace'
-        ]
-      }
+      colors: {
+        brand: {
+          DEFAULT: '#2563EB',
+          light: '#3B82F6',
+          dark: '#1D4ED8',
+        },
+      },
     },
   },
   plugins: [],
-}
+};

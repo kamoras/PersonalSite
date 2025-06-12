@@ -1,26 +1,23 @@
 import React from 'react';
-import './App.css';
 import Sidebar from './components/sidebar';
 import Introduction from './components/introduction';
 import About from './components/about';
 import Timeline from './components/timeline';
-import { useInitializeTemplateScripts } from './hooks/useInitializeTemplateScripts';
+import useInitializeTemplateScripts from './hooks/useInitializeTemplateScripts';
 
 const App: React.FC = () => {
   useInitializeTemplateScripts();
 
   return (
-    <div id="colorlib-page">
-      <div id="container-wrap" className="js-fullheight">
-        <Sidebar />
-        <div id="colorlib-main">
-          <div className="js-fullheight">
-            <Introduction />
-            <About />
-            <Timeline />
-          </div>
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto">
+        <div className="flex flex-col min-h-screen">
+          <Introduction />
+          <About />
+          <Timeline />
         </div>
-      </div>
+      </main>
     </div>
   );
 };
