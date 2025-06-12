@@ -406,7 +406,7 @@ figure {
 		}
 		.slider-text{
 			display: table;
-			opacity: 0;
+			opacity: 1;
 			min-height: 500px;
 			z-index: 9;
 			> .slider-text-inner {
@@ -1220,7 +1220,7 @@ margin-left: -20px;
 		left: 0;
 		right: 0;
 		background: $brand-primary;
-		opacity: 0;
+		opacity: 1;
 		@include transition(.3s);
 		.con{
 			padding: 20px;
@@ -1742,6 +1742,6 @@ margin-left: -20px;
 
 .animate-box {
 	.js & {
-		opacity: 0;
+		opacity: 1;
 	}
 }
