@@ -3,14 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { FaGithub, FaLinkedin, FaSun, FaMoon } from 'react-icons/fa';
 import { HiMail } from 'react-icons/hi';
 
-{(HiMail as unknown as React.FC<{ className?: string }>)({ className: "mr-2" })}
-{(FaGithub as unknown as React.FC<{ className?: string }>)({ className: "mr-2" })}
-{(FaLinkedin as unknown as React.FC<{ className?: string }>)({ className: "mr-2" })}
-{(FaSun as unknown as React.FC<{ className?: string }>)({ className: "mr-2" })}
-{(FaMoon as unknown as React.FC<{ className?: string }>)({ className: "mr-2" })}
-
 const Sidebar: React.FC = () => {
   const [isDark, setIsDark] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -19,6 +14,10 @@ const Sidebar: React.FC = () => {
       setIsDark(true);
     }
   }, []);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   const toggleDarkMode = () => {
     const html = document.documentElement;
@@ -33,15 +32,34 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
+      {/* Burger menu button (mobile only) */}
       <button
-        className="fixed z-50 top-4 right-4 p-2 bg-white dark:bg-gray-800 rounded-md shadow-lg md:hidden"
-        aria-label="Toggle navigation"
+        onClick={toggleMenu}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-md shadow-lg"
+        aria-label="Toggle sidebar"
       >
-        <i className="icon-menu text-2xl" aria-hidden="true" />
+        ☰
       </button>
 
-      <aside className="font-serif fixed h-full w-64 bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-lg z-40">
-        <div className="flex flex-col h-full">
+      {/* Dark overlay when sidebar is open on mobile */}
+      {isOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={toggleMenu}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        className={`
+          font-serif fixed top-0 left-0 h-screen w-64 z-40
+          bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-lg
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0
+        `}
+      >
+        <div className="flex flex-col h-full overflow-y-auto">
           <div className="flex flex-col items-center py-8">
             <div
               className="w-32 h-32 rounded-full bg-cover bg-center mb-4 border-4 border-gray-200"
