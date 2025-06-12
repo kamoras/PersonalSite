@@ -55,7 +55,7 @@ const Timeline: React.FC = () => {
     {
       title: 'Staff Software Engineer',
       company: 'Capgemini Engineering',
-      date: 'Burlington, Massachussetts (June 2018 - October 2018)',
+      date: 'Burlington, Massachusetts (June 2018 - October 2018)',
       description: [
         'I worked on projects for ASML in Wilton, CT, focusing on embedded programming. The primary product that I worked on was EUV (extreme ultraviolet) lithography. Languages used: C++ and Python.',
         'Wrote software to improve the function of the "top" of ASML lithography devices. The top is responsible for the handling of the reticle, a piece of glass that light is passed through to etch the design of a semiconductor chip into a silicon wafer. These reticles must be moved in a clean environment within the device through complex robotics in order to prevent contamination from dust (which would ruin the pattern being etched).',
