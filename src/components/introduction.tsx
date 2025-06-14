@@ -13,7 +13,7 @@ const Introduction: React.FC = () => {
     {
       title: 'Innovator, Problem Solver, Engineer',
       buttonText: 'View Projects',
-      buttonHref: 'https://github.com/ryan-mack',
+      buttonHref: 'https://github.com/kamoras',
       iconClass: 'icon-briefcase3',
     },
   ];
