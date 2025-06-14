@@ -5,9 +5,9 @@ const Introduction: React.FC = () => {
   const slides = [
     {
       title: 'Ryan Mack',
-      buttonText: 'View CV',
+      buttonText: 'View Resume',
       buttonHref:
-        'https://docs.google.com/document/d/1X-YPeb9ckf2z2EqSZ3n-Gm812Scb5VYEu2f9UYFnihk/edit?usp=sharing',
+        '/documents/Ryan-M-Mack-Resume.pdf',
       iconClass: 'icon-download4',
     },
     {
