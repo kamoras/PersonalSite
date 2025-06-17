@@ -1,5 +1,11 @@
+import { expect, beforeAll, vi } from 'vitest';
 import '@testing-library/jest-dom';
-import { beforeAll, vi } from 'vitest';
+
+declare global {
+  namespace Vitest {
+    interface Assertion<T = any> extends jest.Matchers<void, T> {}
+  }
+}
 
 beforeAll(() => {
   // Mock window.scrollTo

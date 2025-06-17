@@ -1,6 +1,21 @@
 // src/components/Timeline.tsx
+/**
+ * Timeline component displaying career history with company logos
+ * 
+ * Features:
+ * - Intersection Observer for scroll animations
+ * - Company logos with fallback handling
+ * - Responsive design with dark/light mode support
+ * - Continuous timeline line with positioned dots
+ * 
+ * Maintainability improvements:
+ * - Extracted company logo mapping to constants
+ * - Separated CompanyLogo into reusable component
+ * - Configuration constants for easy tweaking
+ * - Proper TypeScript typing throughout
+ */
 import React, { useEffect, useRef, useState } from 'react';
-import { FaBriefcase } from 'react-icons/fa';
+import { FaCalendar } from 'react-icons/fa';
 
 interface TimelineEntry {
   title: string;
@@ -11,8 +26,53 @@ interface TimelineEntry {
   animationEffect?: string;
 }
 
+// Company logo mapping for better maintainability
+const COMPANY_LOGOS: Record<string, string> = {
+  'Thermo Fisher': '/images/thermo.jpg',
+  'Capgemini': '/images/capg.jpg', 
+  'PerkinElmer': '/images/perkin.jpg',
+  'Datto': '/images/datto.jpg',
+  'Cisco ThousandEyes': '/images/te.jpg',
+} as const;
+
+const DEFAULT_LOGO = '/images/thermo.jpg';
+
+// Reusable component for company logos
+interface CompanyLogoProps {
+  company: string;
+}
+
+const CompanyLogo: React.FC<CompanyLogoProps> = ({ company }) => {
+  const getCompanyLogo = (company: string): string => {
+    const logoKey = Object.keys(COMPANY_LOGOS).find(key => company.includes(key));
+    return logoKey ? COMPANY_LOGOS[logoKey] : DEFAULT_LOGO;
+  };
+
+  return (
+    <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
+      <div className="w-20 h-20 bg-white rounded-lg overflow-hidden">
+        <img 
+          src={getCompanyLogo(company)} 
+          alt={`${company} logo`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  );
+};
+
 const Timeline: React.FC = () => {
-  const timelineEntries: TimelineEntry[] = [
+
+// Constants for timeline configuration
+const TIMELINE_CONFIG = {
+  ANIMATION_THRESHOLD: 0.1,
+  INTERSECTION_OBSERVER_OPTIONS: { threshold: 0.1 },
+  TIMELINE_SPACING: 'space-y-12',
+  TIMELINE_PADDING: 'pb-12',
+} as const;
+
+// Timeline data - could be moved to a separate data file
+const TIMELINE_ENTRIES: TimelineEntry[] = [
     {
       title: 'Senior Software Engineer II',
       company: 'Cisco ThousandEyes',
@@ -84,10 +144,9 @@ const Timeline: React.FC = () => {
       color: 4,
     },
   ];
-
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  const refs = useRef<(HTMLElement | null)[]>([]);
   const [visibleEntries, setVisibleEntries] = useState<boolean[]>(
-    new Array(timelineEntries.length).fill(false)
+    new Array(TIMELINE_ENTRIES.length).fill(false)
   );
 
   useEffect(() => {
@@ -102,53 +161,70 @@ const Timeline: React.FC = () => {
           });
         }
       });
-    }, { threshold: 0.1 });
+    }, TIMELINE_CONFIG.INTERSECTION_OBSERVER_OPTIONS);
 
     refs.current.forEach((ref) => ref && observer.observe(ref));
     return () => refs.current.forEach((ref) => ref && observer.unobserve(ref));
-  }, []);
-
-  return (
-    <section
-      className="font-serif py-16 bg-gray-50 dark:bg-gray-800"
+  }, []);return (    <section
+      className="font-serif py-24 bg-white dark:bg-gray-900"
       id="timeline"
       data-section="timeline"
       role="region"
       aria-label="timeline"
     >
-      <div className="max-w-4xl mx-auto px-4 py-8" data-testid="timeline-content">
-        <div className="mb-12">
-          <span className="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">Highlights</span>
-          <h2 className="text-3xl font-bold mt-2 mb-4 dark:text-white">Timeline</h2>
-        </div>
-
-        <div className="space-y-8" role="list">
-          {timelineEntries.map((entry, index) => (
-            <article
-              key={index}
-              ref={(el) => (refs.current[index] = el as HTMLDivElement | null)}
-              className={`relative pl-10 border-l-4 border-black dark:border-white transition-all duration-700 ease-out transform ${
-                visibleEntries[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              data-testid="timeline-entry"
-            >
-              <div className="relative" data-testid="timeline-entry-inner">
-                <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md" data-testid="timeline-label">
-                  <span className="text-gray-500 dark:text-gray-400 mb-2 block" data-testid="timeline-date">
-                    {entry.date}
-                  </span>
-                  <div className="flex justify-between items-baseline mb-2">
-                    <h2 className="text-xl font-bold mb-2 dark:text-white">{entry.title} at {entry.company}</h2>
-                  </div>
-                  <div className="text-gray-700 dark:text-gray-300" data-testid="timeline-description">
-                    {entry.description.map((paragraph, pIndex) => (
-                      <p key={pIndex} className="mb-4 last:mb-0">{paragraph}</p>
-                    ))}
+      <div className="max-w-4xl mx-auto px-6 py-8" data-testid="timeline-content">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <span className="text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 font-medium">
+            Career Journey
+          </span>
+          <h2 className="text-4xl font-bold mt-4 mb-6 text-gray-900 dark:text-white">
+            Timeline
+          </h2>
+        </div>        {/* Timeline */}
+        <div className={`relative ${TIMELINE_CONFIG.TIMELINE_PADDING}`}>
+          {/* Timeline line - continuous vertical line centered with dots */}
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-900 dark:bg-white z-1"></div>
+            <div className={TIMELINE_CONFIG.TIMELINE_SPACING} role="list">
+            {TIMELINE_ENTRIES.map((entry: TimelineEntry, index: number) => (
+              <article
+                key={index}
+                ref={(el) => {
+                  refs.current[index] = el;
+                }}
+                className={`relative pl-20 transition-all duration-700 ease-out transform ${
+                  visibleEntries[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                data-testid="timeline-entry"
+              >                {/* Timeline dot */}
+                <div className="absolute left-8 top-8 w-4 h-4 bg-gray-900 dark:bg-white rounded-full shadow-lg z-20 -translate-x-2"></div>
+                
+                <div className="relative" data-testid="timeline-entry-inner">
+                  <div className="group bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300" data-testid="timeline-label">                    {/* Company and Title */}
+                    <div className="flex items-start gap-4 mb-4">
+                      <CompanyLogo company={entry.company} />
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
+                          {entry.title}
+                        </h3>
+                        <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                          {entry.company}
+                        </p>
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400" data-testid="timeline-date">
+                          <FaCalendar className="w-4 h-4" />
+                          <span>{entry.date}</span>
+                        </div>
+                      </div>
+                    </div>
+                      {/* Description */}
+                    <div className="text-gray-600 dark:text-gray-300 leading-relaxed" data-testid="timeline-description">
+                      {entry.description.map((paragraph: string, pIndex: number) => (
+                        <p key={pIndex} className="mb-4 last:mb-0">{paragraph}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>            ))}          </div>
         </div>
       </div>
     </section>

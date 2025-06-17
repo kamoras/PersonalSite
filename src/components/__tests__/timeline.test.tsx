@@ -1,138 +1,130 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Timeline from '../timeline';
 
+// Mock IntersectionObserver
+const observerMap = new Map();
+
+beforeEach(() => {
+  observerMap.clear();
+  // @ts-ignore - we don't need to implement all IntersectionObserver properties for testing
+  window.IntersectionObserver = class {
+    constructor(callback: IntersectionObserverCallback) {
+      // Store the callback for later use
+      this.callback = callback;
+    }
+    
+    observe(element: Element) {
+      observerMap.set(element, this.callback);
+    }
+    
+    unobserve(element: Element) {
+      observerMap.delete(element);
+    }
+    
+    disconnect() {
+      observerMap.clear();
+    }
+    
+    private callback: IntersectionObserverCallback;
+  };
+});
+
 describe('Timeline Component', () => {
-  it('renders section header', () => {
+  it('renders current position first', () => {
     render(<Timeline />);
     
-    expect(screen.getByText('Timeline')).toBeInTheDocument();
-    expect(screen.getByText('highlights')).toBeInTheDocument();
+    const timelineContent = screen.getByTestId('timeline-content');
+    expect(timelineContent).toBeInTheDocument();
+    
+    const entries = screen.getAllByTestId('timeline-entry');
+    const firstEntry = entries[0];
+    
+    expect(firstEntry).toHaveTextContent('Senior Software Engineer II');
+    expect(firstEntry).toHaveTextContent('Cisco ThousandEyes');
+    expect(firstEntry).toHaveTextContent('San Francisco, California (Remote) (November 2024 - Present)');
+  });  it('renders timeline entries in chronological order', () => {
+    render(<Timeline />);
+    
+    const entries = screen.getAllByTestId('timeline-entry');
+    const titles = [
+      'Senior Software Engineer II',
+      'Senior Software Engineer I', 
+      'Senior Software Engineer',
+      'Software Development Engineer',
+      'Staff Software Engineer',
+      'Software Engineer II',
+      'Software Engineering Intern'
+    ];
+    
+    titles.forEach((title, index) => {
+      expect(entries[index]).toHaveTextContent(title);
+    });
   });
 
-  it('renders timeline entries in correct order', () => {
+  it('renders job descriptions correctly', () => {
     render(<Timeline />);
     
-    const entries = screen.getAllByRole('heading', { level: 2 })
-      .filter(h2 => !h2.textContent?.includes('Timeline'));
+    const descriptions = screen.getAllByTestId('timeline-description');
+    
+    // Check key descriptions from different roles
+    expect(descriptions[0]).toHaveTextContent(/Continuing to work on major projects as a senior member/);
+    expect(descriptions[1]).toHaveTextContent(/ThousandEyes is a key part of Cisco/);
+    expect(descriptions[2]).toHaveTextContent(/I joined Datto, a rapidly growing startup/);
+  });  it('renders with proper structure and data attributes', () => {
+    render(<Timeline />);
+    
+    const timelineSection = screen.getByRole('region', { name: 'timeline' });
+    expect(timelineSection).toHaveAttribute('id', 'timeline');
+    expect(timelineSection).toHaveClass('font-serif', 'py-24', 'bg-white', 'dark:bg-gray-900');
+    
+    const entries = screen.getAllByTestId('timeline-entry');
+    entries.forEach((entry, index) => {
+      const inner = screen.getAllByTestId('timeline-entry-inner')[index];
+      const label = screen.getAllByTestId('timeline-label')[index];
+      const date = screen.getAllByTestId('timeline-date')[index];
       
-    expect(entries[0].textContent).toContain('Senior Software Engineer II at Cisco ThousandEyes');
-    expect(entries[1].textContent).toContain('Senior Software Engineer at Datto');
-  });
-
-  it('renders timeline entry details correctly', () => {
-    render(<Timeline />);
-    
-    expect(screen.getByText(/ThousandEyes is a key part of Cisco/)).toBeInTheDocument();
-    expect(screen.getByText(/San Francisco, California \(Remote\)/)).toBeInTheDocument();
-    
-    expect(screen.getByText(/April 2022 - November 2022/)).toBeInTheDocument();
-    expect(screen.getByText(/October 2019 - April 2022/)).toBeInTheDocument();
-  });
-
-  it('applies correct animation classes', () => {
-    render(<Timeline />);
-    
-    const entries = screen.getAllByTestId('timeline-entry');
-    expect(entries.length).toBeGreaterThan(0);
-    entries.forEach(entry => {
-      expect(entry).toHaveClass('transform', 'transition-all', 'duration-500', 'ease-out');
-    });
-  });
-
-  it('renders timeline icons with correct styles', () => {
-    render(<Timeline />);
-    
-    const icons = screen.getAllByTestId('timeline-icon')
-      .filter(icon => !icon.closest('[data-testid="timeline-end-marker"]'));
-    expect(icons.length).toBeGreaterThan(0);
-    
-    icons.forEach(icon => {
-      expect(icon).toHaveClass(
-        'absolute',
-        'left-[-2.5rem]',
-        'w-12',
-        'h-12',
-        'rounded-full',
-        'border-4',
-        'border-white',
-        'bg-blue-400'
-      );
-    });
-  });
-  it('maintains chronological structure', () => {
-    render(<Timeline />);
-    
-    const timelineContainer = screen.getByTestId('timeline-content');
-    expect(timelineContainer).toHaveClass('max-w-4xl', 'mx-auto', 'px-4', 'py-8');
-    
-    const entries = screen.getAllByTestId('timeline-entry');
-    expect(entries.length).toBeGreaterThan(1);
-    expect(entries[0]).toHaveClass('relative', 'pl-10', 'border-l-4', 'border-blue-400');
-    
-    const dates = screen.getAllByText(/\d{4}/);
-    expect(dates.length).toBeGreaterThan(1);
-    
-    // Verify chronological order (newest to oldest)
-    const years = dates.map(date => {
-      const match = date.textContent?.match(/\d{4}/);
-      return match ? parseInt(match[0]) : 0;
-    });
-    expect([...years]).toEqual([...years].sort((a, b) => b - a));
-  });
-
-  it('renders timeline entry content correctly', () => {
-    render(<Timeline />);
-    
-    const entries = screen.getAllByTestId('timeline-entry');
-    entries.forEach(entry => {
-      const date = within(entry).getByTestId('timeline-date');
-      expect(date).toHaveClass('text-gray-600', 'mb-2');
-
-      const title = within(entry).getByRole('heading', { level: 2 });
-      expect(title).toHaveClass('font-bold', 'text-xl', 'mb-2');
-
-      const description = within(entry).getByTestId('timeline-description');
-      expect(description).toHaveClass('text-gray-700');
-    });
-  });
-
-  it('meets accessibility requirements', () => {
-    render(<Timeline />);
-    
-    const timelineSection = screen.getByRole('region', { name: /timeline/i });
-    expect(timelineSection).toBeInTheDocument();
-
-    const headings = screen.getAllByRole('heading', { level: 2 });
-    expect(headings[0]).toHaveClass('text-3xl', 'font-bold', 'mt-2', 'mb-4');
-  });
-
-  it('has proper timeline entry structure', () => {
-    render(<Timeline />);
-    
-    const entries = screen.getAllByTestId('timeline-entry');
-    entries.forEach(entry => {
-      const innerElement = within(entry).getByTestId('timeline-entry-inner');
-      const icon = within(innerElement).getByTestId('timeline-icon');
-      const label = within(innerElement).getByTestId('timeline-label');
-      
-      expect(innerElement).toBeInTheDocument();
-      expect(icon).toBeInTheDocument();
+      expect(inner).toBeInTheDocument();
       expect(label).toBeInTheDocument();
+      expect(date).toBeInTheDocument();
       
-      expect(label).toHaveClass('bg-white', 'p-6', 'rounded-lg', 'shadow-md');
+      expect(entry).toHaveClass('relative', 'pl-20');
+      expect(label).toHaveClass('group', 'bg-white', 'dark:bg-gray-800', 'p-8', 'rounded-2xl');
     });
   });
-  it('renders with proper layout classes', () => {
+  it('handles visibility transitions through intersection observer', async () => {
     render(<Timeline />);
     
-    const section = screen.getByRole('region', { name: /timeline/i });
-    expect(section).toHaveClass('py-16', 'bg-gray-50');
+    const entries = screen.getAllByTestId('timeline-entry');
     
-    const container = screen.getByTestId('timeline-content');
-    expect(container).toHaveClass('max-w-4xl', 'mx-auto', 'px-4', 'py-8');
+    // Initially entries should be invisible
+    entries.forEach(entry => {
+      expect(entry.classList.toString()).toContain('opacity-0');
+      expect(entry.classList.toString()).toContain('translate-y-8');
+    });
     
-    const timelineList = screen.getByRole('list');
-    expect(timelineList).toHaveClass('space-y-8');
+    // Trigger intersection observer for all entries at once
+    await act(async () => {
+      const promises = entries.map(entry => {
+        const callback = observerMap.get(entry);
+        return callback?.([{
+          target: entry,
+          isIntersecting: true,
+          boundingClientRect: {} as DOMRectReadOnly,
+          intersectionRatio: 1,
+          intersectionRect: {} as DOMRectReadOnly,
+          rootBounds: null,
+          time: Date.now()
+        }]);
+      });
+      await Promise.all(promises);
+    });
+    
+    // Check that all entries are now visible
+    entries.forEach(entry => {
+      expect(entry.classList.toString()).toContain('opacity-100');
+      expect(entry.classList.toString()).toContain('translate-y-0');
+    });
   });
 });
