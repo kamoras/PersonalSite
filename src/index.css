@@ -1,17 +1,330 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
+  /* Light mode: white background, dark text */
+  html {
+    background-color: white;
+    color: #111827; /* gray-900 - dark text */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Dark mode: dark background, light text */
+  html.dark {
+    background-color: #111827; /* gray-900 - dark background */
+    color: white; /* light text */
+  }
+  
   body {
-    @apply m-0 p-0 antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-      sans-serif;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: white;
+    color: #111827; /* gray-900 - dark text */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body.dark {
+    background-color: #111827; /* gray-900 - dark background */
+    color: white; /* light text */
   }
 
   code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
+  }
 }
+
+@layer components {
+  .intro-background {
+    background-image: url('/images/penn.avif') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
+  }
+
+  /* LIGHT MODE - Default white backgrounds with dark text */
+  /* About section */
+  section[data-section="about"],
+  section[data-section="about"] * {
+    background-color: white !important;
+    color: #111827 !important; /* gray-900 - dark text */
+  }
+  
+  section[data-section="about"] h1,
+  section[data-section="about"] h2,
+  section[data-section="about"] h3 {
+    color: #111827 !important; /* gray-900 - dark text */
+  }
+  
+  /* Timeline section */
+  section[data-section="timeline"],
+  section[data-section="timeline"] * {
+    background-color: white !important;
+    color: #111827 !important; /* gray-900 - dark text */
+  }
+  
+  section[data-section="timeline"] h1,
+  section[data-section="timeline"] h2,
+  section[data-section="timeline"] h3 {
+    color: #111827 !important; /* gray-900 - dark text */
+  }  /* Sidebar light mode */
+  aside,
+  aside * {
+    background-color: white !important;
+    color: #111827 !important; /* gray-900 - dark text */
+    border-color: #e5e7eb !important; /* gray-200 */
+  }
+  
+  /* Exclude profile picture hover overlay from background override */
+  aside .absolute.inset-0 {
+    background-color: transparent !important;
+    background-image: linear-gradient(to top, rgba(0,0,0,0.1), transparent) !important;
+  }
+  
+  aside h1,
+  aside h2,
+  aside h3 {
+    color: #111827 !important; /* gray-900 - dark text */
+  }
+  /* Allow hover effects for sidebar navigation */
+  aside nav a:hover {
+    background-color: #f9fafb !important; /* gray-50 */
+    color: #111827 !important; /* gray-900 */
+    border-left-color: #111827 !important; /* black border */
+  }/* Card backgrounds in light mode - About section */
+  section[data-section="about"] .group {
+    background-color: white !important; /* Clean white background */
+    color: #111827 !important; /* gray-900 - dark text */
+    border-color: #e5e7eb !important; /* gray-200 */
+  }
+  section[data-section="about"] .group h3 {
+    color: #111827 !important; /* gray-900 - dark headings */
+  }
+  
+  /* Override hover colors to gray instead of blue */
+  section[data-section="about"] .group:hover h3 {
+    color: #4b5563 !important; /* gray-600 on hover */
+  }
+
+  section[data-section="about"] .group p {
+    color: #4b5563 !important; /* gray-600 - readable body text */
+  }
+
+  /* Icon backgrounds in About section */
+  section[data-section="about"] .bg-gray-50 {
+    background-color: #f9fafb !important; /* gray-50 */
+  }  /* Card backgrounds in light mode - Timeline section */
+  section[data-section="timeline"] .group {
+    background-color: white !important; /* Clean white background */
+    color: #111827 !important; /* gray-900 - dark text */
+    border-color: #e5e7eb !important; /* gray-200 */
+    position: relative !important; /* ensure cards don't interfere with line positioning */
+    z-index: 2 !important; /* cards appear above line */
+  }
+  section[data-section="timeline"] .group h3 {
+    color: #111827 !important; /* gray-900 - dark headings */
+  }
+  
+  /* Override hover colors to gray instead of blue */
+  section[data-section="timeline"] .group:hover h3 {
+    color: #4b5563 !important; /* gray-600 on hover */
+  }
+
+  section[data-section="timeline"] .group p {
+    color: #4b5563 !important; /* gray-600 - readable body text */
+  }
+  /* Icon backgrounds in Timeline section */
+  section[data-section="timeline"] .bg-blue-50 {
+    background-color: #eff6ff !important; /* blue-50 */
+  }
+    /* Fix timeline line and dots visibility in light mode */
+  section[data-section="timeline"] .absolute.w-1,
+  section[data-section="timeline"] .absolute.w-0\.5 {
+    background-color: #111827 !important; /* black line in light mode */
+    z-index: 1 !important; /* ensure line appears behind dots but above section background */
+  }
+  section[data-section="timeline"] .absolute.rounded-full {
+    background-color: #111827 !important; /* solid black dot in light mode */
+    z-index: 20 !important; /* dots appear above line */
+  }/* DARK MODE - Dark backgrounds with light text */
+  /* About section */
+  .dark section[data-section="about"],
+  .dark section[data-section="about"] * {
+    background-color: #111827 !important; /* gray-900 - dark background */
+    color: white !important; /* light text */
+  }
+  
+  /* BUT override specific elements that should have different backgrounds */
+  .dark section[data-section="about"] .group {
+    background-color: #1f2937 !important; /* gray-800 for cards */
+  }
+  
+  .dark section[data-section="about"] .group * {
+    background-color: #1f2937 !important; /* gray-800 for card contents */
+  }
+  
+  .dark section[data-section="about"] h1,
+  .dark section[data-section="about"] h2,
+  .dark section[data-section="about"] h3 {
+    color: white !important; /* light text */
+  }
+  
+  /* Timeline section */
+  .dark section[data-section="timeline"],
+  .dark section[data-section="timeline"] * {
+    background-color: #111827 !important; /* gray-900 - dark background */
+    color: white !important; /* light text */
+  }
+    /* BUT override specific elements that should have different backgrounds */
+  .dark section[data-section="timeline"] .group {
+    background-color: #1f2937 !important; /* gray-800 for cards */
+    position: relative !important; /* ensure cards don't interfere with line positioning */
+    z-index: 2 !important; /* cards appear above line */
+  }
+    .dark section[data-section="timeline"] .group * {
+    background-color: #1f2937 !important; /* gray-800 for card contents */
+  }
+    /* Fix timeline line and dots visibility */
+  .dark section[data-section="timeline"] .absolute.w-1,
+  .dark section[data-section="timeline"] .absolute.w-0\.5 {
+    background-color: white !important; /* white line in dark mode */
+    z-index: 1 !important; /* ensure line appears behind dots but above section background */
+  }
+  .dark section[data-section="timeline"] .absolute.rounded-full {
+    background-color: white !important; /* solid white dot in dark mode */
+    z-index: 20 !important; /* dots appear above line */
+  }
+
+  .dark section[data-section="timeline"] h1,
+  .dark section[data-section="timeline"] h2,
+  .dark section[data-section="timeline"] h3 {
+    color: white !important; /* light text */
+  }  /* Sidebar dark mode */
+  .dark aside,
+  .dark aside * {
+    background-color: #030712 !important; /* gray-950 - very dark */
+    color: white !important; /* light text */
+    border-color: #1f2937 !important; /* gray-800 */
+  }
+  
+  /* Exclude profile picture hover overlay from background override */
+  .dark aside .absolute.inset-0 {
+    background-color: transparent !important;
+    background-image: linear-gradient(to top, rgba(0,0,0,0.1), transparent) !important;
+  }
+  
+  .dark aside h1,
+  .dark aside h2,
+  .dark aside h3 {
+    color: white !important; /* light text */
+  }
+  /* Allow hover effects for sidebar navigation in dark mode */
+  .dark aside nav a:hover {
+    background-color: rgba(31, 41, 55, 0.5) !important; /* gray-800/50 */
+    color: white !important; /* white text */
+    border-left-color: white !important; /* white border */
+  }/* Card backgrounds in dark mode - About section */
+  .dark section[data-section="about"] .group {
+    background-color: #1f2937 !important; /* gray-800 - consistent dark background */
+    color: white !important; /* light text */
+    border-color: #374151 !important; /* gray-700 */
+  }
+  .dark section[data-section="about"] .group h3 {
+    color: white !important; /* white headings */
+  }
+  
+  /* Override hover colors to gray instead of blue */
+  .dark section[data-section="about"] .group:hover h3 {
+    color: #d1d5db !important; /* gray-300 on hover */
+  }
+
+  .dark section[data-section="about"] .group p {
+    color: #d1d5db !important; /* gray-300 - readable body text */
+  }
+
+  /* Icon backgrounds in About section - dark mode */
+  .dark section[data-section="about"] .bg-gray-50 {
+    background-color: #374151 !important; /* gray-700 */
+  }  /* Card backgrounds in dark mode - Timeline section */
+  .dark section[data-section="timeline"] .group {
+    background-color: #1f2937 !important; /* gray-800 - consistent dark background */
+    color: white !important; /* light text */
+    border-color: #374151 !important; /* gray-700 */
+  }
+  .dark section[data-section="timeline"] .group h3 {
+    color: white !important; /* white headings */
+  }
+  
+  /* Override hover colors to gray instead of blue */
+  .dark section[data-section="timeline"] .group:hover h3 {
+    color: #d1d5db !important; /* gray-300 on hover */
+  }
+
+  .dark section[data-section="timeline"] .group p {
+    color: #d1d5db !important; /* gray-300 - readable body text */
+  }
+
+  /* Icon backgrounds in Timeline section - dark mode */
+  .dark section[data-section="timeline"] .bg-blue-50 {
+    background-color: rgba(29, 78, 216, 0.2) !important; /* blue-900/20 */
+  }
+
+  /* Special handling for icons to maintain their intended colors */
+  .dark .text-blue-600,
+  .dark .text-blue-500 {
+    color: #60a5fa !important; /* blue-400 */
+  }
+  
+  .dark .text-green-500 {
+    color: #10b981 !important; /* emerald-500 */
+  }
+  
+  .dark .text-purple-500 {
+    color: #a855f7 !important; /* purple-500 */
+  }
+  
+  .dark .text-orange-500 {
+    color: #f97316 !important; /* orange-500 */
+  }
+
+  .dark .bg-blue-50 {
+    background-color: rgba(29, 78, 216, 0.2) !important; /* blue-900/20 */
+  }
+    .dark .bg-gray-50 {
+    background-color: #374151 !important; /* gray-700 */
+  }
+  /* Introduction component button styling */
+  /* Light mode: Make buttons more visible with better contrast */
+  section[data-section="home"] a,
+  div[data-section="home"] a {
+    background-color: white !important;
+    color: #111827 !important; /* Dark text for good contrast */
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  }
+    section[data-section="home"] a:hover,
+  div[data-section="home"] a:hover {
+    background-color: #6b7280 !important; /* gray-500 */
+    color: white !important;
+    border-color: #6b7280 !important;
+    box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4) !important;
+  }
+
+  /* Dark mode: Keep current styling */
+  .dark section[data-section="home"] a,
+  .dark div[data-section="home"] a {
+    background-color: #1f2937 !important; /* gray-800 */
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  }
+    .dark section[data-section="home"] a:hover,
+  .dark div[data-section="home"] a:hover {
+    background-color: #d1d5db !important; /* gray-300 */
+    color: #111827 !important; /* dark text */
+    border-color: #d1d5db !important;
+    box-shadow: 0 8px 25px rgba(209, 213, 219, 0.4) !important;  }
 }

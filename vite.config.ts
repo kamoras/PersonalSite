@@ -9,9 +9,8 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-  },
-  build: {
-    outDir: 'build', // Keep the same output directory as CRA for gh-pages
+  },  build: {
+    outDir: 'dist', // Standard Vite output directory
   },
   server: {
     port: 3000, // Keep the same port as CRA
