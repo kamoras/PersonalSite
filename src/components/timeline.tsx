@@ -199,20 +199,41 @@ const TIMELINE_ENTRIES: TimelineEntry[] = [
               >                {/* Timeline dot */}
                 <div className="absolute left-8 top-8 w-4 h-4 bg-gray-900 dark:bg-white rounded-full shadow-lg z-20 -translate-x-2"></div>
                 
-                <div className="relative" data-testid="timeline-entry-inner">
-                  <div className="group bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300" data-testid="timeline-label">                    {/* Company and Title */}
-                    <div className="flex items-start gap-4 mb-4">
-                      <CompanyLogo company={entry.company} />
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
-                          {entry.title}
-                        </h3>
-                        <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                          {entry.company}
-                        </p>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400" data-testid="timeline-date">
-                          <FaCalendar className="w-4 h-4" />
-                          <span>{entry.date}</span>
+                <div className="relative" data-testid="timeline-entry-inner">                  <div className="group bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300" data-testid="timeline-label">                    {/* Company and Title - Responsive Layout */}
+                    <div className="mb-4">
+                      {/* Mobile Layout: Logo on top, text below */}
+                      <div className="flex flex-col gap-4 sm:hidden">
+                        <div className="flex justify-center">
+                          <CompanyLogo company={entry.company} />
+                        </div>
+                        <div className="text-center">
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
+                            {entry.title}
+                          </h3>
+                          <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            {entry.company}
+                          </p>
+                          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400" data-testid="timeline-date">
+                            <FaCalendar className="w-4 h-4" />
+                            <span>{entry.date}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Desktop Layout: Logo and text side by side */}
+                      <div className="hidden sm:flex items-start gap-4">
+                        <CompanyLogo company={entry.company} />
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
+                            {entry.title}
+                          </h3>
+                          <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            {entry.company}
+                          </p>
+                          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400" data-testid="timeline-date">
+                            <FaCalendar className="w-4 h-4" />
+                            <span>{entry.date}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
