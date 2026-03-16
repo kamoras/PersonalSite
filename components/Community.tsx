@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
 import { Users } from "lucide-react";
+import Script from "next/script";
 
 const volunteering = [
   {
@@ -92,18 +93,17 @@ export default function Community() {
                 career, prep for interviews, or navigate the industry. No catch — book a time that works for you.
               </p>
 
-              {/* Inline Calendly embed */}
-              <div className="rounded-xl overflow-hidden mb-2">
-                <iframe
-                  src="https://calendly.com/ryan-m-mack?embed_domain=ryan-mack.dev&embed_type=Inline&hide_gdpr_banner=1&primary_color=c9a465"
-                  width="100%"
-                  height="580"
-                  style={{ border: "none", display: "block" }}
-                  title="Book a free mentoring session"
-                  aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
-                  loading="lazy"
-                />
-              </div>
+              {/* Inline Calendly embed — widget.js auto-resizes via postMessage */}
+              <div
+                className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
+                data-url="https://calendly.com/ryan-m-mack?hide_gdpr_banner=1&primary_color=c9a465"
+                aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
+                style={{ minWidth: "320px", height: "630px" }}
+              />
+              <Script
+                src="https://assets.calendly.com/assets/external/widget.js"
+                strategy="lazyOnload"
+              />
 
               <p className="font-mono text-[10px] text-[var(--text-muted)]">
                 Powered by{" "}
