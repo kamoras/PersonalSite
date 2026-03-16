@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:    var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono:    var(--font-geist-mono), monospace;
+  /* Serif display — applied to h1/h2 globally */
+  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
+}
+
+/* ─── Color tokens ────────────────────────────────────────────────────────────
+   Warm dark academia palette.
+   All text values verified ≥ 4.5:1 WCAG AA contrast ratio.
+
+   Dark bg:  #0e0c0a   Light bg: #faf7f2
+─────────────────────────────────────────────────────────────────────────────*/
+:root {
+  /* Dark mode */
+  --color-bg:       #100d09;
+  --color-fg:       #ede8df;  /* 15:1 contrast — warm off-white, like aged paper */
+  --color-gold:     #c9a465;  /*  7.5:1 contrast — candlelight gold              */
+  --text-secondary: #a8a090;  /*  7.5:1 contrast — warm mid-gray                 */
+  --text-muted:     #8a8275;  /*  5.1:1 contrast — warm soft gray                */
+}
+
+body.light {
+  /* Light mode — warm parchment */
+  --color-bg:       #faf7f2;
+  --color-fg:       #1a1714;  /* 17:1 contrast — warm near-black                 */
+  --color-gold:     #7a5c12;  /*  5.9:1 contrast — dark amber on cream           */
+  --text-secondary: #4a4540;  /*  9.0:1 contrast — warm charcoal                 */
+  --text-muted:     #6b6460;  /*  5.5:1 contrast — warm medium gray              */
+}
+
+/* ─── Serif headings — dark academia signature ───────────────────────────────*/
+h1, h2 {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+}
+
+/* Explicit utility — belt-and-suspenders for component-level overrides */
+.font-playfair {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+}
+
+/* Hero tagline italic — scholarly quote feel */
+.hero-tagline {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-style: italic;
+}
+
+/* ─── Drop cap — dark academia scholarly opener ──────────────────────────────*/
+.drop-cap::first-letter {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  float: left;
+  line-height: 0.82;
+  margin-right: 0.12em;
+  margin-top: 0.06em;
+  color: var(--color-gold);
+}
+
+/* ─── Ornamental divider ──────────────────────────────────────────────────────*/
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(201, 164, 101, 0.5);
+}
+
+.ornament-divider::before,
+.ornament-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to var(--ornament-dir, right), transparent, rgba(201, 164, 101, 0.25));
+}
+
+.ornament-divider::after {
+  --ornament-dir: left;
+}
+
+body.light .ornament-divider {
+  color: rgba(122, 92, 18, 0.5);
+}
+body.light .ornament-divider::before,
+body.light .ornament-divider::after {
+  background: linear-gradient(to var(--ornament-dir, right), transparent, rgba(122, 92, 18, 0.2));
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────────*/
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem; /* offset for fixed navbar */
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Grain texture overlay — warmth you feel, not see ──────────────────────
+   A very subtle SVG fractal noise sits over the entire page.
+   Gives the aged-paper, dark academia quality.
+─────────────────────────────────────────────────────────────────────────────*/
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ─── Focus ──────────────────────────────────────────────────────────────────*/
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────────*/
+::selection {
+  background: rgba(201, 164, 101, 0.22); /* gold tint — dark academia */
+}
+
+body.light ::selection {
+  background: rgba(122, 92, 18, 0.15);
+}
+
+/* ─── Gold gradient name shimmer ─────────────────────────────────────────────*/
+@keyframes text-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.gradient-name {
+  background: linear-gradient(
+    to right,
+    #ede8e0  0%,
+    #c9a465 35%,
+    #f0d080 55%,
+    #ede8e0 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 7s linear infinite;
+}
+
+body.light .gradient-name {
+  background: linear-gradient(
+    to right,
+    #1a1714  0%,
+    #7a5c12 35%,
+    #9a7520 55%,
+    #1a1714 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 7s linear infinite;
+}
+
+/* ─── Experience card hover ──────────────────────────────────────────────────*/
+.exp-card {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.exp-card:hover {
+  border-color: rgba(201, 164, 101, 0.3) !important; /* gold hover border */
+  box-shadow: 0 0 0 1px rgba(201, 164, 101, 0.08),
+              0 8px 32px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+body.light .exp-card:hover {
+  border-color: rgba(122, 92, 18, 0.3) !important;
+  box-shadow: 0 0 0 1px rgba(122, 92, 18, 0.08),
+              0 8px 32px rgba(0, 0, 0, 0.07);
+}
+
+/* ─── Nav resume CTA — gold-tinted border, adapts to theme ──────────────────*/
+.btn-resume {
+  border: 1px solid rgba(201, 164, 101, 0.28);
+  color: var(--text-muted);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.btn-resume:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+/* ─── Reduced motion overrides ───────────────────────────────────────────────*/
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .gradient-name   { background-position: 50% center; }
+  .exp-card:hover  { transform: none; }
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────────*/
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar-thumb {
+  background: #8a8275;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a090;
+}
+
+body.light ::-webkit-scrollbar-thumb       { background: #6b6460; }
+body.light ::-webkit-scrollbar-thumb:hover { background: #4a4540; }
