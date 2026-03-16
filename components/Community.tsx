@@ -7,6 +7,13 @@ import { Users } from "lucide-react";
 
 const volunteering = [
   {
+    org: "Blue Horizon Sailing",
+    role: "Technology Volunteer",
+    period: "Jan 2026 — Present",
+    current: true,
+    description: "Providing technical support and expertise for the organization.",
+  },
+  {
     org: "Braven",
     role: "Volunteer Coach",
     period: "Oct 2023 — Present",
@@ -28,13 +35,6 @@ const volunteering = [
     period: "Nov 2023 — Jan 2024",
     current: false,
     description: "Helped high school students with college essays and major selection.",
-  },
-  {
-    org: "Blue Horizon Sailing",
-    role: "Technology Volunteer",
-    period: "Jan 2026 — Present",
-    current: true,
-    description: "Providing technical support and expertise for the organization.",
   },
 ];
 
