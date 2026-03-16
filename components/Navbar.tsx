@@ -8,6 +8,8 @@ const navLinks = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
   { label: "Publications", href: "#publications" },
+  { label: "Projects", href: "#projects" },
+  { label: "Community", href: "#community" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -40,7 +42,7 @@ export default function Navbar() {
       },
       { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
     );
-    ["about", "experience", "publications", "contact"].forEach((id) => {
+    ["about", "experience", "publications", "projects", "community", "contact"].forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });

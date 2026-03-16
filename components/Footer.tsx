@@ -26,7 +26,7 @@ export default function Footer() {
           {/* CTA block — centered */}
           <div className="text-center mb-16">
             <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-5">
-              04 — Contact
+              06 — Contact
             </p>
             <h2 className="font-playfair text-4xl md:text-5xl font-light tracking-tight mb-4">
               Let&apos;s <span className="font-semibold">connect</span>

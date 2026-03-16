@@ -3,8 +3,16 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Experience from "@/components/Experience";
 import Publications from "@/components/Publications";
+import Projects from "@/components/Projects";
+import Community from "@/components/Community";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
+
+const Divider = () => (
+  <div aria-hidden="true" className="ornament-divider max-w-6xl mx-auto px-6 -mt-12 mb-0 text-lg select-none">
+    ◆
+  </div>
+);
 
 export default function Home() {
   return (
@@ -21,14 +29,14 @@ export default function Home() {
         <main id="main-content">
           <Hero />
           <About />
-          <div aria-hidden="true" className="ornament-divider max-w-6xl mx-auto px-6 -mt-12 mb-0 text-lg select-none">
-            ◆
-          </div>
+          <Divider />
           <Experience />
-          <div aria-hidden="true" className="ornament-divider max-w-6xl mx-auto px-6 -mt-12 mb-0 text-lg select-none">
-            ◆
-          </div>
+          <Divider />
           <Publications />
+          <Divider />
+          <Projects />
+          <Divider />
+          <Community />
         </main>
         <Footer />
       </div>
