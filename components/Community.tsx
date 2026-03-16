@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
 import { Users } from "lucide-react";
@@ -44,6 +44,22 @@ export default function Community() {
   const prefersReducedMotion = useReducedMotion();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  // Sync container height to Calendly's reported content height
+  const [calendlyHeight, setCalendlyHeight] = useState(420);
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (!e.origin.includes("calendly.com")) return;
+      const data = e.data as { event?: string; payload?: { height?: string | number } };
+      if (data?.event === "calendly.page_height") {
+        const raw = data.payload?.height;
+        const px = typeof raw === "number" ? raw : parseInt(raw ?? "", 10);
+        if (!isNaN(px) && px > 0) setCalendlyHeight(px);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
   const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
@@ -93,12 +109,16 @@ export default function Community() {
                 career, prep for interviews, or navigate the industry. No catch — book a time that works for you.
               </p>
 
-              {/* Inline Calendly embed — widget.js auto-resizes via postMessage */}
+              {/* Inline Calendly embed — height driven by postMessage from widget */}
               <div
                 className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
                 data-url="https://calendly.com/ryan-m-mack?hide_gdpr_banner=1&primary_color=c9a465"
                 aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
-                style={{ minWidth: "320px", height: "630px" }}
+                style={{
+                  minWidth: "320px",
+                  height: `${calendlyHeight}px`,
+                  transition: "height 0.3s ease",
+                }}
               />
               <Script
                 src="https://assets.calendly.com/assets/external/widget.js"
