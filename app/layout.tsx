@@ -55,7 +55,7 @@ const jsonLd = {
     {
       "@type": "CollegeOrUniversity",
       name: "Georgia Institute of Technology",
-      description: "M.S. Computer Science, Computing Systems",
+      description: "M.S. Computer Science, Human-Computer Interaction",
     },
     {
       "@type": "CollegeOrUniversity",

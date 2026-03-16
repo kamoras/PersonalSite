@@ -46,7 +46,7 @@ const education = [
   {
     degree: "M.S., Computer Science",
     school: "Georgia Institute of Technology",
-    detail: "Specialization: Computing Systems",
+    detail: "Specialization: Human-Computer Interaction",
     period: "Jan 2022 — Aug 2026",
     current: true,
   },
