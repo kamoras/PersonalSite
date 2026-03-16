@@ -7,6 +7,7 @@ import Projects from "@/components/Projects";
 import Community from "@/components/Community";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
+import BackToTop from "@/components/BackToTop";
 
 const Divider = () => (
   <div aria-hidden="true" className="ornament-divider max-w-6xl mx-auto px-6 -mt-12 mb-0 text-lg select-none">
@@ -40,6 +41,7 @@ export default function Home() {
         </main>
         <Footer />
       </div>
+      <BackToTop />
     </ThemeProvider>
   );
 }

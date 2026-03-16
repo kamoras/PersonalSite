@@ -25,14 +25,14 @@ export default function Publications() {
         };
 
   return (
-    <section id="publications" ref={ref} className="py-32">
+    <section id="publications" aria-labelledby="publications-heading" ref={ref} className="py-32">
       <div className="max-w-6xl mx-auto px-6">
 
         <motion.div {...fade()} className="mb-16">
           <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-4">
             03 — Publications
           </p>
-          <h2 className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
+          <h2 id="publications-heading" className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
             Research & <span className="font-semibold">writing</span>
           </h2>
         </motion.div>

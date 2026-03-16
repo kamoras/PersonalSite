@@ -211,7 +211,7 @@ export default function Experience() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="experience" ref={ref} className="py-32">
+    <section id="experience" aria-labelledby="experience-heading" ref={ref} className="py-32">
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
           {...(prefersReducedMotion
@@ -229,7 +229,7 @@ export default function Experience() {
           >
             02 — Experience
           </p>
-          <h2 className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
+          <h2 id="experience-heading" className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
             A decade of <span className="font-semibold">engineering excellence</span>
           </h2>
         </motion.div>

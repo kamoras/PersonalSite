@@ -75,14 +75,14 @@ export default function Community() {
         };
 
   return (
-    <section id="community" ref={ref} className="py-32">
+    <section id="community" aria-labelledby="community-heading" ref={ref} className="py-32">
       <div className="max-w-6xl mx-auto px-6">
 
         <motion.div {...fade()} className="mb-16">
           <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-4">
             05 — Community
           </p>
-          <h2 className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
+          <h2 id="community-heading" className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
             Giving <span className="font-semibold">back</span>
           </h2>
         </motion.div>
@@ -100,7 +100,7 @@ export default function Community() {
                   <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-gold)] opacity-70">
                     Open offer
                   </p>
-                  <p className="text-sm font-semibold mt-0.5">Free 1:1 Mentorship</p>
+                  <h3 className="text-sm font-semibold mt-0.5">Free 1:1 Mentorship</h3>
                 </div>
               </div>
 
@@ -110,6 +110,9 @@ export default function Community() {
               </p>
 
               {/* Inline Calendly embed — height driven by postMessage from widget */}
+              <p className="sr-only">
+                Use the scheduling widget below to book a free mentoring session.
+              </p>
               <div
                 className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
                 data-url="https://calendly.com/ryan-m-mack?hide_gdpr_banner=1&primary_color=c9a465"
@@ -140,38 +143,40 @@ export default function Community() {
           </motion.div>
 
           {/* Volunteer list */}
-          <motion.div {...fade(0.15)} className="space-y-4">
+          <motion.div {...fade(0.15)}>
             <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--text-muted)] mb-6">
               Volunteer work
             </p>
-            {volunteering.map((v, i) => (
-              <motion.div
-                key={v.org}
-                {...(prefersReducedMotion
-                  ? {}
-                  : {
-                      initial: { opacity: 0, x: 12 },
-                      animate: isInView ? { opacity: 1, x: 0 } : {},
-                      transition: { duration: 0.4, delay: 0.25 + i * 0.07 },
-                    })}
-                className={`p-4 rounded-xl border ${borderColor} ${cardBg}`}
-              >
-                <div className="flex items-start justify-between gap-2 mb-0.5">
-                  <p className="text-sm font-medium leading-snug">{v.org}</p>
-                  {v.current && (
-                    <div className="flex items-center gap-1 flex-shrink-0 pt-0.5">
-                      <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full animate-pulse ${theme === "dark" ? "bg-emerald-400" : "bg-emerald-600"}`} />
-                      <span className={`font-mono text-[10px] ${theme === "dark" ? "text-emerald-400" : "text-emerald-700"}`}>
-                        Ongoing
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <p className="font-mono text-[10px] text-[var(--color-gold)] opacity-70 mb-2">{v.role}</p>
-                <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-2">{v.description}</p>
-                <p className="font-mono text-[10px] text-[var(--text-muted)]">{v.period}</p>
-              </motion.div>
-            ))}
+            <ul className="space-y-4 list-none">
+              {volunteering.map((v, i) => (
+                <motion.li
+                  key={v.org}
+                  {...(prefersReducedMotion
+                    ? {}
+                    : {
+                        initial: { opacity: 0, x: 12 },
+                        animate: isInView ? { opacity: 1, x: 0 } : {},
+                        transition: { duration: 0.4, delay: 0.25 + i * 0.07 },
+                      })}
+                  className={`p-4 rounded-xl border ${borderColor} ${cardBg}`}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-0.5">
+                    <p className="text-sm font-medium leading-snug">{v.org}</p>
+                    {v.current && (
+                      <div className="flex items-center gap-1 flex-shrink-0 pt-0.5">
+                        <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full animate-pulse ${theme === "dark" ? "bg-emerald-400" : "bg-emerald-600"}`} />
+                        <span className={`font-mono text-[10px] ${theme === "dark" ? "text-emerald-400" : "text-emerald-700"}`}>
+                          Ongoing
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="font-mono text-[10px] text-[var(--color-gold)] opacity-70 mb-2">{v.role}</p>
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-2">{v.description}</p>
+                  <p className="font-mono text-[10px] text-[var(--text-muted)]">{v.period}</p>
+                </motion.li>
+              ))}
+            </ul>
           </motion.div>
 
         </div>

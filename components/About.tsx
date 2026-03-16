@@ -77,7 +77,7 @@ export default function About() {
         };
 
   return (
-    <section id="about" ref={ref} className="py-32">
+    <section id="about" aria-labelledby="about-heading" ref={ref} className="py-32">
       <div className="max-w-6xl mx-auto px-6">
 
         {/* Section header */}
@@ -85,7 +85,7 @@ export default function About() {
           <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-4">
             01 — About
           </p>
-          <h2 className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
+          <h2 id="about-heading" className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
             Shipping software that <span className="font-semibold">scales</span>
           </h2>
         </motion.div>

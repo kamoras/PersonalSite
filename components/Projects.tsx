@@ -34,14 +34,14 @@ export default function Projects() {
         };
 
   return (
-    <section id="projects" ref={ref} className="py-32">
+    <section id="projects" aria-labelledby="projects-heading" ref={ref} className="py-32">
       <div className="max-w-6xl mx-auto px-6">
 
         <motion.div {...fade()} className="mb-16">
           <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-4">
             04 — Projects
           </p>
-          <h2 className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
+          <h2 id="projects-heading" className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
             Built <span className="font-semibold">outside work</span>
           </h2>
         </motion.div>
