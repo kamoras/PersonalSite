@@ -93,12 +93,12 @@ export default function Community() {
               </p>
 
               {/* Inline Calendly embed */}
-              <div className="rounded-xl overflow-hidden mb-2" style={{ minHeight: "580px" }}>
+              <div className="rounded-xl overflow-hidden mb-2">
                 <iframe
                   src="https://calendly.com/ryan-m-mack?embed_domain=ryan-mack.dev&embed_type=Inline&hide_gdpr_banner=1&primary_color=c9a465"
                   width="100%"
                   height="580"
-                  frameBorder="0"
+                  style={{ border: "none", display: "block" }}
                   title="Book a free mentoring session"
                   aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
                   loading="lazy"
