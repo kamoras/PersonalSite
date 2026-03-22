@@ -22,6 +22,7 @@
     "@types/react-dom": "^19",
     "eslint": "^10",
     "eslint-config-next": "16.1.7",
+    "flatted": "^3.4.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
