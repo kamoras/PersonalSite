@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "framer-motion": "^12.37.0",
-    "lucide-react": "^0.577.0",
-    "next": "16.1.7",
+    "lucide-react": "^1.0.1",
+    "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -20,10 +20,10 @@
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^10",
-    "eslint-config-next": "16.1.7",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.1",
     "flatted": "^3.4.2",
-    "tailwindcss": "^4",
+    "tailwindcss": "4.2.2",
     "typescript": "^5"
   }
 }

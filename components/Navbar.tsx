@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Moon, Sun, Github, Linkedin, Menu, X } from "lucide-react";
+import Link from "next/link";
+import { Moon, Sun, Menu, X } from "lucide-react";
+import { Github, Linkedin } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 
 const navLinks = [
@@ -113,13 +115,13 @@ export default function Navbar() {
         className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between"
       >
         {/* Logo — links to top of page */}
-        <a
+        <Link
           href="/"
           aria-label="Ryan Mack — back to top"
           className={`font-playfair italic text-lg font-semibold ${textMuted} hover:text-current transition-colors`}
         >
           rm
-        </a>
+        </Link>
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-8">

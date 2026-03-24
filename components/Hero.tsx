@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useInView } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowDown, Mail } from "lucide-react";
+import { Github, Linkedin } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import Image from "next/image";
 
@@ -29,6 +30,7 @@ function AnimatedStat({
 
   useEffect(() => {
     if (!isInView || !animate) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplay(value);
       return;
     }

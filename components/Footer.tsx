@@ -1,6 +1,7 @@
 "use client";
 
-import { Github, Linkedin, Mail, FileText } from "lucide-react";
+import { Mail, FileText } from "lucide-react";
+import { Github, Linkedin } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 
 const social = [
