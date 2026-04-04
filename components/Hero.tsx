@@ -122,8 +122,7 @@ export default function Hero() {
               transition={prefersReducedMotion ? undefined : { duration: 0.6, delay: 0.16, ease: "easeOut" }}
               className="hero-tagline text-base md:text-lg text-[var(--text-secondary)] max-w-lg leading-relaxed mb-10"
             >
-              Building the infrastructure that makes the entire internet as
-              visible as your local network — at enterprise scale.
+              Software engineer at Cisco ThousandEyes
             </motion.p>
 
             <motion.div

@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
 import { useTheme } from "./ThemeProvider";
 import { ExternalLink, BarChart2 } from "lucide-react";
 
@@ -17,8 +17,7 @@ const sources = ["FEC", "Congress.gov", "GovInfo", "Federal Register", "BLS", "S
 export default function Projects() {
   const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
   const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
   const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";

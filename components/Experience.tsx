@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
 import { useTheme } from "./ThemeProvider";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
@@ -114,8 +114,7 @@ type Experience = (typeof experiences)[0];
 function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
   const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
   const borderColor = exp.current
     ? "border-[rgba(201,164,101,0.35)]"
@@ -207,8 +206,7 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
 
 export default function Experience() {
   const prefersReducedMotion = useReducedMotion();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { ref, isInView } = useScrollAwareInView({ margin: "-100px" });
 
   return (
     <section id="experience" aria-labelledby="experience-heading" ref={ref} className="py-32">

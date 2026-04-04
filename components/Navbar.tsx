@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Moon, Sun, Menu, X } from "lucide-react";
-import { Github, Linkedin } from "./BrandIcons";
+import { Github, Linkedin, Bluesky } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 
 const navLinks = [
@@ -13,10 +14,13 @@ const navLinks = [
   { label: "Projects", href: "#projects" },
   { label: "Community", href: "#community" },
   { label: "Contact", href: "#contact" },
+  { label: "Blog", href: "/blog" },
 ];
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState("");
@@ -92,12 +96,8 @@ export default function Navbar() {
 
   const navBg =
     theme === "dark"
-      ? scrolled
-        ? "bg-[#100d09]/92 backdrop-blur-md border-b border-white/[0.06]"
-        : "bg-transparent"
-      : scrolled
-      ? "bg-[#faf7f2]/92 backdrop-blur-md border-b border-black/[0.06]"
-      : "bg-transparent";
+      ? "bg-[#100d09]/92 backdrop-blur-md border-b border-white/[0.06]"
+      : "bg-[#faf7f2]/92 backdrop-blur-md border-b border-black/[0.06]";
 
   // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
@@ -126,12 +126,16 @@ export default function Navbar() {
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.href.slice(1);
+            const isHashLink = link.href.startsWith("#");
+            const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
+            const isActive = isHashLink
+              ? activeSection === link.href.slice(1)
+              : pathname.startsWith(link.href);
             return (
-              <a
+              <Link
                 key={link.href}
-                href={link.href}
-                aria-current={isActive ? "true" : undefined}
+                href={resolvedHref}
+                aria-current={isActive ? "page" : undefined}
                 className={`relative text-sm transition-colors tracking-wide ${
                   isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
                 }`}
@@ -143,7 +147,7 @@ export default function Navbar() {
                     className="absolute -bottom-1 left-0 right-0 h-px bg-[var(--color-gold)] rounded-full"
                   />
                 )}
-              </a>
+              </Link>
             );
           })}
         </div>
@@ -167,6 +171,15 @@ export default function Navbar() {
             className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
           >
             <Linkedin size={16} aria-hidden="true" />
+          </a>
+          <a
+            href="https://bsky.app/profile/ryan-mack.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Bluesky profile (opens in new tab)"
+            className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
+          >
+            <Bluesky size={16} aria-hidden="true" />
           </a>
           <button
             onClick={toggleTheme}
@@ -222,16 +235,26 @@ export default function Navbar() {
           } backdrop-blur-md`}
         >
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={`text-sm ${textMuted} hover:text-current transition-colors tracking-wide py-2`}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isHashLink = link.href.startsWith("#");
+              const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
+              const isActive = isHashLink
+                ? activeSection === link.href.slice(1)
+                : pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={resolvedHref}
+                  onClick={() => setMobileOpen(false)}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`text-sm transition-colors tracking-wide py-2 ${
+                    isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <div className={`flex items-center gap-3 pt-2 border-t ${theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"}`}>
               <a
                 href="https://github.com/kamoras"
@@ -250,6 +273,15 @@ export default function Navbar() {
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
                 <Linkedin size={18} aria-hidden="true" />
+              </a>
+              <a
+                href="https://bsky.app/profile/ryan-mack.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Bluesky profile (opens in new tab)"
+                className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
+              >
+                <Bluesky size={18} aria-hidden="true" />
               </a>
               <button
                 onClick={toggleTheme}
