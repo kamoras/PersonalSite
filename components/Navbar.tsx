@@ -21,7 +21,6 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,7 +29,6 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 20);
       const total = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
     };
@@ -135,7 +133,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={resolvedHref}
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
                 className={`relative text-sm transition-colors tracking-wide ${
                   isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
                 }`}
@@ -246,7 +244,7 @@ export default function Navbar() {
                   key={link.href}
                   href={resolvedHref}
                   onClick={() => setMobileOpen(false)}
-                  aria-current={isActive ? "page" : undefined}
+                  aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
                   className={`text-sm transition-colors tracking-wide py-2 ${
                     isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
                   }`}

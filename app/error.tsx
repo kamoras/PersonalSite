@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -39,12 +40,12 @@ export default function Error({
             >
               Try again
             </button>
-            <a
+            <Link
               href="/"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--color-gold)] border border-[var(--color-card-border)] transition-colors"
             >
               Go home
-            </a>
+            </Link>
           </div>
         </div>
       </div>

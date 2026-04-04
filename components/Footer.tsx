@@ -10,7 +10,7 @@ const social = [
   { href: "https://bsky.app/profile/ryan-mack.dev",             icon: Bluesky,   label: "Bluesky profile (opens in new tab)",         external: true  },
   { href: "https://www.instagram.com/kamoras95/",               icon: Instagram, label: "Instagram profile (opens in new tab)",       external: true  },
   { href: "mailto:mack.ryanm@gmail.com",                        icon: Mail,      label: "Send email",                                external: false },
-  { href: "/documents/Ryan-M-Mack-Resume.pdf",                  icon: FileText,  label: "Download resume (PDF, opens in new tab)",   external: false },
+  { href: "/documents/Ryan-M-Mack-Resume.pdf",                  icon: FileText,  label: "Download resume (PDF, opens in new tab)",   external: true  },
 ];
 
 export default function Footer() {

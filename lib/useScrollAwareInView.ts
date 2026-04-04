@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 
 /**
@@ -14,10 +14,11 @@ export function useScrollAwareInView(options?: Parameters<typeof useInView>[1]) 
   const isInView = useInView(ref, { once: true, ...options });
   const [alreadyPassed, setAlreadyPassed] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!ref.current) return;
     const rect = (ref.current as HTMLElement).getBoundingClientRect();
     // Element is entirely above the viewport — it will never enter view by scrolling down
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (rect.bottom < 0) setAlreadyPassed(true);
   }, []);
 

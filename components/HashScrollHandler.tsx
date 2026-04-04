@@ -15,8 +15,18 @@ export default function HashScrollHandler() {
     // finished committing all client components to the DOM.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const el = document.querySelector(hash);
-        el?.scrollIntoView({ behavior: "smooth" });
+        let id = hash.slice(1);
+        try {
+          id = decodeURIComponent(id);
+        } catch {
+          // Malformed percent-encoding — fall back to raw value.
+        }
+        const el = document.getElementById(id);
+        if (!el) return;
+        const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth";
+        el.scrollIntoView({ behavior });
       });
     });
   }, []);
