@@ -13,8 +13,9 @@ export default function HashScrollHandler() {
 
     // Double rAF ensures we're after the first browser paint and React has
     // finished committing all client components to the DOM.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
         let id = hash.slice(1);
         try {
           id = decodeURIComponent(id);
@@ -29,6 +30,11 @@ export default function HashScrollHandler() {
         el.scrollIntoView({ behavior });
       });
     });
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
   }, []);
 
   return null;

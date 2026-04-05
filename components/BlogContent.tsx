@@ -31,7 +31,8 @@ export default function BlogContent({ html }: { html: string }) {
     if (!article) return;
 
     const handleClick = (e: MouseEvent) => {
-      const anchor = (e.target as HTMLElement).closest("a[data-footnote-ref]");
+      if (!(e.target instanceof Element)) return;
+      const anchor = e.target.closest("a[data-footnote-ref]") as HTMLAnchorElement | null;
       if (!anchor) return;
 
       e.preventDefault();
@@ -68,7 +69,7 @@ export default function BlogContent({ html }: { html: string }) {
     const handleOutside = (e: MouseEvent) => {
       if (tooltipRef.current && !tooltipRef.current.contains(e.target as Node)) {
         // Let the article click handler update the tooltip when switching footnotes
-        if ((e.target as HTMLElement).closest("a[data-footnote-ref]")) return;
+        if (e.target instanceof Element && e.target.closest("a[data-footnote-ref]")) return;
         closeTooltip();
       }
     };
