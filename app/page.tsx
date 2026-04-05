@@ -6,8 +6,8 @@ import Publications from "@/components/Publications";
 import Projects from "@/components/Projects";
 import Community from "@/components/Community";
 import Footer from "@/components/Footer";
-import ThemeProvider from "@/components/ThemeProvider";
 import BackToTop from "@/components/BackToTop";
+import HashScrollHandler from "@/components/HashScrollHandler";
 
 const Divider = () => (
   <div aria-hidden="true" className="ornament-divider max-w-6xl mx-auto px-6 -mt-12 mb-0 text-lg select-none">
@@ -17,11 +17,11 @@ const Divider = () => (
 
 export default function Home() {
   return (
-    <ThemeProvider>
+    <>
       {/* Skip-to-content link: visually hidden until focused by keyboard */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
+        className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:bg-[#c9a465] focus-visible:text-[#100d09] focus-visible:rounded-lg focus-visible:text-sm focus-visible:font-medium"
       >
         Skip to main content
       </a>
@@ -42,6 +42,7 @@ export default function Home() {
         <Footer />
       </div>
       <BackToTop />
-    </ThemeProvider>
+      <HashScrollHandler />
+    </>
   );
 }

@@ -1,0 +1,110 @@
+---
+title: "Observability at the Edge: Lessons from Building Network Monitoring Agents"
+date: "2026-03-30"
+description: "What years of shipping software agents to millions of endpoints taught me about designing for observability, reliability, and the reality of heterogeneous environments."
+tags: ["distributed systems", "observability", "C++", "Linux"]
+---
+
+Distributed systems fail in ways that surprise you. After years working on ThousandEyes Enterprise Agents — software that runs on customer premises to measure network performance from the inside out — I've accumulated a set of hard-won lessons about building systems that observe the world while remaining observable themselves.
+
+## The fundamental tension
+
+An agent that monitors the network is in an awkward position: it must be resilient enough to survive the conditions it's measuring. A degraded network path is exactly when your customers need accurate data most, and exactly when your agent is most likely to lose contact with the backend.
+
+This creates a design constraint that touches everything: local buffering, exponential backoff, graceful degradation. The agent can't just fail when the internet fails — it has to keep measuring, keep recording, and eventually reconcile with the backend when connectivity recovers.
+
+```cpp
+// Simplified sketch of the reconciliation pattern
+class MeasurementBuffer {
+  std::deque<Measurement> pending_;
+  std::chrono::steady_clock::time_point last_flush_;
+
+public:
+  void record(Measurement m) {
+    pending_.push_back(std::move(m));
+    if (pending_.size() > kMaxBuffered) {
+      // Drop oldest, not newest — recent data is more valuable
+      pending_.pop_front();
+    }
+  }
+
+  void flush_if_connected(BackendClient& client) {
+    if (!client.connected()) return;
+    while (!pending_.empty()) {
+      if (!client.send(pending_.front())) break;
+      pending_.pop_front();
+    }
+    last_flush_ = std::chrono::steady_clock::now();
+  }
+};
+```
+
+The key insight here: **drop the oldest data, not the newest**. When backpressure builds up, the most recent measurements are the most actionable. Historical data that couldn't be shipped during an outage has limited value once connectivity resumes.
+
+## Operating in heterogeneous environments
+
+Enterprise software runs everywhere. Our agents operate on:
+
+- Linux (RHEL, Ubuntu, Debian, Alpine — each with different init systems, package managers, and kernel versions)
+- Virtual machines with limited resource envelopes
+- Docker containers with various levels of host access
+- Hardware appliances with fixed software stacks
+
+Each environment has its own assumptions about what you can rely on. A syscall that works fine on Ubuntu 22.04 may behave differently on RHEL 8 with a 4.18 kernel. A `/proc` path that exists on bare metal may be absent in a restricted container.
+
+The discipline this forces is valuable: **never assume what you haven't probed at runtime**.
+
+```cpp
+bool has_cap_net_raw() {
+  // Don't assume — check
+  cap_t caps = cap_get_proc();
+  if (!caps) return false;
+
+  cap_flag_value_t val = CAP_CLEAR;
+  cap_get_flag(caps, CAP_NET_RAW, CAP_EFFECTIVE, &val);
+  cap_free(caps);
+  return val == CAP_SET;
+}
+```
+
+This runtime probing approach means the agent degrades gracefully rather than crashing when a capability is absent. Features that require elevated privileges are skipped with a clear diagnostic message rather than a segfault.
+
+## What "observability" means for an observer
+
+There's something recursive about making a monitoring agent observable. The system that watches your network needs to be watched too.
+
+The practices I've found most valuable:
+
+### Structured logging over printf
+
+It's tempting to scatter `printf`-style log statements through C++ code. Resist this. Structured logs with consistent fields (`timestamp`, `component`, `level`, `msg`, and typed metadata) are queryable. Printf output is grep-fodder at best.
+
+```cpp
+LOG_INFO("measurement_complete",
+  {{"probe_type", probe_type_str(probe)},
+   {"target", target.to_string()},
+   {"latency_ms", result.latency.count()},
+   {"loss_pct", result.packet_loss}});
+```
+
+### Metrics that reflect intent, not implementation
+
+Track what the *system is trying to do*, not just what it's doing. "Measurements dispatched per second" is more useful than "queue depth." The former tells you about system health; the latter tells you about one implementation detail that may be refactored away.
+
+### Distinguishing transient from persistent failures
+
+A single failed measurement is noise. The same measurement failing for five minutes is signal. A good health model tracks failure *rates* and *durations*, not just instantaneous counts.
+
+> The goal is not zero errors. The goal is understanding which errors matter.
+
+## On platform support as a first-class concern
+
+Late in a product's lifecycle, platform support is often treated as a maintenance burden — something that slows down feature development. I've come to see it differently.
+
+Supporting new operating systems and hardware platforms is an investment in resilience. Every new platform we qualify forces us to examine assumptions baked into the codebase. Those assumptions are usually where the interesting bugs live.
+
+The work of porting to a new platform is also the work of understanding your own system more deeply. That's worth something independent of the platform itself.
+
+---
+
+These lessons aren't unique to network monitoring — they apply broadly to any software that must be reliable in an environment it doesn't control. The edge is a good teacher precisely because it's unforgiving.

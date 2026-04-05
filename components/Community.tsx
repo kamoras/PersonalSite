@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
 import { useTheme } from "./ThemeProvider";
 import { Users } from "lucide-react";
 import Script from "next/script";
@@ -42,8 +43,7 @@ const volunteering = [
 export default function Community() {
   const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
   // Sync container height to Calendly's reported content height
   const [calendlyHeight, setCalendlyHeight] = useState(420);

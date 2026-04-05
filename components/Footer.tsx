@@ -1,14 +1,16 @@
 "use client";
 
 import { Mail, FileText } from "lucide-react";
-import { Github, Linkedin } from "./BrandIcons";
+import { Github, Linkedin, Bluesky, Instagram } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 
 const social = [
-  { href: "https://github.com/kamoras",          icon: Github,   label: "GitHub profile (opens in new tab)",          external: true  },
-  { href: "https://www.linkedin.com/in/ryan-mack", icon: Linkedin, label: "LinkedIn profile (opens in new tab)",         external: true  },
-  { href: "mailto:mack.ryanm@gmail.com",           icon: Mail,     label: "Send email",                                 external: false },
-  { href: "/documents/Ryan-M-Mack-Resume.pdf",     icon: FileText, label: "Download resume (PDF, opens in new tab)",    external: false },
+  { href: "https://github.com/kamoras",                          icon: Github,    label: "GitHub profile (opens in new tab)",         external: true  },
+  { href: "https://www.linkedin.com/in/ryan-mack",              icon: Linkedin,  label: "LinkedIn profile (opens in new tab)",        external: true  },
+  { href: "https://bsky.app/profile/ryan-mack.dev",             icon: Bluesky,   label: "Bluesky profile (opens in new tab)",         external: true  },
+  { href: "https://www.instagram.com/kamoras95/",               icon: Instagram, label: "Instagram profile (opens in new tab)",       external: true  },
+  { href: "mailto:mack.ryanm@gmail.com",                        icon: Mail,      label: "Send email",                                external: false },
+  { href: "/documents/Ryan-M-Mack-Resume.pdf",                  icon: FileText,  label: "Download resume (PDF, opens in new tab)",   external: true  },
 ];
 
 export default function Footer() {

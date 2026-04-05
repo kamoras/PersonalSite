@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import ThemeProvider from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,22 +23,22 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Ryan Mack — Senior Software Engineer",
+  title: "Ryan Mack",
   description:
-    "Senior Software Engineer at Cisco ThousandEyes. Technical leadership in distributed systems, cloud infrastructure, and enterprise software.",
-  keywords: ["software engineer", "technical leadership", "Cisco ThousandEyes", "distributed systems"],
+    "Software engineer at Cisco ThousandEyes. Writing about technology, engineering, and whatever else is worth thinking about.",
+  keywords: ["software engineer", "Cisco ThousandEyes", "distributed systems", "engineering"],
   authors: [{ name: "Ryan Mack" }],
   openGraph: {
-    title: "Ryan Mack — Senior Software Engineer",
-    description: "Senior Software Engineer at Cisco ThousandEyes. Technical leadership in distributed systems, cloud infrastructure, and enterprise software.",
+    title: "Ryan Mack",
+    description: "Software engineer at Cisco ThousandEyes. Writing about technology, engineering, and whatever else is worth thinking about.",
     url: "https://ryan-mack.dev",
     siteName: "Ryan Mack",
     type: "profile",
   },
   twitter: {
     card: "summary",
-    title: "Ryan Mack — Senior Software Engineer",
-    description: "Senior Software Engineer at Cisco ThousandEyes.",
+    title: "Ryan Mack",
+    description: "Software engineer at Cisco ThousandEyes. Writing about technology, engineering, and whatever else is worth thinking about.",
   },
   metadataBase: new URL("https://ryan-mack.dev"),
 };
@@ -83,7 +84,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
