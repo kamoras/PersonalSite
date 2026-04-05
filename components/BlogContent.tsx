@@ -51,6 +51,8 @@ export default function BlogContent({ html }: { html: string }) {
 
     const handleOutside = (e: MouseEvent) => {
       if (tooltipRef.current && !tooltipRef.current.contains(e.target as Node)) {
+        // Let the article click handler update the tooltip when switching footnotes
+        if ((e.target as HTMLElement).closest("a[data-footnote-ref]")) return;
         closeTooltip();
       }
     };
