@@ -148,7 +148,7 @@ export default function BlogContent({ html }: { html: string }) {
           ref={tooltipRef}
           style={tooltipStyle()}
           role="tooltip"
-          className="rounded-lg border border-[var(--color-card-border)] bg-[var(--color-bg)] px-4 py-3 text-sm text-[var(--text-muted)] shadow-xl"
+          className="rounded-lg border border-[var(--color-card-border)] bg-[var(--color-bg)] px-4 py-3 text-sm text-[var(--text-muted)] shadow-xl [overflow-wrap:break-word]"
           dangerouslySetInnerHTML={{ __html: tooltip.html }}
         />
       )}
