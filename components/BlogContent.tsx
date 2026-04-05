@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { FOOTNOTE_ID_PREFIX } from "@/lib/constants";
 
 interface Tooltip {
   html: string;
@@ -37,10 +38,12 @@ export default function BlogContent({ html }: { html: string }) {
 
       e.preventDefault();
 
-      const targetId = anchor.getAttribute("href")?.slice(1);
-      if (!targetId) return;
+      const rawId = anchor.getAttribute("href")?.slice(1);
+      if (!rawId) return;
 
-      const footnoteEl = document.getElementById(targetId);
+      // hrefs are plain "#fn-N"; rehype-sanitize prefixes element ids with
+      // FOOTNOTE_ID_PREFIX, so resolve the target element accordingly.
+      const footnoteEl = document.getElementById(FOOTNOTE_ID_PREFIX + rawId);
       if (!footnoteEl) return;
 
       // Clone the footnote, strip the back-reference arrow

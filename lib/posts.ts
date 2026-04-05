@@ -14,14 +14,11 @@ const postsDirectory = path.join(process.cwd(), "content/posts");
 // attributes that BlogContent.tsx uses for its tooltip interception.
 const sanitizeSchema = {
   ...defaultSchema,
-  // remark-rehype prefixes BOTH id attributes and href values with "user-content-".
-  // rehype-sanitize's clobberPrefix only re-prefixes id attributes, not hrefs,
-  // so keeping the default "user-content-" prefix here would produce
-  // id="user-content-user-content-fn-1" while href stays "#user-content-fn-1" —
-  // they'd never match. Setting clobberPrefix:"" skips the second pass.
-  // The DOM-clobbering risk is already mitigated by the strict attribute allowlist
-  // above (only specific, known-safe elements and attributes are permitted through).
-  clobberPrefix: "",
+  // Uses the default clobberPrefix ("user-content-") — DOM clobbering protection
+  // is fully active. remark-rehype is told not to add its own prefix so the
+  // prefix is applied exactly once (by rehype-sanitize) to id attributes.
+  // hrefs are left as plain "#fn-N" fragments; BlogContent prepends the prefix
+  // when resolving the target element via getElementById.
   attributes: {
     ...defaultSchema.attributes,
     a: [
@@ -92,7 +89,7 @@ export async function getPost(slug: string): Promise<Post> {
   const processed = await unified()
     .use(remarkParse)
     .use(remarkGfm)
-    .use(remarkRehype, { allowDangerousHtml: false })
+    .use(remarkRehype, { allowDangerousHtml: false, clobberPrefix: "" })
     .use(rehypeSanitize, sanitizeSchema)
     .use(rehypeStringify)
     .process(content);
