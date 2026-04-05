@@ -7,12 +7,23 @@ interface Tooltip {
   anchorRect: DOMRect;
 }
 
+const TOOLTIP_ID = "footnote-tooltip";
+
 export default function BlogContent({ html }: { html: string }) {
   const articleRef = useRef<HTMLElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const activeAnchorRef = useRef<Element | null>(null);
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
 
   const closeTooltip = useCallback(() => setTooltip(null), []);
+
+  // Remove aria-describedby from the triggering anchor when tooltip closes
+  useEffect(() => {
+    if (!tooltip) {
+      activeAnchorRef.current?.removeAttribute("aria-describedby");
+      activeAnchorRef.current = null;
+    }
+  }, [tooltip]);
 
   // Intercept footnote ref clicks
   useEffect(() => {
@@ -35,6 +46,11 @@ export default function BlogContent({ html }: { html: string }) {
       const clone = footnoteEl.cloneNode(true) as HTMLElement;
       clone.querySelector("[data-footnote-backref]")?.remove();
 
+      // Associate the tooltip with the triggering anchor for screen readers
+      activeAnchorRef.current?.removeAttribute("aria-describedby");
+      anchor.setAttribute("aria-describedby", TOOLTIP_ID);
+      activeAnchorRef.current = anchor;
+
       setTooltip({
         html: clone.innerHTML,
         anchorRect: anchor.getBoundingClientRect(),
@@ -45,7 +61,7 @@ export default function BlogContent({ html }: { html: string }) {
     return () => article.removeEventListener("click", handleClick);
   }, []);
 
-  // Close on outside click or Escape
+  // Close on outside click, Escape, or focus leaving the anchor
   useEffect(() => {
     if (!tooltip) return;
 
@@ -61,16 +77,27 @@ export default function BlogContent({ html }: { html: string }) {
       if (e.key === "Escape") closeTooltip();
     };
 
-    // Defer listener so the opening click doesn't immediately close the tooltip
+    const handleFocusOut = (e: FocusEvent) => {
+      const next = e.relatedTarget as Node | null;
+      // Keep open if focus stays within the tooltip or moves to another footnote ref
+      if (tooltipRef.current?.contains(next)) return;
+      if ((next as HTMLElement | null)?.closest("a[data-footnote-ref]")) return;
+      closeTooltip();
+    };
+
+    // Defer click listener so the opening click doesn't immediately close the tooltip
     const id = setTimeout(() => {
       document.addEventListener("click", handleOutside);
-      document.addEventListener("keydown", handleKey);
     }, 0);
+
+    document.addEventListener("keydown", handleKey);
+    document.addEventListener("focusout", handleFocusOut);
 
     return () => {
       clearTimeout(id);
       document.removeEventListener("click", handleOutside);
       document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("focusout", handleFocusOut);
     };
   }, [tooltip, closeTooltip]);
 
@@ -105,6 +132,7 @@ export default function BlogContent({ html }: { html: string }) {
       />
       {tooltip && (
         <div
+          id={TOOLTIP_ID}
           ref={tooltipRef}
           style={tooltipStyle()}
           role="tooltip"
