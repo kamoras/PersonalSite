@@ -96,12 +96,17 @@ export default function BlogContent({ html }: { html: string }) {
 
     document.addEventListener("keydown", handleKey);
     document.addEventListener("focusout", handleFocusOut);
+    // Close if the page scrolls or resizes so the tooltip doesn't drift from its anchor
+    window.addEventListener("scroll", closeTooltip, { passive: true });
+    window.addEventListener("resize", closeTooltip);
 
     return () => {
       clearTimeout(id);
       document.removeEventListener("click", handleOutside);
       document.removeEventListener("keydown", handleKey);
       document.removeEventListener("focusout", handleFocusOut);
+      window.removeEventListener("scroll", closeTooltip);
+      window.removeEventListener("resize", closeTooltip);
     };
   }, [tooltip, closeTooltip]);
 
