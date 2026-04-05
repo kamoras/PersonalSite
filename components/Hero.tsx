@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useInView } from "framer-motion";
-import { ArrowDown, Mail } from "lucide-react";
+import { ArrowDown, Mail, MapPin } from "lucide-react";
 import { Github, Linkedin } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import Image from "next/image";
@@ -122,7 +122,10 @@ export default function Hero() {
               transition={prefersReducedMotion ? undefined : { duration: 0.6, delay: 0.16, ease: "easeOut" }}
               className="hero-tagline text-base md:text-lg text-[var(--text-secondary)] max-w-lg leading-relaxed mb-10"
             >
-              Software engineer at Cisco ThousandEyes
+              <span className="inline-flex items-center gap-2">
+                Guilford, Connecticut
+                <MapPin size={14} aria-hidden="true" />
+              </span>
             </motion.p>
 
             <motion.div
