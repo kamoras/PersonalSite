@@ -14,8 +14,13 @@ const postsDirectory = path.join(process.cwd(), "content/posts");
 // attributes that BlogContent.tsx uses for its tooltip interception.
 const sanitizeSchema = {
   ...defaultSchema,
-  // remark-rehype already adds the "user-content-" prefix to ids/hrefs;
-  // rehype-sanitize must not add it a second time or footnote ids won't match.
+  // remark-rehype prefixes BOTH id attributes and href values with "user-content-".
+  // rehype-sanitize's clobberPrefix only re-prefixes id attributes, not hrefs,
+  // so keeping the default "user-content-" prefix here would produce
+  // id="user-content-user-content-fn-1" while href stays "#user-content-fn-1" —
+  // they'd never match. Setting clobberPrefix:"" skips the second pass.
+  // The DOM-clobbering risk is already mitigated by the strict attribute allowlist
+  // above (only specific, known-safe elements and attributes are permitted through).
   clobberPrefix: "",
   attributes: {
     ...defaultSchema.attributes,

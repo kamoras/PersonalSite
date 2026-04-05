@@ -107,6 +107,8 @@ export default function BlogContent({ html }: { html: string }) {
     const { anchorRect } = tooltip;
     const WIDTH = 320;
     const MARGIN = 12;
+    const GAP = 8;
+    const MIN_SPACE = 120; // flip above if less than this many px below anchor
 
     const width = Math.min(WIDTH, window.innerWidth - 2 * MARGIN);
     let left = anchorRect.left;
@@ -115,13 +117,14 @@ export default function BlogContent({ html }: { html: string }) {
     }
     if (left < MARGIN) left = MARGIN;
 
-    return {
-      position: "fixed",
-      left,
-      top: anchorRect.bottom + 8,
-      width,
-      zIndex: 50,
-    };
+    // Flip above the anchor if there isn't enough room below
+    const spaceBelow = window.innerHeight - anchorRect.bottom;
+    const vertical: React.CSSProperties =
+      spaceBelow >= MIN_SPACE
+        ? { top: anchorRect.bottom + GAP }
+        : { bottom: window.innerHeight - anchorRect.top + GAP };
+
+    return { position: "fixed", left, width, zIndex: 50, ...vertical };
   };
 
   return (
