@@ -80,9 +80,10 @@ export default function BlogContent({ html }: { html: string }) {
     const WIDTH = 320;
     const MARGIN = 12;
 
+    const width = Math.min(WIDTH, window.innerWidth - 2 * MARGIN);
     let left = anchorRect.left;
-    if (left + WIDTH > window.innerWidth - MARGIN) {
-      left = window.innerWidth - WIDTH - MARGIN;
+    if (left + width > window.innerWidth - MARGIN) {
+      left = window.innerWidth - width - MARGIN;
     }
     if (left < MARGIN) left = MARGIN;
 
@@ -90,7 +91,7 @@ export default function BlogContent({ html }: { html: string }) {
       position: "fixed",
       left,
       top: anchorRect.bottom + 8,
-      width: WIDTH,
+      width,
       zIndex: 50,
     };
   };
