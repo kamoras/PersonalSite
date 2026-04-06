@@ -191,10 +191,10 @@ export default function Navbar() {
             )}
           </button>
           <a
-            href="/documents/Ryan-M-Mack-Resume.pdf"
+            href="/resume"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Download resume (PDF, opens in new tab)"
+            aria-label="View resume (opens in new tab)"
             className="btn-resume ml-2 px-4 py-1.5 text-sm rounded font-mono tracking-wide"
           >
             Resume
@@ -293,10 +293,10 @@ export default function Navbar() {
                 )}
               </button>
               <a
-                href="/documents/Ryan-M-Mack-Resume.pdf"
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Download resume (PDF, opens in new tab)"
+                aria-label="View resume (opens in new tab)"
                 className="btn-resume ml-auto px-4 py-2 text-sm rounded font-mono"
               >
                 Resume

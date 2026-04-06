@@ -141,10 +141,10 @@ export default function Hero() {
                 View Experience
               </a>
               <a
-                href="/documents/Ryan-M-Mack-Resume.pdf"
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Download resume (PDF, opens in new tab)"
+                aria-label="View resume (opens in new tab)"
                 className={`px-6 py-3 rounded-lg text-sm font-medium border transition-colors ${
                   theme === "dark"
                     ? "border-white/15 hover:border-white/25 hover:bg-white/5"
