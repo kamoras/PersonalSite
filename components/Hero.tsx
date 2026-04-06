@@ -151,7 +151,7 @@ export default function Hero() {
                     : "border-black/15 hover:border-black/20 hover:bg-black/5"
                 }`}
               >
-                Download Resume
+                View Resume
               </a>
             </motion.div>
 

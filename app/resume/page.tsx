@@ -9,7 +9,7 @@ export default function ResumePage() {
     <iframe
       src="/documents/Ryan-M-Mack-Resume.pdf"
       className="fixed inset-0 w-full h-full border-0"
-      title="Ryan Mack — Resume"
+      title="Resume — Ryan Mack"
     />
   );
 }
