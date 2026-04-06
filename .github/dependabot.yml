@@ -5,7 +5,13 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # ESLint 10 is incompatible with eslint-plugin-react 7.x (bundled by
+      # eslint-config-next) — context.getFilename() was removed in ESLint 10.
+      # Re-enable once eslint-config-next ships with a compatible plugin version.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
