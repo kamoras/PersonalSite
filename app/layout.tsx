@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import ThemeProvider from "@/components/ThemeProvider";
 import "./globals.css";
 
@@ -85,6 +86,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <ThemeProvider>{children}</ThemeProvider>
+        <Script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="56257bed-8341-4b3f-9aac-2457b5b3c407"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
