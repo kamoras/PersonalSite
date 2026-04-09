@@ -86,12 +86,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <ThemeProvider>{children}</ThemeProvider>
-        <Script
-          defer
-          src="https://cloud.umami.is/script.js"
-          data-website-id="56257bed-8341-4b3f-9aac-2457b5b3c407"
-          strategy="afterInteractive"
-        />
+        {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+          <Script
+            defer
+            src="https://cloud.umami.is/script.js"
+            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
