@@ -91,7 +91,7 @@ export default function Hero() {
         style={{ background: "radial-gradient(circle, #c9a465 0%, transparent 70%)" }}
       />
 
-      <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-20 w-full">
+      <div className="relative max-w-6xl mx-auto px-6 pb-20 w-full" style={{ paddingTop: "calc(6rem + env(safe-area-inset-top, 0px))" }}>
         <div className="flex flex-col md:flex-row items-center md:items-start gap-16 md:gap-20">
 
           {/* ── Text column ── */}

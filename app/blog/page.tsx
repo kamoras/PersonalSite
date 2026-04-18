@@ -27,7 +27,7 @@ export default function BlogIndex() {
   const posts = getAllPostsMeta();
 
   return (
-    <div className="max-w-3xl mx-auto px-6 pt-28 pb-24">
+    <div className="max-w-3xl mx-auto px-6 pb-24" style={{ paddingTop: "calc(7rem + env(safe-area-inset-top, 0px))" }}>
       <header className="mb-14">
         <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-4">
           Writing

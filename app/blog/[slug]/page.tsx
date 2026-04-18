@@ -88,7 +88,7 @@ export default async function PostPage({
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 pt-28 pb-24">
+    <div className="max-w-3xl mx-auto px-6 pb-24" style={{ paddingTop: "calc(7rem + env(safe-area-inset-top, 0px))" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
