@@ -18,38 +18,58 @@ export default function TextToSpeech({
   const [state, setState] = useState<TTSState>("idle");
   const [supported, setSupported] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
 
   useEffect(() => {
-    setSupported("speechSynthesis" in window);
+    if (!("speechSynthesis" in window)) return;
+    setSupported(true);
+
+    // Trigger voice loading immediately at mount so voices are ready by the
+    // time the user clicks play. Chrome loads voices asynchronously — calling
+    // speak() before they're loaded results in silent no-op audio.
+    const loadVoices = () => {
+      voicesRef.current = window.speechSynthesis.getVoices();
+    };
+    loadVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
+
     return () => {
-      window.speechSynthesis?.cancel();
+      window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
+      window.speechSynthesis.cancel();
     };
   }, []);
 
   const play = useCallback(() => {
-    if (!window.speechSynthesis) return;
+    const synth = window.speechSynthesis;
+    if (!synth) return;
 
     if (state === "paused") {
-      window.speechSynthesis.resume();
+      synth.resume();
       setState("playing");
       return;
     }
 
     const utterance = new SpeechSynthesisUtterance(`${title}. ${text}`);
     utterance.rate = 0.92;
-    utterance.onend = () => setState("idle");
-    utterance.onerror = () => setState("idle");
 
-    // Keep a ref so the utterance isn't garbage-collected mid-speech
+    const voices = voicesRef.current;
+    const englishVoice = voices.find((v) => v.lang.startsWith("en"));
+    if (englishVoice) utterance.voice = englishVoice;
+
+    console.log("[TTS] voices at click:", voices.length, "| using:", englishVoice?.name ?? "default");
+    console.log("[TTS] text length:", utterance.text.length);
+
+    utterance.onstart = () => console.log("[TTS] onstart");
+    utterance.onend = () => { console.log("[TTS] onend"); setState("idle"); };
+    utterance.onerror = (e) => { console.error("[TTS] onerror:", e.error); setState("idle"); };
+
     utteranceRef.current = utterance;
 
-    // Chrome's autoplay policy requires speak() to be called synchronously
-    // within a user gesture — setTimeout breaks that context. Cancel only if
-    // something is already playing, then speak immediately.
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    }
-    window.speechSynthesis.speak(utterance);
+    if (synth.speaking) synth.cancel();
+    synth.resume(); // unstick Chrome if it got into a paused state
+    synth.speak(utterance);
+
+    console.log("[TTS] after speak — speaking:", synth.speaking, "pending:", synth.pending);
     setState("playing");
   }, [state, title, text]);
 
