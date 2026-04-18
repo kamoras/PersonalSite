@@ -44,6 +44,15 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     document.body.classList.toggle("light", theme === "light");
     localStorage.setItem("theme", theme);
+
+    const color = theme === "dark" ? "#100d09" : "#faf7f2";
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    meta.content = color;
   }, [theme]);
 
   const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));

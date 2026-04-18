@@ -107,7 +107,7 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
-      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)", transform: "translateZ(0)" }}
     >
       {/* Solid cover for the iOS safe area — sits above the backdrop-blur layer
           to prevent scrolled content from showing through in that region */}
