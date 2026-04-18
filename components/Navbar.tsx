@@ -94,8 +94,8 @@ export default function Navbar() {
 
   const navBg =
     theme === "dark"
-      ? "bg-[#100d09]/92 backdrop-blur-md border-b border-white/[0.06]"
-      : "bg-[#faf7f2]/92 backdrop-blur-md border-b border-black/[0.06]";
+      ? "bg-[#100d09] md:bg-[#100d09]/92 md:backdrop-blur-md border-b border-white/[0.06]"
+      : "bg-[#faf7f2] md:bg-[#faf7f2]/92 md:backdrop-blur-md border-b border-black/[0.06]";
 
   // Solid background for the safe area cover — backdrop-blur doesn't render
   // reliably in the safe area on iOS Safari, so we overlay a fully opaque div.
