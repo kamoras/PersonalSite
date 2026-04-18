@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getAllPostSlugs, getPost, formatDate } from "@/lib/posts";
 import { ArrowLeft } from "lucide-react";
 import BlogContent from "@/components/BlogContent";
+import TextToSpeech from "@/components/TextToSpeech";
 
 export async function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
@@ -22,6 +23,7 @@ export async function generateMetadata({
   return {
     title: `${post.title} — Ryan Mack`,
     description: post.description,
+    keywords: post.tags,
     openGraph: {
       title: post.title,
       description: post.description,
@@ -29,6 +31,7 @@ export async function generateMetadata({
       siteName: "Ryan Mack",
       type: "article",
       publishedTime: post.date,
+      authors: ["Ryan Mack"],
       images: [{ url: "/opengraph-image.png", width: 1200, height: 630 }],
     },
     twitter: {
@@ -50,9 +53,51 @@ export default async function PostPage({
   if (!slugs.includes(slug)) notFound();
 
   const post = await getPost(slug);
+  const postUrl = `https://ryan-mack.dev/blog/${slug}`;
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.description,
+    author: {
+      "@type": "Person",
+      name: "Ryan Mack",
+      url: "https://ryan-mack.dev",
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Ryan Mack",
+      url: "https://ryan-mack.dev",
+    },
+    datePublished: post.date,
+    url: postUrl,
+    ...(post.tags.length > 0 && { keywords: post.tags.join(", ") }),
+    image: "https://ryan-mack.dev/opengraph-image.png",
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://ryan-mack.dev" },
+      { "@type": "ListItem", position: 2, name: "Writing", item: "https://ryan-mack.dev/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+    ],
+  };
 
   return (
     <div className="max-w-3xl mx-auto px-6 pt-28 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Back link */}
       <nav aria-label="Breadcrumb" className="mb-10">
         <Link
@@ -74,6 +119,8 @@ export default async function PostPage({
           <time dateTime={post.date}>{formatDate(post.date)}</time>
           <span aria-hidden="true">·</span>
           <span>{post.readingTime} min read</span>
+          <span aria-hidden="true">·</span>
+          <TextToSpeech title={post.title} html={post.contentHtml} />
         </div>
 
         {post.tags.length > 0 && (
