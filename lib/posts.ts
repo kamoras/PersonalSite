@@ -44,6 +44,22 @@ export interface PostMeta {
 
 export interface Post extends PostMeta {
   contentHtml: string;
+  contentText: string;
+}
+
+function markdownToPlainText(md: string): string {
+  return md
+    .replace(/\[\^[^\]]+\]:\s*.+/gm, "")  // footnote definitions
+    .replace(/\[\^[^\]]+\]/g, "")           // footnote references
+    .replace(/^#{1,6}\s+/gm, "")            // headings
+    .replace(/\*{1,3}([^*\n]+)\*{1,3}/g, "$1") // bold / italic
+    .replace(/_{1,3}([^_\n]+)_{1,3}/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // links → label
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")    // images
+    .replace(/`{1,3}[^`]+`{1,3}/g, "")       // inline / fenced code
+    .replace(/^[-*_]{3,}\s*$/gm, "")         // horizontal rules
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function computeReadingTime(markdown: string): number {
@@ -102,6 +118,7 @@ export async function getPost(slug: string): Promise<Post> {
     tags: (data.tags as string[]) ?? [],
     readingTime: computeReadingTime(content),
     contentHtml: processed.toString(),
+    contentText: markdownToPlainText(content),
   };
 }
 
