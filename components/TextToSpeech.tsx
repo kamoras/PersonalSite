@@ -89,8 +89,6 @@ export default function TextToSpeech({
 
     console.log("[TTS] chunks:", chunksRef.current.length, "| voices:", voicesRef.current.length);
 
-    synth.cancel();
-    synth.resume();
     speakChunk(0);
     setState("playing");
   }, [state, title, text, speakChunk]);
