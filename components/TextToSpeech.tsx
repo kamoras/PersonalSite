@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, Square, Volume2 } from "lucide-react";
 
 type TTSState = "idle" | "playing" | "paused";
@@ -17,12 +17,19 @@ export default function TextToSpeech({
 }) {
   const [state, setState] = useState<TTSState>("idle");
   const [supported, setSupported] = useState(false);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     setSupported("speechSynthesis" in window);
     return () => {
       window.speechSynthesis?.cancel();
     };
+  }, []);
+
+  const doSpeak = useCallback((utterance: SpeechSynthesisUtterance) => {
+    window.speechSynthesis.cancel();
+    // Defer by one tick — Chrome silently drops speak() called synchronously after cancel()
+    setTimeout(() => window.speechSynthesis.speak(utterance), 50);
   }, []);
 
   const play = useCallback(() => {
@@ -39,12 +46,24 @@ export default function TextToSpeech({
     utterance.onend = () => setState("idle");
     utterance.onerror = () => setState("idle");
 
-    // Chrome silently drops speak() when called synchronously after cancel(),
-    // so cancel first then defer speak by one tick.
-    window.speechSynthesis.cancel();
-    setTimeout(() => window.speechSynthesis.speak(utterance), 0);
+    // Hold a ref so the utterance isn't garbage-collected mid-speech
+    utteranceRef.current = utterance;
+
+    // Chrome loads voices asynchronously — if getVoices() is empty the utterance
+    // queues silently and never plays. Wait for voiceschanged if needed.
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+      doSpeak(utterance);
+    } else {
+      window.speechSynthesis.addEventListener(
+        "voiceschanged",
+        () => doSpeak(utterance),
+        { once: true }
+      );
+    }
+
     setState("playing");
-  }, [state, title, text]);
+  }, [state, title, text, doSpeak]);
 
   const pause = useCallback(() => {
     window.speechSynthesis?.pause();
@@ -53,6 +72,7 @@ export default function TextToSpeech({
 
   const stop = useCallback(() => {
     window.speechSynthesis?.cancel();
+    utteranceRef.current = null;
     setState("idle");
   }, []);
 
