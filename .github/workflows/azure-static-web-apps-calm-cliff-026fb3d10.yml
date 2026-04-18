@@ -76,7 +76,7 @@ jobs:
   lighthouse:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
-    name: Lighthouse SEO
+    name: Lighthouse
     needs: build_pr
     steps:
       - uses: actions/checkout@v4
@@ -88,9 +88,79 @@ jobs:
           path: out/
 
       - name: Run Lighthouse CI
-        run: npx --yes @lhci/cli@0.14.x autorun
+        id: lhci
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: .lighthouserc.json
+          temporaryPublicStorage: true
+        continue-on-error: true
+
+      - name: Comment PR with Lighthouse results
+        if: always()
+        uses: actions/github-script@v7
         env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          MANIFEST: ${{ steps.lhci.outputs.manifest }}
+          LINKS: ${{ steps.lhci.outputs.links }}
+        with:
+          script: |
+            const manifest = JSON.parse(process.env.MANIFEST || '[]');
+            const links = JSON.parse(process.env.LINKS || '{}');
+
+            const fmt = (val) => {
+              const pct = Math.round(val * 100);
+              const icon = pct >= 90 ? '🟢' : pct >= 80 ? '🟡' : '🔴';
+              return `${icon} ${pct}`;
+            };
+
+            const rows = manifest.map((r) => {
+              const path = new URL(r.url).pathname;
+              const link = links[r.url];
+              const s = r.summary;
+              const label = link ? `[\`${path}\`](${link})` : `\`${path}\``;
+              return `| ${label} | ${fmt(s.performance)} | ${fmt(s.accessibility)} | ${fmt(s['best-practices'])} | ${fmt(s.seo)} |`;
+            });
+
+            const passed = '${{ steps.lhci.outcome }}' === 'success';
+            const status = passed ? '✅ All checks passed' : '❌ One or more checks failed';
+
+            const body = [
+              '## Lighthouse Report',
+              '',
+              status,
+              '',
+              '| URL | Performance | Accessibility | Best Practices | SEO |',
+              '|-----|:-----------:|:-------------:|:--------------:|:---:|',
+              ...rows,
+              '',
+              '_🟢 ≥ 90 · 🟡 ≥ 80 · 🔴 < 80 — Performance gate: 80, all others: 90_',
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c => c.body.startsWith('## Lighthouse Report'));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Fail if Lighthouse checks did not pass
+        if: steps.lhci.outcome == 'failure'
+        run: exit 1
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

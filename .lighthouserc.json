@@ -4,7 +4,7 @@
       "staticDistDir": "./out",
       "url": [
         "http://localhost/",
-        "http://localhost/blog"
+        "http://localhost/blog/"
       ],
       "numberOfRuns": 1
     },
