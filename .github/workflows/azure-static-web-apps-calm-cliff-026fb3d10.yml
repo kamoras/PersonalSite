@@ -113,7 +113,7 @@ jobs:
             };
 
             const rows = manifest.map((r) => {
-              const path = new URL(r.url).pathname;
+              const path = new URL(r.url).pathname.replace(/\.html$/, '');
               const link = links[r.url];
               const s = r.summary;
               const label = link ? `[\`${path}\`](${link})` : `\`${path}\``;
