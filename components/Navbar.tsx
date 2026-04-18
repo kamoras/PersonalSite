@@ -97,6 +97,10 @@ export default function Navbar() {
       ? "bg-[#100d09]/92 backdrop-blur-md border-b border-white/[0.06]"
       : "bg-[#faf7f2]/92 backdrop-blur-md border-b border-black/[0.06]";
 
+  // Solid background for the safe area cover — backdrop-blur doesn't render
+  // reliably in the safe area on iOS Safari, so we overlay a fully opaque div.
+  const solidBg = theme === "dark" ? "bg-[#100d09]" : "bg-[#faf7f2]";
+
   // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
 
@@ -105,6 +109,13 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
+      {/* Solid cover for the iOS safe area — sits above the backdrop-blur layer
+          to prevent scrolled content from showing through in that region */}
+      <div
+        aria-hidden="true"
+        className={`absolute top-0 left-0 right-0 ${solidBg}`}
+        style={{ height: "env(safe-area-inset-top, 0px)" }}
+      />
       {/* Scroll progress indicator */}
       <div
         aria-hidden="true"
