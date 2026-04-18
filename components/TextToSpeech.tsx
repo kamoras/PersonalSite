@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Play, Pause, Square, Volume2 } from "lucide-react";
 
 type TTSState = "idle" | "playing" | "paused";
@@ -10,8 +10,7 @@ function extractText(title: string, html: string): string {
   const doc = parser.parseFromString(html, "text/html");
   doc.querySelector("[data-footnotes]")?.remove();
   doc.querySelectorAll("sup").forEach((el) => el.remove());
-  const body = doc.body.innerText || doc.body.textContent || "";
-  return `${title}. ${body}`;
+  return `${title}. ${doc.body.textContent ?? ""}`;
 }
 
 const btnClass =
@@ -28,7 +27,7 @@ export default function TextToSpeech({
   const [supported, setSupported] = useState(false);
 
   useEffect(() => {
-    setSupported(typeof window !== "undefined" && "speechSynthesis" in window);
+    setSupported("speechSynthesis" in window);
     return () => {
       window.speechSynthesis?.cancel();
     };
@@ -43,12 +42,15 @@ export default function TextToSpeech({
       return;
     }
 
-    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(extractText(title, html));
     utterance.rate = 0.92;
     utterance.onend = () => setState("idle");
     utterance.onerror = () => setState("idle");
-    window.speechSynthesis.speak(utterance);
+
+    // Chrome silently drops speak() if called synchronously after cancel(),
+    // so cancel first then defer the speak call by one tick.
+    window.speechSynthesis.cancel();
+    setTimeout(() => window.speechSynthesis.speak(utterance), 0);
     setState("playing");
   }, [state, title, html]);
 
