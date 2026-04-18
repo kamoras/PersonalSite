@@ -46,7 +46,10 @@ export default function TextToSpeech({
     const loadVoices = () => { voicesRef.current = window.speechSynthesis.getVoices(); };
     loadVoices();
     window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
+    const onBeforeUnload = () => window.speechSynthesis.cancel();
+    window.addEventListener("beforeunload", onBeforeUnload);
     return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
       window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
       stoppedRef.current = true;
       window.speechSynthesis.cancel();
