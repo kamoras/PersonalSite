@@ -26,12 +26,6 @@ export default function TextToSpeech({
     };
   }, []);
 
-  const doSpeak = useCallback((utterance: SpeechSynthesisUtterance) => {
-    window.speechSynthesis.cancel();
-    // Defer by one tick — Chrome silently drops speak() called synchronously after cancel()
-    setTimeout(() => window.speechSynthesis.speak(utterance), 50);
-  }, []);
-
   const play = useCallback(() => {
     if (!window.speechSynthesis) return;
 
@@ -46,24 +40,18 @@ export default function TextToSpeech({
     utterance.onend = () => setState("idle");
     utterance.onerror = () => setState("idle");
 
-    // Hold a ref so the utterance isn't garbage-collected mid-speech
+    // Keep a ref so the utterance isn't garbage-collected mid-speech
     utteranceRef.current = utterance;
 
-    // Chrome loads voices asynchronously — if getVoices() is empty the utterance
-    // queues silently and never plays. Wait for voiceschanged if needed.
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length > 0) {
-      doSpeak(utterance);
-    } else {
-      window.speechSynthesis.addEventListener(
-        "voiceschanged",
-        () => doSpeak(utterance),
-        { once: true }
-      );
+    // Chrome's autoplay policy requires speak() to be called synchronously
+    // within a user gesture — setTimeout breaks that context. Cancel only if
+    // something is already playing, then speak immediately.
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
     }
-
+    window.speechSynthesis.speak(utterance);
     setState("playing");
-  }, [state, title, text, doSpeak]);
+  }, [state, title, text]);
 
   const pause = useCallback(() => {
     window.speechSynthesis?.pause();
