@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { getAllPostSlugs, getPost, formatDate } from "@/lib/posts";
 import { ArrowLeft } from "lucide-react";
 import BlogContent from "@/components/BlogContent";
-import TextToSpeech from "@/components/TextToSpeech";
+import TextToSpeech from "@/components/TextToSpeechLoader";
 
 export async function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));

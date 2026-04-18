@@ -32,7 +32,8 @@ export default function TextToSpeech({
   text: string;
 }) {
   const [state, setState] = useState<TTSState>("idle");
-  const [supported, setSupported] = useState(false);
+  // Loaded via dynamic({ ssr: false }), so window is always available here.
+  const [supported] = useState(() => "speechSynthesis" in window);
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
   const chunksRef = useRef<string[]>([]);
   const stoppedRef = useRef(false);
@@ -41,8 +42,7 @@ export default function TextToSpeech({
   const speakChunkRef = useRef<(index: number) => void>(() => {});
 
   useEffect(() => {
-    if (!("speechSynthesis" in window)) return;
-    setSupported(true);
+    if (!supported) return;
     const loadVoices = () => { voicesRef.current = window.speechSynthesis.getVoices(); };
     loadVoices();
     window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
@@ -54,7 +54,7 @@ export default function TextToSpeech({
       stoppedRef.current = true;
       window.speechSynthesis.cancel();
     };
-  }, []);
+  }, [supported]);
 
   const speakChunk = useCallback((index: number) => {
     const synth = window.speechSynthesis;
@@ -74,7 +74,7 @@ export default function TextToSpeech({
   }, []);
 
   // Keep ref in sync with the stable callback
-  speakChunkRef.current = speakChunk;
+  useEffect(() => { speakChunkRef.current = speakChunk; });
 
   const play = useCallback(() => {
     const synth = window.speechSynthesis;
