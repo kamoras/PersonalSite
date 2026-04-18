@@ -93,21 +93,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Covers the iOS safe area above the navbar. Separate from the navbar
-            so no transform or stacking-context change affects its fixed position. */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "env(safe-area-inset-top, 0px)",
-            background: "var(--color-bg)",
-            zIndex: 9999,
-            pointerEvents: "none",
-          }}
-        />
         <ThemeProvider>{children}</ThemeProvider>
         {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
           <Script

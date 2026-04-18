@@ -104,24 +104,37 @@ export default function Navbar() {
   // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
 
+  const bgColor = theme === "dark" ? "#100d09" : "#faf7f2";
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
-      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+      className={`fixed top-0 left-0 right-0 z-[10000] ${navBg}`}
+      style={{ 
+        backgroundColor: bgColor
+      }}
     >
-      {/* Solid cover for the iOS safe area — sits above the backdrop-blur layer
-          to prevent scrolled content from showing through in that region */}
-      <div
+      {/* 
+          OVER-COVER HACK:
+          This absolute div sits above the header to ensure that even during 
+          iOS Safari's dynamic browser chrome transitions, no content is 
+          visible in the safe area gap.
+      */}
+      <div 
         aria-hidden="true"
-        className={`absolute top-0 left-0 right-0 ${solidBg}`}
-        style={{ height: "env(safe-area-inset-top, 0px)" }}
+        className="absolute bottom-full left-0 right-0 h-[100px]"
+        style={{ backgroundColor: bgColor }}
       />
+
+      {/* SAFE AREA SPACER */}
+      <div style={{ height: "env(safe-area-inset-top, 0px)" }} />
+
       {/* Scroll progress indicator */}
       <div
         aria-hidden="true"
-        className="absolute bottom-0 left-0 h-px bg-[var(--color-gold)] transition-all duration-75 ease-out"
+        className="absolute bottom-0 left-0 h-px bg-[var(--color-gold)]"
         style={{ width: `${scrollProgress}%` }}
       />
+      
       <nav
         aria-label="Main navigation"
         className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between"
