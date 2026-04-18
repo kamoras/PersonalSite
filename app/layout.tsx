@@ -25,6 +25,10 @@ const playfair = Playfair_Display({
 
 export const viewport: Viewport = {
   viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#100d09" },
+    { media: "(prefers-color-scheme: light)", color: "#faf7f2" },
+  ],
 };
 
 export const metadata: Metadata = {
