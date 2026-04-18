@@ -64,10 +64,8 @@ export default function TextToSpeech({
     const englishVoice = voicesRef.current.find((v) => v.lang.startsWith("en"));
     if (englishVoice) utterance.voice = englishVoice;
 
-    console.log(`[TTS] chunk ${index + 1}/${chunksRef.current.length} (${chunk.length} chars):`, chunk.slice(0, 60));
-    utterance.onstart = () => console.log(`[TTS] onstart chunk ${index + 1}`);
     utterance.onend = () => speakChunk(index + 1);
-    utterance.onerror = (e) => { console.error("[TTS] onerror:", e.error); setState("idle"); };
+    utterance.onerror = () => setState("idle");
 
     synth.speak(utterance);
   }, []);
@@ -86,8 +84,6 @@ export default function TextToSpeech({
     chunksRef.current = toChunks(fullText);
     chunkIndexRef.current = 0;
     stoppedRef.current = false;
-
-    console.log("[TTS] chunks:", chunksRef.current.length, "| voices:", voicesRef.current.length);
 
     speakChunk(0);
     setState("playing");
