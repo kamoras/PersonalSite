@@ -97,6 +97,11 @@ body.light .ornament-divider::after {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 4.5rem; /* offset for fixed navbar */
+  background-color: #100d09; /* fills iOS safe area canvas — body bg doesn't reach there */
+}
+
+html:has(body.light) {
+  background-color: #faf7f2;
 }
 
 body {
