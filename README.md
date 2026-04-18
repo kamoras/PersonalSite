@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ryan-mack.dev
 
-## Getting Started
+Personal portfolio and writing site for Ryan Mack — Senior Software Engineer at Cisco ThousandEyes.
 
-First, run the development server:
+Built with Next.js (static export), Tailwind CSS v4, and framer-motion. Deployed to Azure Static Web Apps via GitHub Actions.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 16 (App Router, `output: "export"`) |
+| Styling | Tailwind CSS v4 |
+| Animation | framer-motion |
+| Icons | lucide-react |
+| Blog | Markdown → unified/remark/rehype pipeline |
+| Fonts | Geist Sans, Geist Mono, Playfair Display (via `next/font/google`) |
+| Analytics | Umami (self-hosted, opt-in via env var) |
+| Hosting | Azure Static Web Apps |
+| CI/CD | GitHub Actions |
+
+## Project structure
+
+```
+app/                  # Next.js App Router pages and layouts
+  blog/               # Blog index + dynamic [slug] pages
+  resume/             # Resume page
+  layout.tsx          # Root layout (fonts, metadata, theme-color)
+  page.tsx            # Homepage (assembles all sections)
+  globals.css         # Design tokens, base styles, animations
+components/           # React components (one per section/feature)
+  Navbar.tsx
+  Hero.tsx
+  About.tsx
+  Experience.tsx
+  Publications.tsx
+  Projects.tsx
+  Community.tsx
+  Footer.tsx
+  ThemeProvider.tsx   # Dark/light theme + localStorage persistence
+  TextToSpeech.tsx    # Browser Speech API reader for blog posts
+  BlogContent.tsx     # Markdown renderer for blog posts
+content/
+  posts/              # Blog posts as Markdown files
+lib/
+  posts.ts            # Blog post loading + metadata parsing
+  useScrollAwareInView.ts
+public/
+  images/             # Static images (profile photo, company logos)
+  resume/             # Resume PDF
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev       # starts at http://localhost:3000
+npm run build     # generates static output in /out
+npm run lint      # ESLint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Writing a blog post
 
-## Learn More
+Add a Markdown file to `content/posts/`. Required frontmatter:
 
-To learn more about Next.js, take a look at the following resources:
+```markdown
+---
+title: "Post title"
+date: "YYYY-MM-DD"
+description: "One-sentence summary shown in the index and OG tags."
+tags: ["tag1", "tag2"]
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Post body here.
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The slug is derived from the filename. Reading time is computed automatically.
 
-## Deploy on Vercel
+## Environment variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Variable | Required | Purpose |
+|---|---|---|
+| `AZURE_STATIC_WEB_APPS_API_TOKEN_*` | Deploy only | Azure SWA deployment token |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Optional | Enables Umami analytics |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## CI/CD
+
+Every PR runs:
+- **Build** — `npm run build` (static export must succeed)
+- **Lint** — ESLint
+- **Lighthouse** — SEO ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90, Performance reported (warn only). Results posted as a PR comment.
+
+Merges to `main` deploy automatically to Azure Static Web Apps.
+
+## Design system
+
+- **Dark academia palette** — warm dark (`#100d09`) and warm parchment (`#faf7f2`)
+- **Gold accent** — `#c9a465` (dark) / `#7a5c12` (light), 4.5:1+ contrast
+- **Fonts** — Playfair Display for headings, Geist for body, Geist Mono for labels
+- **Motion** — framer-motion scroll-triggered animations; all respect `prefers-reduced-motion`
+- **Accessibility** — WCAG AA contrast throughout, ARIA labels, keyboard navigation, focus-visible styles
