@@ -97,36 +97,21 @@ export default function Hero() {
           {/* ── Text column ── */}
           <div className="flex-1 text-center md:text-left">
 
-            <motion.p
-              initial={prefersReducedMotion ? undefined : { opacity: 0, y: 16 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={prefersReducedMotion ? undefined : { duration: 0.5, ease: "easeOut" }}
-              className="font-mono text-xs tracking-[0.35em] uppercase text-[var(--color-gold)] mb-5"
-            >
+            <p className="font-mono text-xs tracking-[0.35em] uppercase text-[var(--color-gold)] mb-5">
               Senior Engineer · Cisco ThousandEyes
-            </motion.p>
+            </p>
 
-            <motion.h1
-              initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={prefersReducedMotion ? undefined : { duration: 0.6, delay: 0.08, ease: "easeOut" }}
-              className="font-playfair text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-none mb-6"
-            >
+            <h1 className="font-playfair text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-none mb-6">
               Ryan{" "}
               <span className="gradient-name font-bold">Mack</span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={prefersReducedMotion ? undefined : { duration: 0.6, delay: 0.16, ease: "easeOut" }}
-              className="hero-tagline text-base md:text-lg text-[var(--text-secondary)] max-w-lg leading-relaxed mb-10"
-            >
+            <p className="hero-tagline text-base md:text-lg text-[var(--text-secondary)] max-w-lg leading-relaxed mb-10">
               <span className="inline-flex items-center gap-2">
                 Guilford, Connecticut
                 <MapPin size={14} aria-hidden="true" />
               </span>
-            </motion.p>
+            </p>
 
             <motion.div
               initial={prefersReducedMotion ? undefined : { opacity: 0, y: 16 }}
