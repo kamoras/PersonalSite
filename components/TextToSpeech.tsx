@@ -5,23 +5,15 @@ import { Play, Pause, Square, Volume2 } from "lucide-react";
 
 type TTSState = "idle" | "playing" | "paused";
 
-function extractText(title: string, html: string): string {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  doc.querySelector("[data-footnotes]")?.remove();
-  doc.querySelectorAll("sup").forEach((el) => el.remove());
-  return `${title}. ${doc.body.textContent ?? ""}`;
-}
-
 const btnClass =
   "flex items-center justify-center w-7 h-7 rounded-full border border-[rgba(201,164,101,0.3)] text-[var(--text-muted)] hover:text-[var(--color-gold)] hover:border-[var(--color-gold)] transition-colors";
 
 export default function TextToSpeech({
   title,
-  html,
+  text,
 }: {
   title: string;
-  html: string;
+  text: string;
 }) {
   const [state, setState] = useState<TTSState>("idle");
   const [supported, setSupported] = useState(false);
@@ -42,17 +34,17 @@ export default function TextToSpeech({
       return;
     }
 
-    const utterance = new SpeechSynthesisUtterance(extractText(title, html));
+    const utterance = new SpeechSynthesisUtterance(`${title}. ${text}`);
     utterance.rate = 0.92;
     utterance.onend = () => setState("idle");
     utterance.onerror = () => setState("idle");
 
-    // Chrome silently drops speak() if called synchronously after cancel(),
-    // so cancel first then defer the speak call by one tick.
+    // Chrome silently drops speak() when called synchronously after cancel(),
+    // so cancel first then defer speak by one tick.
     window.speechSynthesis.cancel();
     setTimeout(() => window.speechSynthesis.speak(utterance), 0);
     setState("playing");
-  }, [state, title, html]);
+  }, [state, title, text]);
 
   const pause = useCallback(() => {
     window.speechSynthesis?.pause();
@@ -67,15 +59,8 @@ export default function TextToSpeech({
   if (!supported) return null;
 
   return (
-    <div
-      className="flex items-center gap-2.5"
-      aria-label="Article reader controls"
-    >
-      <Volume2
-        size={13}
-        aria-hidden="true"
-        className="text-[var(--color-gold)]"
-      />
+    <div className="flex items-center gap-2.5" aria-label="Article reader controls">
+      <Volume2 size={13} aria-hidden="true" className="text-[var(--color-gold)]" />
       <span className="text-xs font-mono text-[var(--text-muted)]">Listen</span>
 
       {state === "playing" ? (
@@ -99,12 +84,8 @@ export default function TextToSpeech({
       )}
 
       <span aria-live="polite" aria-atomic="true" className="text-xs font-mono">
-        {state === "playing" && (
-          <span className="text-[var(--color-gold)]">Reading…</span>
-        )}
-        {state === "paused" && (
-          <span className="text-[var(--text-muted)]">Paused</span>
-        )}
+        {state === "playing" && <span className="text-[var(--color-gold)]">Reading…</span>}
+        {state === "paused" && <span className="text-[var(--text-muted)]">Paused</span>}
       </span>
     </div>
   );

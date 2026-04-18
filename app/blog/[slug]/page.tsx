@@ -120,7 +120,7 @@ export default async function PostPage({
           <span aria-hidden="true">·</span>
           <span>{post.readingTime} min read</span>
           <span aria-hidden="true">·</span>
-          <TextToSpeech title={post.title} html={post.contentHtml} />
+          <TextToSpeech title={post.title} text={post.contentText} />
         </div>
 
         {post.tags.length > 0 && (
