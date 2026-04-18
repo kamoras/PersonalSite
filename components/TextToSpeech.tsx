@@ -8,8 +8,6 @@ type TTSState = "idle" | "playing" | "paused";
 const btnClass =
   "flex items-center justify-center w-7 h-7 rounded-full border border-[rgba(201,164,101,0.3)] text-[var(--text-muted)] hover:text-[var(--color-gold)] hover:border-[var(--color-gold)] transition-colors";
 
-// Chrome silently drops utterances longer than ~200 chars in some versions.
-// Split on sentence boundaries and speak chunks sequentially.
 function toChunks(text: string, maxLen = 200): string[] {
   const sentences = text.match(/[^.!?]+[.!?]+|\S[^.!?]*/g) ?? [text];
   const chunks: string[] = [];
@@ -37,8 +35,10 @@ export default function TextToSpeech({
   const [supported, setSupported] = useState(false);
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
   const chunksRef = useRef<string[]>([]);
-  const chunkIndexRef = useRef(0);
   const stoppedRef = useRef(false);
+  // Holds the recursive speak function so it can reference itself without
+  // a self-referencing useCallback (which the linter flags).
+  const speakChunkRef = useRef<(index: number) => void>(() => {});
 
   useEffect(() => {
     if (!("speechSynthesis" in window)) return;
@@ -48,6 +48,7 @@ export default function TextToSpeech({
     window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
     return () => {
       window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
+      stoppedRef.current = true;
       window.speechSynthesis.cancel();
     };
   }, []);
@@ -63,12 +64,14 @@ export default function TextToSpeech({
     utterance.rate = 0.92;
     const englishVoice = voicesRef.current.find((v) => v.lang.startsWith("en"));
     if (englishVoice) utterance.voice = englishVoice;
-
-    utterance.onend = () => speakChunk(index + 1);
+    // Recurse via ref to avoid a self-referencing useCallback
+    utterance.onend = () => speakChunkRef.current(index + 1);
     utterance.onerror = () => setState("idle");
-
     synth.speak(utterance);
   }, []);
+
+  // Keep ref in sync with the stable callback
+  speakChunkRef.current = speakChunk;
 
   const play = useCallback(() => {
     const synth = window.speechSynthesis;
@@ -80,14 +83,11 @@ export default function TextToSpeech({
       return;
     }
 
-    const fullText = `${title}. ${text}`;
-    chunksRef.current = toChunks(fullText);
-    chunkIndexRef.current = 0;
+    chunksRef.current = toChunks(`${title}. ${text}`);
     stoppedRef.current = false;
-
-    speakChunk(0);
+    speakChunkRef.current(0);
     setState("playing");
-  }, [state, title, text, speakChunk]);
+  }, [state, title, text]);
 
   const pause = useCallback(() => {
     window.speechSynthesis?.pause();
