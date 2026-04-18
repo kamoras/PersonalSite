@@ -101,7 +101,10 @@ export default function Navbar() {
   const textMuted = "text-[var(--text-muted)]";
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+    >
       {/* Scroll progress indicator */}
       <div
         aria-hidden="true"

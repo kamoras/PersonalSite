@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -22,6 +22,10 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Ryan Mack",
