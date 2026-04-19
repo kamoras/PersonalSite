@@ -1,21 +1,58 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 
 type Theme = "dark" | "light";
 
-function getInitialThemeState(): { theme: Theme; hasStoredPreference: boolean } {
-  if (typeof window === "undefined") {
-    return { theme: "dark", hasStoredPreference: false };
-  }
+const THEME_STORAGE_KEY = "theme";
+const THEME_EVENT = "themechange";
 
-  const stored = localStorage.getItem("theme");
+function readStoredTheme(): Theme | null {
+  const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
   if (stored === "dark" || stored === "light") {
-    return { theme: stored, hasStoredPreference: true };
+    return stored;
+  }
+  return null;
+}
+
+function readSystemTheme(): Theme {
+  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function getThemeSnapshot(): Theme {
+  if (typeof window === "undefined") {
+    return "dark";
   }
 
-  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-  return { theme: prefersLight ? "light" : "dark", hasStoredPreference: false };
+  return readStoredTheme() ?? readSystemTheme();
+}
+
+function subscribeToTheme(onChange: () => void) {
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
+  const notifyIfSystemDriven = () => {
+    if (!readStoredTheme()) {
+      onChange();
+    }
+  };
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === THEME_STORAGE_KEY) {
+      onChange();
+    }
+  };
+
+  mediaQuery.addEventListener("change", notifyIfSystemDriven);
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(THEME_EVENT, onChange);
+
+  return () => {
+    mediaQuery.removeEventListener("change", notifyIfSystemDriven);
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(THEME_EVENT, onChange);
+  };
 }
 
 const ThemeContext = createContext<{
@@ -31,29 +68,10 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => getInitialThemeState().theme);
-  const hasStoredPreferenceRef = useRef(getInitialThemeState().hasStoredPreference);
-
-  useEffect(() => {
-    // Honour system preference on first visit and live-update if it changes.
-    // Once the user toggles manually, we stop following the OS setting.
-    const mq = window.matchMedia("(prefers-color-scheme: light)");
-
-    const onChange = (e: MediaQueryListEvent) => {
-      // Only follow system if the user hasn't made a manual choice
-      if (!localStorage.getItem("theme")) {
-        setTheme(e.matches ? "light" : "dark");
-      }
-    };
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, () => "dark");
 
   useEffect(() => {
     document.body.classList.toggle("light", theme === "light");
-    if (hasStoredPreferenceRef.current) {
-      localStorage.setItem("theme", theme);
-    }
 
     const color = theme === "dark" ? "#100d09" : "#faf7f2";
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
@@ -66,8 +84,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   }, [theme]);
 
   const toggleTheme = () => {
-    hasStoredPreferenceRef.current = true;
-    setTheme((t) => (t === "dark" ? "light" : "dark"));
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    window.dispatchEvent(new Event(THEME_EVENT));
   };
 
   return (
