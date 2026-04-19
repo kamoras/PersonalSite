@@ -30,6 +30,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const closeMobileMenu = () => setMobileOpen(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -56,10 +57,6 @@ export default function Navbar() {
     });
     return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
 
   // Focus trap, escape key, and body scroll lock for mobile menu
   useEffect(() => {
@@ -146,6 +143,7 @@ export default function Navbar() {
         {/* Logo — links to top of page */}
         <Link
           href="/"
+          onClick={closeMobileMenu}
           aria-label="Ryan Mack — back to top"
           className={`font-playfair italic text-lg font-semibold ${textMuted} hover:text-current transition-colors`}
         >
@@ -274,7 +272,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={resolvedHref}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={closeMobileMenu}
                   aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
                   className={`text-sm transition-colors tracking-wide py-2 ${
                     isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
@@ -289,6 +287,7 @@ export default function Navbar() {
                 href={siteConfig.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMobileMenu}
                 aria-label="GitHub profile (opens in new tab)"
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
@@ -298,6 +297,7 @@ export default function Navbar() {
                 href={siteConfig.links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMobileMenu}
                 aria-label="LinkedIn profile (opens in new tab)"
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
@@ -307,13 +307,17 @@ export default function Navbar() {
                 href={siteConfig.links.bluesky}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMobileMenu}
                 aria-label="Bluesky profile (opens in new tab)"
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
                 <Bluesky size={18} aria-hidden="true" />
               </a>
               <button
-                onClick={toggleTheme}
+                onClick={() => {
+                  closeMobileMenu();
+                  toggleTheme();
+                }}
                 aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
@@ -327,6 +331,7 @@ export default function Navbar() {
                 href={siteConfig.resumeDocumentPath}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMobileMenu}
                 aria-label="View resume PDF (opens in new tab)"
                 className="btn-resume ml-auto px-4 py-2 text-sm rounded font-mono"
               >
