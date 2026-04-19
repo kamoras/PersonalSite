@@ -4,6 +4,20 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 type Theme = "dark" | "light";
 
+function getInitialThemeState(): { theme: Theme; hasStoredPreference: boolean } {
+  if (typeof window === "undefined") {
+    return { theme: "dark", hasStoredPreference: false };
+  }
+
+  const stored = localStorage.getItem("theme");
+  if (stored === "dark" || stored === "light") {
+    return { theme: stored, hasStoredPreference: true };
+  }
+
+  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+  return { theme: prefersLight ? "light" : "dark", hasStoredPreference: false };
+}
+
 const ThemeContext = createContext<{
   theme: Theme;
   toggleTheme: () => void;
@@ -17,20 +31,13 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
-  const hasStoredPreferenceRef = useRef(false);
+  const [theme, setTheme] = useState<Theme>(() => getInitialThemeState().theme);
+  const hasStoredPreferenceRef = useRef(getInitialThemeState().hasStoredPreference);
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme") as Theme | null;
-    if (stored) {
-      hasStoredPreferenceRef.current = true;
-      setTheme(stored);
-      return;
-    }
-
-    // Honour system preference on first visit and live-update if it changes
+    // Honour system preference on first visit and live-update if it changes.
+    // Once the user toggles manually, we stop following the OS setting.
     const mq = window.matchMedia("(prefers-color-scheme: light)");
-    if (mq.matches) setTheme("light");
 
     const onChange = (e: MediaQueryListEvent) => {
       // Only follow system if the user hasn't made a manual choice
