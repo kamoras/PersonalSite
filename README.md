@@ -22,7 +22,6 @@ Built with Next.js static export and Tailwind CSS v4. Deployed to Azure Static W
 ```
 app/                  # Next.js App Router pages and layouts
   blog/               # Blog index + dynamic [slug] pages
-  resume/             # Resume page
   layout.tsx          # Root layout (fonts, metadata, theme-color)
   page.tsx            # Homepage (assembles all sections)
   globals.css         # Design tokens, base styles, animations

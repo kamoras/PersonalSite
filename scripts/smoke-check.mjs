@@ -47,14 +47,20 @@ const posts = fs.existsSync(postsDir)
 
 const home = resolveRouteFile("/");
 assertIncludes("/", home.content, 'id="main-content"');
-assertIncludes("/", home.content, "Review Experience");
+assertIncludes("/", home.content, "View Experience");
 
 const blog = resolveRouteFile("/blog");
 assertIncludes("/blog", blog.content, "RSS Feed");
 
-const resume = resolveRouteFile("/resume");
-assertIncludes("/resume", resume.content, "Download PDF");
-assertIncludes("/resume", resume.content, "/documents/Ryan-M-Mack-Resume.pdf");
+const resumePdfPath = path.join(outDir, "documents", "Ryan-M-Mack-Resume.pdf");
+if (!fs.existsSync(resumePdfPath)) {
+  throw new Error("Missing exported resume PDF asset");
+}
+
+const faviconPath = path.join(outDir, "favicon.ico");
+if (!fs.existsSync(faviconPath)) {
+  throw new Error("Missing exported favicon asset");
+}
 
 if (posts.length > 0) {
   const firstPost = resolveRouteFile(`/blog/${posts[0]}`);
@@ -67,5 +73,12 @@ if (feed === null) {
   throw new Error("Missing generated RSS feed: out/feed.xml");
 }
 assertIncludes("/feed.xml", feed, "<rss version=\"2.0\">");
+
+const configPath = path.join(rootDir, "public", "staticwebapp.config.json");
+const staticConfig = JSON.parse(fs.readFileSync(configPath, "utf8"));
+const resumeRoute = staticConfig.routes?.find((route) => route.route === "/resume");
+if (!resumeRoute || resumeRoute.redirect !== "/documents/Ryan-M-Mack-Resume.pdf") {
+  throw new Error("Missing /resume redirect in static web app config");
+}
 
 console.log("Smoke checks passed.");

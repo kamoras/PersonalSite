@@ -41,9 +41,6 @@ export default function Community() {
                     Booking
                   </p>
                 </div>
-                <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
-                  {communityContent.mentoringNote}
-                </p>
                 <a
                   href={siteConfig.links.calendly}
                   target="_blank"
@@ -54,19 +51,6 @@ export default function Community() {
                   <ArrowRight size={15} aria-hidden="true" />
                 </a>
               </div>
-
-              <p className="font-mono text-[10px] text-[var(--text-muted)]">
-                Opens externally on{" "}
-                <a
-                  href={siteConfig.links.calendly}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-2 hover:text-current transition-colors"
-                >
-                  Calendly
-                </a>
-                .
-              </p>
             </div>
           </div>
 

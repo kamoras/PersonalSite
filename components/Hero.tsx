@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowDown, ArrowRight, Mail, MapPin } from "lucide-react";
+import { ArrowDown, MapPin } from "lucide-react";
 import { Github, Linkedin } from "./BrandIcons";
 import { heroContent } from "@/lib/portfolio";
 import { mailtoUrl, siteConfig } from "@/lib/site";
@@ -52,45 +52,23 @@ export default function Hero() {
               <span>{heroContent.location}</span>
             </div>
 
-            <p className="mb-5 max-w-3xl text-balance font-playfair text-2xl italic leading-relaxed text-[var(--text-secondary)] sm:text-3xl">
+            <p className="mb-10 max-w-2xl text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
               {heroContent.intro}
             </p>
-
-            <p className="mb-8 max-w-2xl text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-              {heroContent.detail}
-            </p>
-
-            <ul className="mb-10 flex flex-wrap justify-center gap-2 lg:justify-start">
-              {heroContent.proofPoints.map((point) => (
-                <li
-                  key={point}
-                  className="rounded-full border border-[var(--color-card-border)] bg-[var(--color-card-bg)] px-3 py-1.5 font-mono text-xs text-[var(--text-muted)]"
-                >
-                  {point}
-                </li>
-              ))}
-            </ul>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
               <a
                 href="#experience"
-                className="inline-flex items-center gap-2 rounded-lg bg-[#c9a465] px-6 py-3 text-sm font-semibold text-[#100d09] transition-colors hover:bg-[#d4b870]"
+                className="inline-flex items-center rounded-lg bg-[#c9a465] px-6 py-3 text-sm font-semibold text-[#100d09] transition-colors hover:bg-[#d4b870]"
               >
-                Review Experience
-                <ArrowRight size={15} aria-hidden="true" />
+                View Experience
               </a>
               <a
-                href={mailtoUrl()}
-                className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-card-border)] px-6 py-3 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
-              >
-                <Mail size={15} aria-hidden="true" />
-                Start a conversation
-              </a>
-              <a
-                href={siteConfig.resumePagePath}
+                href={siteConfig.resumeDocumentPath}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-card-border)] px-6 py-3 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+                aria-label="View resume PDF (opens in new tab)"
+                className="inline-flex items-center rounded-lg border border-[var(--color-card-border)] px-6 py-3 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
               >
                 View resume
               </a>
@@ -153,14 +131,6 @@ export default function Hero() {
                   priority
                   className="aspect-[4/5] w-full object-cover object-top"
                 />
-              </div>
-              <div className="mt-5 rounded-2xl border border-[var(--color-card-border)] bg-black/10 p-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-gold)]">
-                  Current focus
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
-                  Shipping platform support, operating-system expansion, and maintainable agent runtime work for enterprise observability customers.
-                </p>
               </div>
             </div>
           </aside>

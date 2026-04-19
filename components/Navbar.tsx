@@ -192,10 +192,10 @@ export default function Navbar() {
             )}
           </button>
           <a
-            href={siteConfig.resumePagePath}
+            href={siteConfig.resumeDocumentPath}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="View resume (opens in new tab)"
+            aria-label="View resume PDF (opens in new tab)"
             className="btn-resume ml-2 px-4 py-1.5 text-sm rounded font-mono tracking-wide"
           >
             Resume
@@ -289,10 +289,10 @@ export default function Navbar() {
                 )}
               </button>
               <a
-                href={siteConfig.resumePagePath}
+                href={siteConfig.resumeDocumentPath}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="View resume (opens in new tab)"
+                aria-label="View resume PDF (opens in new tab)"
                 className="btn-resume ml-auto px-4 py-2 text-sm rounded font-mono"
               >
                 Resume

@@ -3,13 +3,6 @@ export const heroContent = {
   location: "Guilford, Connecticut",
   intro:
     "I build resilient platform and observability software for complex systems, with a focus on correctness, maintainability, and long-term operability.",
-  detail:
-    "At Cisco ThousandEyes, I lead delivery on the Enterprise Agent and ship production systems in C++, Java, and Python for customers operating at enterprise scale.",
-  proofPoints: [
-    "Distributed systems and observability",
-    "C++, Java, Python, and platform engineering",
-    "Architecture, delivery, and technical leadership",
-  ],
   stats: [
     { value: "9+", label: "years in production engineering" },
     { value: "7", label: "engineering roles shipped" },
@@ -226,8 +219,6 @@ export const publicationItems = [
 export const communityContent = {
   mentorship:
     "I offer free 1:1 sessions for students and early-career engineers who want direct feedback on resumes, interviewing, career decisions, or breaking into software engineering.",
-  mentoringNote:
-    "Scheduling opens externally so the site remains fast and private during first load while still making it easy to book time.",
   volunteering: [
     {
       org: "Blue Horizon Sailing",
@@ -259,22 +250,5 @@ export const communityContent = {
       current: false,
       description: "Helped high school students with college essays and major selection.",
     },
-  ],
-} as const;
-
-export const resumeContent = {
-  summary:
-    "Senior software engineer focused on distributed systems, observability, and platform software with a decade of experience shipping customer-facing infrastructure.",
-  highlights: [
-    "Lead development on Cisco ThousandEyes Enterprise Agent initiatives across C++, Java, and Python.",
-    "Granted inventor with additional patents pending.",
-    "Experience spanning startups, enterprise platforms, desktop applications, embedded systems, and cloud-native infrastructure.",
-    "Graduate study in Computer Science at Georgia Tech with a Human-Computer Interaction specialization.",
-  ],
-  focusAreas: [
-    "Distributed systems and observability",
-    "Platform and agent architecture",
-    "Production reliability and supportability",
-    "Technical leadership and cross-team execution",
   ],
 } as const;

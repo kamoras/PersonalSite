@@ -8,7 +8,7 @@ const social = [
   { href: siteConfig.links.bluesky, icon: Bluesky, label: "Bluesky profile (opens in new tab)", external: true },
   { href: siteConfig.links.instagram, icon: Instagram, label: "Instagram profile (opens in new tab)", external: true },
   { href: mailtoUrl(), icon: Mail, label: "Send email", external: false },
-  { href: siteConfig.resumePagePath, icon: FileText, label: "View resume (opens in new tab)", external: true },
+  { href: siteConfig.resumeDocumentPath, icon: FileText, label: "View resume PDF (opens in new tab)", external: true },
 ];
 
 export default function Footer() {

@@ -1,4 +1,11 @@
 {
+  "routes": [
+    {
+      "route": "/resume",
+      "redirect": "/documents/Ryan-M-Mack-Resume.pdf",
+      "statusCode": 302
+    }
+  ],
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "SAMEORIGIN",
