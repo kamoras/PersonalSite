@@ -1,11 +1,13 @@
 "use client";
 
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
-
-type Theme = "dark" | "light";
-
-const THEME_STORAGE_KEY = "theme";
-const THEME_EVENT = "themechange";
+import {
+  DARK_THEME_COLOR,
+  LIGHT_THEME_COLOR,
+  THEME_EVENT,
+  THEME_STORAGE_KEY,
+  type Theme,
+} from "@/lib/theme";
 
 function readStoredTheme(): Theme | null {
   const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -75,9 +77,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   );
 
   useEffect(() => {
-    document.body.classList.toggle("light", theme === "light");
+    document.documentElement.classList.toggle("light", theme === "light");
+    document.documentElement.style.colorScheme = theme;
 
-    const color = theme === "dark" ? "#100d09" : "#faf7f2";
+    const color = theme === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     if (!meta) {
       meta = document.createElement("meta");

@@ -2,7 +2,7 @@
 
 Personal portfolio and writing site for Ryan Mack — Senior Software Engineer at Cisco ThousandEyes.
 
-Built with Next.js (static export), Tailwind CSS v4, and framer-motion. Deployed to Azure Static Web Apps via GitHub Actions.
+Built with Next.js static export and Tailwind CSS v4. Deployed to Azure Static Web Apps via GitHub Actions.
 
 ## Stack
 
@@ -10,7 +10,6 @@ Built with Next.js (static export), Tailwind CSS v4, and framer-motion. Deployed
 |---|---|
 | Framework | Next.js 16 (App Router, `output: "export"`) |
 | Styling | Tailwind CSS v4 |
-| Animation | framer-motion |
 | Icons | lucide-react |
 | Blog | Markdown → unified/remark/rehype pipeline |
 | Fonts | Geist Sans, Geist Mono, Playfair Display (via `next/font/google`) |
@@ -36,18 +35,24 @@ components/           # React components (one per section/feature)
   Projects.tsx
   Community.tsx
   Footer.tsx
-  ThemeProvider.tsx   # Dark/light theme + localStorage persistence
+  ThemeProvider.tsx   # Dark/light theme + system preference support
   TextToSpeech.tsx    # Browser Speech API reader for blog posts
   BlogContent.tsx     # Markdown renderer for blog posts
 content/
   posts/              # Blog posts as Markdown files
 lib/
+  portfolio.ts        # Structured homepage / resume content
   posts.ts            # Blog post loading + frontmatter validation
   site.ts             # Site metadata, profile links, canonical URLs
-  useScrollAwareInView.ts
+  theme.ts            # Shared theme constants + pre-paint init script
 public/
+  apple-touch-icon.png
+  favicon.png
   images/             # Static images (profile photo, company logos)
   documents/          # Resume PDF and other downloadable assets
+scripts/
+  generate-feed.mjs   # RSS feed generation before build
+  smoke-check.mjs     # Static export smoke checks
 ```
 
 ## Development
@@ -58,8 +63,10 @@ npm install
 npm run dev       # starts at http://localhost:3000
 npm run build     # generates static output in /out
 npm run lint      # ESLint
+npm run smoke     # validate the exported site in /out
 ```
 
+`npm run build` runs RSS feed generation automatically before the Next.js build.
 The project expects Node 20.9+; the checked-in `.nvmrc` tracks the CI runtime (`22`).
 
 ## Writing a blog post
@@ -91,6 +98,7 @@ Invalid or incomplete frontmatter fails fast during build-time content loading w
 
 Every PR runs:
 - **Build** — `npm run build` (static export must succeed)
+- **Smoke** — validates the exported homepage, blog, resume, and RSS feed
 - **Lint** — ESLint
 - **Lighthouse** — SEO ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90, Performance reported (warn only). Results posted as a PR comment.
 
@@ -101,5 +109,5 @@ Merges to `main` deploy automatically to Azure Static Web Apps.
 - **Dark academia palette** — warm dark (`#100d09`) and warm parchment (`#faf7f2`)
 - **Gold accent** — `#c9a465` (dark) / `#7a5c12` (light), 4.5:1+ contrast
 - **Fonts** — Playfair Display for headings, Geist for body, Geist Mono for labels
-- **Motion** — framer-motion scroll-triggered animations; all respect `prefers-reduced-motion`
+- **Rendering** — homepage sections are server-rendered; only navigation, theme toggle, and small UI helpers hydrate
 - **Accessibility** — WCAG AA contrast throughout, ARIA labels, keyboard navigation, focus-visible styles

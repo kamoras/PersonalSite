@@ -6,6 +6,12 @@ import { absoluteUrl, siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: `Writing — ${siteConfig.name}`,
   description: siteConfig.blogDescription,
+  alternates: {
+    canonical: absoluteUrl("/blog"),
+    types: {
+      "application/rss+xml": absoluteUrl(siteConfig.feedPath),
+    },
+  },
   openGraph: {
     title: `Writing — ${siteConfig.name}`,
     description: siteConfig.blogDescription,
@@ -28,9 +34,17 @@ export default function BlogIndex() {
   return (
     <div className="max-w-3xl mx-auto px-6 pb-24" style={{ paddingTop: "calc(7rem + env(safe-area-inset-top, 0px))" }}>
       <header className="mb-14">
-        <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-4">
-          Writing
-        </p>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)]">
+            Writing
+          </p>
+          <a
+            href={siteConfig.feedPath}
+            className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--text-muted)] transition-colors hover:text-[var(--color-gold)]"
+          >
+            RSS Feed
+          </a>
+        </div>
         <h1 className="font-playfair text-4xl md:text-5xl font-light tracking-tight mb-4">
           Thoughts &amp; <span className="font-semibold">perspectives</span>
         </h1>

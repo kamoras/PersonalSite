@@ -1,82 +1,25 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
-import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
-import { useTheme } from "./ThemeProvider";
 import { ArrowRight, CalendarDays, Users } from "lucide-react";
+import { communityContent } from "@/lib/portfolio";
 import { siteConfig } from "@/lib/site";
 
-const volunteering = [
-  {
-    org: "Blue Horizon Sailing",
-    role: "Technology Volunteer",
-    period: "Jan 2026 — Present",
-    current: true,
-    description: "Providing technical support and expertise for the organization.",
-  },
-  {
-    org: "Braven",
-    role: "Volunteer Coach",
-    period: "Oct 2023 — Present",
-    current: true,
-    description:
-      "Mock interview events for university students entering the workforce at San Jose State and CUNY City College.",
-  },
-  {
-    org: "UConn Center for Career Development",
-    role: "Advisor",
-    period: "May 2017 — Jul 2024",
-    current: false,
-    description:
-      "7 years mentoring students through HuskyLink — career guidance, resume reviews, and mock interviews.",
-  },
-  {
-    org: "Genesys Works Bay Area",
-    role: "Volunteer",
-    period: "Nov 2023 — Jan 2024",
-    current: false,
-    description: "Helped high school students with college essays and major selection.",
-  },
-];
-
 export default function Community() {
-  const { theme } = useTheme();
-  const prefersReducedMotion = useReducedMotion();
-  const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
-
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
-  const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
-  const iconBg = theme === "dark" ? "bg-white/[0.03]" : "bg-black/[0.02]";
-
-  const fade = (delay = 0) =>
-    prefersReducedMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 20 },
-          animate: isInView ? { opacity: 1, y: 0 } : {},
-          transition: { duration: 0.55, delay },
-        };
-
   return (
-    <section id="community" aria-labelledby="community-heading" ref={ref} className="py-32">
+    <section id="community" aria-labelledby="community-heading" className="py-32">
       <div className="max-w-6xl mx-auto px-6">
-
-        <motion.div {...fade()} className="mb-16">
+        <div className="mb-16">
           <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-4">
             05 — Community
           </p>
           <h2 id="community-heading" className="font-playfair text-3xl md:text-4xl font-light tracking-tight">
             Giving <span className="font-semibold">back</span>
           </h2>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-start">
-
-          {/* Free mentoring CTA */}
-          <motion.div {...fade(0.1)}>
-            <div className={`p-6 md:p-8 rounded-2xl border border-[rgba(201,164,101,0.25)] ${cardBg} shadow-[0_0_40px_rgba(201,164,101,0.05)]`}>
+          <div>
+            <div className="rounded-2xl border border-[rgba(201,164,101,0.25)] bg-[var(--color-card-bg)] p-6 shadow-[0_0_40px_rgba(201,164,101,0.05)] md:p-8">
               <div className="flex items-center gap-3 mb-5">
-                <div className={`flex-shrink-0 p-3 rounded-xl border ${borderColor} ${iconBg}`}>
+                <div className="rounded-xl border border-[var(--color-card-border)] bg-black/5 p-3">
                   <Users size={20} className="text-[var(--color-gold)]" aria-hidden="true" />
                 </div>
                 <div>
@@ -88,11 +31,10 @@ export default function Community() {
               </div>
 
               <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
-                I offer free 1:1 sessions to anyone looking to break into software engineering, grow their
-                career, prep for interviews, or navigate the industry. No catch — book a time that works for you.
+                {communityContent.mentorship}
               </p>
 
-              <div className={`rounded-xl border ${borderColor} ${iconBg} p-5 mb-5`}>
+              <div className="mb-5 rounded-xl border border-[var(--color-card-border)] bg-black/5 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <CalendarDays size={16} className="text-[var(--color-gold)]" aria-hidden="true" />
                   <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-gold)] opacity-70">
@@ -100,8 +42,7 @@ export default function Community() {
                   </p>
                 </div>
                 <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
-                  Scheduling opens on Calendly in a new tab so the main site stays fast, quiet, and free of
-                  third-party embed issues during the initial page load.
+                  {communityContent.mentoringNote}
                 </p>
                 <a
                   href={siteConfig.links.calendly}
@@ -127,45 +68,34 @@ export default function Community() {
                 .
               </p>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Volunteer list */}
-          <motion.div {...fade(0.15)}>
+          <div>
             <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--text-muted)] mb-6">
               Volunteer work
             </p>
             <ul className="space-y-4 list-none">
-              {volunteering.map((v, i) => (
-                <motion.li
+              {communityContent.volunteering.map((v) => (
+                <li
                   key={v.org}
-                  {...(prefersReducedMotion
-                    ? {}
-                    : {
-                        initial: { opacity: 0, x: 12 },
-                        animate: isInView ? { opacity: 1, x: 0 } : {},
-                        transition: { duration: 0.4, delay: 0.25 + i * 0.07 },
-                      })}
-                  className={`p-4 rounded-xl border ${borderColor} ${cardBg}`}
+                  className="rounded-xl border border-[var(--color-card-border)] bg-[var(--color-card-bg)] p-4"
                 >
                   <div className="flex items-start justify-between gap-2 mb-0.5">
                     <p className="text-sm font-medium leading-snug">{v.org}</p>
                     {v.current && (
                       <div className="flex items-center gap-1 flex-shrink-0 pt-0.5">
-                        <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full animate-pulse ${theme === "dark" ? "bg-emerald-400" : "bg-emerald-600"}`} />
-                        <span className={`font-mono text-[10px] ${theme === "dark" ? "text-emerald-400" : "text-emerald-700"}`}>
-                          Ongoing
-                        </span>
+                        <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                        <span className="font-mono text-[10px] text-[var(--color-gold)]">Ongoing</span>
                       </div>
                     )}
                   </div>
                   <p className="font-mono text-[10px] text-[var(--color-gold)] opacity-70 mb-2">{v.role}</p>
                   <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-2">{v.description}</p>
                   <p className="font-mono text-[10px] text-[var(--text-muted)]">{v.period}</p>
-                </motion.li>
+                </li>
               ))}
             </ul>
-          </motion.div>
-
+          </div>
         </div>
       </div>
     </section>

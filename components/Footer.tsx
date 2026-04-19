@@ -1,8 +1,5 @@
-"use client";
-
 import { Mail, FileText } from "lucide-react";
 import { Github, Linkedin, Bluesky, Instagram } from "./BrandIcons";
-import { useTheme } from "./ThemeProvider";
 import { mailtoUrl, siteConfig } from "@/lib/site";
 
 const social = [
@@ -15,19 +12,13 @@ const social = [
 ];
 
 export default function Footer() {
-  const { theme } = useTheme();
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
-
   return (
     <footer id="contact" className="relative overflow-hidden">
-      {/* Ambient top glow */}
       <div aria-hidden="true" className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-[rgba(201,164,101,0.35)] to-transparent" />
       <div aria-hidden="true" className="absolute -top-16 left-1/2 -translate-x-1/2 w-[500px] h-48 rounded-full pointer-events-none blur-3xl" style={{ background: "radial-gradient(circle, rgba(201,164,101,0.06) 0%, transparent 70%)" }} />
 
-      <div className={`border-t ${borderColor} relative`}>
+      <div className="relative border-t border-[var(--color-card-border)]">
         <div className="max-w-6xl mx-auto px-6 pt-20 pb-12">
-
-          {/* CTA block — centered */}
           <div className="text-center mb-16">
             <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-5">
               06 — Contact
@@ -47,8 +38,7 @@ export default function Footer() {
             </a>
           </div>
 
-          {/* Social row */}
-          <div className={`flex items-center justify-center gap-2 pb-10 border-b ${borderColor}`}>
+          <div className="flex items-center justify-center gap-2 border-b border-[var(--color-card-border)] pb-10">
             {social.map(({ href, icon: Icon, label, external }) => (
               <a
                 key={label}
@@ -63,7 +53,6 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Wordmark / copyright */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8">
             <p className="font-mono text-xs text-[var(--text-muted)]">
               © {new Date().getFullYear()} {siteConfig.name}
