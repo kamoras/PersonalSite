@@ -1,25 +1,24 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllPostsMeta, formatDate } from "@/lib/posts";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Writing — Ryan Mack",
-  description:
-    "Writing about software, technology, and whatever else is worth putting into words.",
+  title: `Writing — ${siteConfig.name}`,
+  description: siteConfig.blogDescription,
   openGraph: {
-    title: "Writing — Ryan Mack",
-    description:
-      "Writing about software, technology, and whatever else is worth putting into words.",
-    url: "https://ryan-mack.dev/blog",
-    siteName: "Ryan Mack",
+    title: `Writing — ${siteConfig.name}`,
+    description: siteConfig.blogDescription,
+    url: absoluteUrl("/blog"),
+    siteName: siteConfig.name,
     type: "website",
-    images: [{ url: "/opengraph-image.png", width: 1200, height: 630 }],
+    images: [{ url: siteConfig.opengraphImagePath, width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Writing — Ryan Mack",
-    description: "Writing about software, technology, and whatever else is worth putting into words.",
-    images: ["/opengraph-image.png"],
+    title: `Writing — ${siteConfig.name}`,
+    description: siteConfig.blogDescription,
+    images: [siteConfig.opengraphImagePath],
   },
 };
 

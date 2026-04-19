@@ -42,21 +42,25 @@ components/           # React components (one per section/feature)
 content/
   posts/              # Blog posts as Markdown files
 lib/
-  posts.ts            # Blog post loading + metadata parsing
+  posts.ts            # Blog post loading + frontmatter validation
+  site.ts             # Site metadata, profile links, canonical URLs
   useScrollAwareInView.ts
 public/
   images/             # Static images (profile photo, company logos)
-  resume/             # Resume PDF
+  documents/          # Resume PDF and other downloadable assets
 ```
 
 ## Development
 
 ```bash
+nvm use        # or install Node 22 first
 npm install
 npm run dev       # starts at http://localhost:3000
 npm run build     # generates static output in /out
 npm run lint      # ESLint
 ```
+
+The project expects Node 20.9+; the checked-in `.nvmrc` tracks the CI runtime (`22`).
 
 ## Writing a blog post
 
@@ -74,6 +78,7 @@ Post body here.
 ```
 
 The slug is derived from the filename. Reading time is computed automatically.
+Invalid or incomplete frontmatter fails fast during build-time content loading with a descriptive error.
 
 ## Environment variables
 

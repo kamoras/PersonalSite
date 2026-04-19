@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
+import { siteConfig } from "@/lib/site";
 
 export const dynamic = "force-static";
-export const alt = "Ryan Mack — Senior Software Engineer at Cisco ThousandEyes";
+export const alt = `${siteConfig.name} — ${siteConfig.jobTitle} at ${siteConfig.employer}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -58,7 +59,7 @@ export default function Image() {
             marginBottom: "20px",
           }}
         >
-          Ryan Mack
+          {siteConfig.name}
         </div>
 
         {/* Title */}
@@ -71,7 +72,7 @@ export default function Image() {
             fontWeight: "400",
           }}
         >
-          Senior Software Engineer
+          {siteConfig.jobTitle}
         </div>
 
         {/* Company */}
@@ -85,7 +86,7 @@ export default function Image() {
             fontWeight: "400",
           }}
         >
-          Cisco ThousandEyes
+          {siteConfig.employer}
         </div>
 
         {/* Domain — bottom right */}
@@ -100,7 +101,7 @@ export default function Image() {
             letterSpacing: "0.05em",
           }}
         >
-          ryan-mack.dev
+          {siteConfig.domain}
         </div>
 
         {/* Thin bottom gold line */}

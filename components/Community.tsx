@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
 import { useTheme } from "./ThemeProvider";
-import { Users } from "lucide-react";
-import Script from "next/script";
+import { ArrowRight, CalendarDays, Users } from "lucide-react";
+import { siteConfig } from "@/lib/site";
 
 const volunteering = [
   {
@@ -44,22 +43,6 @@ export default function Community() {
   const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
-
-  // Sync container height to Calendly's reported content height
-  const [calendlyHeight, setCalendlyHeight] = useState(420);
-  useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (!e.origin.includes("calendly.com")) return;
-      const data = e.data as { event?: string; payload?: { height?: string | number } };
-      if (data?.event === "calendly.page_height") {
-        const raw = data.payload?.height;
-        const px = typeof raw === "number" ? raw : parseInt(raw ?? "", 10);
-        if (!isNaN(px) && px > 0) setCalendlyHeight(px);
-      }
-    };
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, []);
 
   const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
   const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
@@ -109,35 +92,39 @@ export default function Community() {
                 career, prep for interviews, or navigate the industry. No catch — book a time that works for you.
               </p>
 
-              {/* Inline Calendly embed — height driven by postMessage from widget */}
-              <p className="sr-only">
-                Use the scheduling widget below to book a free mentoring session.
-              </p>
-              <div
-                className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
-                data-url="https://calendly.com/ryan-m-mack?hide_gdpr_banner=1&primary_color=c9a465"
-                aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
-                style={{
-                  minWidth: "320px",
-                  height: `${calendlyHeight}px`,
-                  transition: "height 0.3s ease",
-                }}
-              />
-              <Script
-                src="https://assets.calendly.com/assets/external/widget.js"
-                strategy="lazyOnload"
-              />
+              <div className={`rounded-xl border ${borderColor} ${iconBg} p-5 mb-5`}>
+                <div className="flex items-center gap-2 mb-3">
+                  <CalendarDays size={16} className="text-[var(--color-gold)]" aria-hidden="true" />
+                  <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-gold)] opacity-70">
+                    Booking
+                  </p>
+                </div>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
+                  Scheduling opens on Calendly in a new tab so the main site stays fast, quiet, and free of
+                  third-party embed issues during the initial page load.
+                </p>
+                <a
+                  href={siteConfig.links.calendly}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-[#c9a465] hover:bg-[#d4b870] text-[#100d09] rounded-lg text-sm font-semibold transition-colors"
+                >
+                  Book a session
+                  <ArrowRight size={15} aria-hidden="true" />
+                </a>
+              </div>
 
               <p className="font-mono text-[10px] text-[var(--text-muted)]">
-                Powered by{" "}
+                Opens externally on{" "}
                 <a
-                  href="https://calendly.com/ryan-m-mack"
+                  href={siteConfig.links.calendly}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline underline-offset-2 hover:text-current transition-colors"
                 >
                   Calendly
                 </a>
+                .
               </p>
             </div>
           </motion.div>

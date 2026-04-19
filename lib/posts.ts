@@ -47,6 +47,58 @@ export interface Post extends PostMeta {
   contentText: string;
 }
 
+interface PostFrontmatter {
+  title: string;
+  date: string;
+  description: string;
+  tags: string[];
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function validatePostFrontmatter(data: unknown, source: string): PostFrontmatter {
+  if (!isRecord(data)) {
+    throw new Error(`Invalid frontmatter in ${source}: expected an object.`);
+  }
+
+  const { title, date, description, tags } = data;
+
+  if (typeof title !== "string" || title.trim() === "") {
+    throw new Error(`Invalid frontmatter in ${source}: "title" must be a non-empty string.`);
+  }
+
+  if (typeof description !== "string" || description.trim() === "") {
+    throw new Error(`Invalid frontmatter in ${source}: "description" must be a non-empty string.`);
+  }
+
+  if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date))) {
+    throw new Error(`Invalid frontmatter in ${source}: "date" must use YYYY-MM-DD.`);
+  }
+
+  if (!Array.isArray(tags) || tags.some((tag) => typeof tag !== "string" || tag.trim() === "")) {
+    throw new Error(`Invalid frontmatter in ${source}: "tags" must be an array of non-empty strings.`);
+  }
+
+  return {
+    title: title.trim(),
+    date,
+    description: description.trim(),
+    tags: tags.map((tag) => tag.trim()),
+  };
+}
+
+function readPostFile(filename: string) {
+  const slug = filename.replace(/\.md$/, "");
+  const source = path.join(postsDirectory, filename);
+  const raw = fs.readFileSync(source, "utf8");
+  const { data, content } = matter(raw);
+  const frontmatter = validatePostFrontmatter(data, source);
+
+  return { slug, content, frontmatter };
+}
+
 function markdownToPlainText(md: string): string {
   return md
     .replace(/\[\^[^\]]+\]:\s*.+/gm, "")  // footnote definitions
@@ -74,16 +126,13 @@ export function getAllPostsMeta(): PostMeta[] {
     .readdirSync(postsDirectory)
     .filter((f) => f.endsWith(".md"))
     .map((filename) => {
-      const slug = filename.replace(/\.md$/, "");
-      const { data, content } = matter(
-        fs.readFileSync(path.join(postsDirectory, filename), "utf8")
-      );
+      const { slug, content, frontmatter } = readPostFile(filename);
       return {
         slug,
-        title: data.title as string,
-        date: data.date as string,
-        description: data.description as string,
-        tags: (data.tags as string[]) ?? [],
+        title: frontmatter.title,
+        date: frontmatter.date,
+        description: frontmatter.description,
+        tags: frontmatter.tags,
         readingTime: computeReadingTime(content),
       };
     })
@@ -99,8 +148,7 @@ export function getAllPostSlugs(): string[] {
 }
 
 export async function getPost(slug: string): Promise<Post> {
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
-  const { data, content } = matter(fs.readFileSync(fullPath, "utf8"));
+  const { frontmatter, content } = readPostFile(`${slug}.md`);
 
   const processed = await unified()
     .use(remarkParse)
@@ -112,10 +160,10 @@ export async function getPost(slug: string): Promise<Post> {
 
   return {
     slug,
-    title: data.title as string,
-    date: data.date as string,
-    description: data.description as string,
-    tags: (data.tags as string[]) ?? [],
+    title: frontmatter.title,
+    date: frontmatter.date,
+    description: frontmatter.description,
+    tags: frontmatter.tags,
     readingTime: computeReadingTime(content),
     contentHtml: processed.toString(),
     contentText: markdownToPlainText(content),

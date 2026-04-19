@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import ThemeProvider from "@/components/ThemeProvider";
+import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,34 +33,33 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Ryan Mack",
-  description:
-    "Software engineer at Cisco ThousandEyes. Writing about technology, engineering, and whatever else is worth thinking about.",
-  keywords: ["software engineer", "Cisco ThousandEyes", "distributed systems", "engineering"],
-  authors: [{ name: "Ryan Mack" }],
+  title: siteConfig.name,
+  description: siteConfig.description,
+  keywords: ["software engineer", siteConfig.employer, "distributed systems", "engineering"],
+  authors: [{ name: siteConfig.name }],
   openGraph: {
-    title: "Ryan Mack",
-    description: "Software engineer at Cisco ThousandEyes. Writing about technology, engineering, and whatever else is worth thinking about.",
-    url: "https://ryan-mack.dev",
-    siteName: "Ryan Mack",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
     type: "profile",
   },
   twitter: {
     card: "summary",
-    title: "Ryan Mack",
-    description: "Software engineer at Cisco ThousandEyes. Writing about technology, engineering, and whatever else is worth thinking about.",
+    title: siteConfig.name,
+    description: siteConfig.description,
   },
-  metadataBase: new URL("https://ryan-mack.dev"),
+  metadataBase: new URL(siteConfig.url),
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: "Ryan Mack",
-  jobTitle: "Senior Software Engineer",
+  name: siteConfig.name,
+  jobTitle: siteConfig.jobTitle,
   worksFor: {
     "@type": "Organization",
-    name: "Cisco ThousandEyes",
+    name: siteConfig.employer,
   },
   alumniOf: [
     {
@@ -73,11 +73,11 @@ const jsonLd = {
       description: "B.S.E. Computer Science and Engineering",
     },
   ],
-  url: "https://ryan-mack.dev",
-  email: "mack.ryanm@gmail.com",
+  url: siteConfig.url,
+  email: siteConfig.email,
   sameAs: [
-    "https://github.com/kamoras",
-    "https://www.linkedin.com/in/ryan-mack",
+    siteConfig.links.github,
+    siteConfig.links.linkedin,
   ],
 };
 

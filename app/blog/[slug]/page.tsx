@@ -5,6 +5,7 @@ import { getAllPostSlugs, getPost, formatDate } from "@/lib/posts";
 import { ArrowLeft } from "lucide-react";
 import BlogContent from "@/components/BlogContent";
 import TextToSpeech from "@/components/TextToSpeechLoader";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export async function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
@@ -21,24 +22,24 @@ export async function generateMetadata({
 
   const post = await getPost(slug);
   return {
-    title: `${post.title} — Ryan Mack`,
+    title: `${post.title} — ${siteConfig.name}`,
     description: post.description,
     keywords: post.tags,
     openGraph: {
       title: post.title,
       description: post.description,
-      url: `https://ryan-mack.dev/blog/${slug}`,
-      siteName: "Ryan Mack",
+      url: absoluteUrl(`/blog/${slug}`),
+      siteName: siteConfig.name,
       type: "article",
       publishedTime: post.date,
-      authors: ["Ryan Mack"],
-      images: [{ url: "/opengraph-image.png", width: 1200, height: 630 }],
+      authors: [siteConfig.name],
+      images: [{ url: siteConfig.opengraphImagePath, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: ["/opengraph-image.png"],
+      images: [siteConfig.opengraphImagePath],
     },
   };
 }
@@ -53,7 +54,7 @@ export default async function PostPage({
   if (!slugs.includes(slug)) notFound();
 
   const post = await getPost(slug);
-  const postUrl = `https://ryan-mack.dev/blog/${slug}`;
+  const postUrl = absoluteUrl(`/blog/${slug}`);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -62,18 +63,18 @@ export default async function PostPage({
     description: post.description,
     author: {
       "@type": "Person",
-      name: "Ryan Mack",
-      url: "https://ryan-mack.dev",
+      name: siteConfig.name,
+      url: siteConfig.url,
     },
     publisher: {
       "@type": "Person",
-      name: "Ryan Mack",
-      url: "https://ryan-mack.dev",
+      name: siteConfig.name,
+      url: siteConfig.url,
     },
     datePublished: post.date,
     url: postUrl,
     ...(post.tags.length > 0 && { keywords: post.tags.join(", ") }),
-    image: "https://ryan-mack.dev/opengraph-image.png",
+    image: absoluteUrl(siteConfig.opengraphImagePath),
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
   };
 
@@ -81,8 +82,8 @@ export default async function PostPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://ryan-mack.dev" },
-      { "@type": "ListItem", position: 2, name: "Writing", item: "https://ryan-mack.dev/blog" },
+      { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
+      { "@type": "ListItem", position: 2, name: "Writing", item: absoluteUrl("/blog") },
       { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
     ],
   };
