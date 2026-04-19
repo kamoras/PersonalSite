@@ -27,7 +27,7 @@ function getThemeSnapshot(): Theme {
   return readStoredTheme() ?? readSystemTheme();
 }
 
-function subscribeToTheme(onChange: () => void) {
+function subscribeToTheme(onChange: () => void): () => void {
   if (typeof window === "undefined") {
     return () => {};
   }
@@ -68,7 +68,11 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, () => "dark");
+  const theme = useSyncExternalStore<Theme>(
+    subscribeToTheme,
+    getThemeSnapshot,
+    (): Theme => "dark"
+  );
 
   useEffect(() => {
     document.body.classList.toggle("light", theme === "light");
