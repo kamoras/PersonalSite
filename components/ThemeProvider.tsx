@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 type Theme = "dark" | "light";
 
@@ -18,13 +18,12 @@ export function useTheme() {
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
-  const [hasStoredPreference, setHasStoredPreference] = useState(false);
+  const hasStoredPreferenceRef = useRef(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme") as Theme | null;
     if (stored) {
-      setHasStoredPreference(true);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+      hasStoredPreferenceRef.current = true;
       setTheme(stored);
       return;
     }
@@ -45,7 +44,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     document.body.classList.toggle("light", theme === "light");
-    if (hasStoredPreference) {
+    if (hasStoredPreferenceRef.current) {
       localStorage.setItem("theme", theme);
     }
 
@@ -57,10 +56,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       document.head.appendChild(meta);
     }
     meta.content = color;
-  }, [hasStoredPreference, theme]);
+  }, [theme]);
 
   const toggleTheme = () => {
-    setHasStoredPreference(true);
+    hasStoredPreferenceRef.current = true;
     setTheme((t) => (t === "dark" ? "light" : "dark"));
   };
 
