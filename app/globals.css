@@ -25,7 +25,7 @@
   --color-code-bg:     rgba(255, 255, 255, 0.06);
 }
 
-body.light {
+html.light {
   /* Light mode — warm parchment */
   --color-bg:          #faf7f2;
   --color-fg:          #1a1714;  /* 17:1 contrast — warm near-black                 */
@@ -85,11 +85,11 @@ h1, h2 {
   --ornament-dir: left;
 }
 
-body.light .ornament-divider {
+html.light .ornament-divider {
   color: rgba(122, 92, 18, 0.5);
 }
-body.light .ornament-divider::before,
-body.light .ornament-divider::after {
+html.light .ornament-divider::before,
+html.light .ornament-divider::after {
   background: linear-gradient(to var(--ornament-dir, right), transparent, rgba(122, 92, 18, 0.2));
 }
 
@@ -100,7 +100,7 @@ html {
   background-color: #100d09; /* fills iOS safe area canvas — body bg doesn't reach there */
 }
 
-html:has(body.light) {
+html.light {
   background-color: #faf7f2;
 }
 
@@ -138,7 +138,7 @@ body::after {
   background: rgba(201, 164, 101, 0.22); /* gold tint — dark academia */
 }
 
-body.light ::selection {
+html.light ::selection {
   background: rgba(122, 92, 18, 0.15);
 }
 
@@ -163,7 +163,7 @@ body.light ::selection {
   animation: text-shimmer 7s linear infinite;
 }
 
-body.light .gradient-name {
+html.light .gradient-name {
   background: linear-gradient(
     to right,
     #1a1714  0%,
@@ -190,7 +190,7 @@ body.light .gradient-name {
   transform: translateY(-2px);
 }
 
-body.light .exp-card:hover {
+html.light .exp-card:hover {
   border-color: rgba(122, 92, 18, 0.3) !important;
   box-shadow: 0 0 0 1px rgba(122, 92, 18, 0.08),
               0 8px 32px rgba(0, 0, 0, 0.07);
@@ -235,8 +235,8 @@ body.light .exp-card:hover {
   background: #a8a090;
 }
 
-body.light ::-webkit-scrollbar-thumb       { background: #6b6460; }
-body.light ::-webkit-scrollbar-thumb:hover { background: #4a4540; }
+html.light ::-webkit-scrollbar-thumb       { background: #6b6460; }
+html.light ::-webkit-scrollbar-thumb:hover { background: #4a4540; }
 
 /* ─── Blog post card ─────────────────────────────────────────────────────────*/
 .blog-card {
@@ -252,7 +252,7 @@ body.light ::-webkit-scrollbar-thumb:hover { background: #4a4540; }
   transform: translateY(-2px);
 }
 
-body.light .blog-card:hover {
+html.light .blog-card:hover {
   border-color: rgba(122, 92, 18, 0.3);
   box-shadow: 0 0 0 1px rgba(122, 92, 18, 0.08),
               0 8px 32px rgba(0, 0, 0, 0.07);
@@ -337,11 +337,11 @@ body.light .blog-card:hover {
   text-decoration-color: var(--color-gold);
 }
 
-body.light .blog-prose a {
+html.light .blog-prose a {
   text-decoration-color: rgba(122, 92, 18, 0.4);
 }
 
-body.light .blog-prose a:hover {
+html.light .blog-prose a:hover {
   text-decoration-color: var(--color-gold);
 }
 
