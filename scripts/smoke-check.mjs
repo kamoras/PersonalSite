@@ -62,9 +62,23 @@ if (!fs.existsSync(faviconPath)) {
   throw new Error("Missing exported favicon asset");
 }
 
+const resumeRouteArtifact = [
+  path.join(outDir, "resume.html"),
+  path.join(outDir, "resume", "index.html"),
+].some((filePath) => fs.existsSync(filePath));
+if (resumeRouteArtifact) {
+  throw new Error("Unexpected exported /resume page artifact");
+}
+
 if (posts.length > 0) {
-  const firstPost = resolveRouteFile(`/blog/${posts[0]}`);
-  assertIncludes(`/blog/${posts[0]}`, firstPost.content, "Back to all posts");
+  const firstPostRoute = `/blog/${posts[0]}`;
+  const firstPost = resolveRouteFile(firstPostRoute);
+  assertIncludes(firstPostRoute, firstPost.content, "Back to all posts");
+
+  const firstPostOgImage = path.join(outDir, "blog", posts[0], "opengraph-image.png");
+  if (!fs.existsSync(firstPostOgImage)) {
+    throw new Error(`Missing exported post Open Graph image: ${firstPostOgImage}`);
+  }
 }
 
 const feedPath = path.join(outDir, "feed.xml");
@@ -74,8 +88,12 @@ if (feed === null) {
 }
 assertIncludes("/feed.xml", feed, "<rss version=\"2.0\">");
 
-const configPath = path.join(rootDir, "public", "staticwebapp.config.json");
-const staticConfig = JSON.parse(fs.readFileSync(configPath, "utf8"));
+const configPath = path.join(outDir, "staticwebapp.config.json");
+const config = readFileIfPresent(configPath);
+if (config === null) {
+  throw new Error("Missing exported static web app config");
+}
+const staticConfig = JSON.parse(config);
 const resumeRoute = staticConfig.routes?.find((route) => route.route === "/resume");
 if (!resumeRoute || resumeRoute.redirect !== "/documents/Ryan-M-Mack-Resume.pdf") {
   throw new Error("Missing /resume redirect in static web app config");

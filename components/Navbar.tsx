@@ -17,6 +17,9 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
   { label: "Blog", href: "/blog" },
 ];
+const sectionIds = navLinks
+  .filter((link) => link.href.startsWith("#"))
+  .map((link) => link.href.slice(1));
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -47,12 +50,16 @@ export default function Navbar() {
       },
       { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
     );
-    ["about", "experience", "publications", "projects", "community", "contact"].forEach((id) => {
+    sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   // Focus trap, escape key, and body scroll lock for mobile menu
   useEffect(() => {
@@ -249,7 +256,7 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className={`flex items-center gap-3 pt-2 border-t ${theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"}`}>
+            <div className="flex items-center gap-3 border-t border-[var(--color-card-border)] pt-2">
               <a
                 href={siteConfig.links.github}
                 target="_blank"

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowDown, MapPin } from "lucide-react";
+import { ArrowDown, Mail, MapPin } from "lucide-react";
 import { Github, Linkedin } from "./BrandIcons";
 import { heroContent } from "@/lib/portfolio";
 import { mailtoUrl, siteConfig } from "@/lib/site";
