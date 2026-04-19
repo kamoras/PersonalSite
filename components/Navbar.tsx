@@ -100,29 +100,50 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  const navBg =
+    theme === "dark"
+      ? "bg-[#100d09] md:bg-[#100d09]/92 md:backdrop-blur-md border-b border-white/[0.06]"
+      : "bg-[#faf7f2] md:bg-[#faf7f2]/92 md:backdrop-blur-md border-b border-black/[0.06]";
+
+  // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
+
+  const bgColor = theme === "dark" ? "#100d09" : "#faf7f2";
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-[10000] border-b border-[var(--color-card-border)] bg-[var(--color-bg)] md:backdrop-blur-md"
-      style={{ backgroundColor: "var(--color-bg)" }}
+      className={`fixed top-0 left-0 right-0 z-[10000] ${navBg}`}
+      style={{
+        backgroundColor: bgColor
+      }}
     >
-      <div 
+      {/*
+          OVER-COVER HACK:
+          This absolute div sits above the header to ensure that even during
+          iOS Safari's dynamic browser chrome transitions, no content is
+          visible in the safe area gap.
+      */}
+      <div
         aria-hidden="true"
         className="absolute bottom-full left-0 right-0 h-[100px]"
-        style={{ backgroundColor: "var(--color-bg)" }}
+        style={{ backgroundColor: bgColor }}
       />
+
+      {/* SAFE AREA SPACER */}
       <div style={{ height: "env(safe-area-inset-top, 0px)" }} />
+
+      {/* Scroll progress indicator */}
       <div
         aria-hidden="true"
         className="absolute bottom-0 left-0 h-px bg-[var(--color-gold)]"
         style={{ width: `${scrollProgress}%` }}
       />
-      
+
       <nav
         aria-label="Main navigation"
         className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between"
       >
+        {/* Logo — links to top of page */}
         <Link
           href="/"
           aria-label="Ryan Mack — back to top"
@@ -131,6 +152,7 @@ export default function Navbar() {
           rm
         </Link>
 
+        {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
             const isHashLink = link.href.startsWith("#");
@@ -159,6 +181,7 @@ export default function Navbar() {
           })}
         </div>
 
+        {/* Desktop actions */}
         <div className="hidden md:flex items-center gap-1">
           <a
             href={siteConfig.links.github}
@@ -209,6 +232,7 @@ export default function Navbar() {
           </a>
         </div>
 
+        {/* Mobile menu toggle */}
         <button
           ref={toggleRef}
           className={`md:hidden p-2 rounded-md ${textMuted} hover:text-current transition-colors`}
@@ -233,7 +257,11 @@ export default function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
-          className="md:hidden border-t border-[var(--color-card-border)] bg-[var(--color-bg)]/96 backdrop-blur-md"
+          className={`md:hidden border-t ${
+            theme === "dark"
+              ? "border-white/[0.06] bg-[#100d09]/96"
+              : "border-black/[0.06] bg-[#faf7f2]/96"
+          } backdrop-blur-md`}
         >
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-4">
             {navLinks.map((link) => {
@@ -256,7 +284,7 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="flex items-center gap-3 border-t border-[var(--color-card-border)] pt-2">
+            <div className={`flex items-center gap-3 pt-2 border-t ${theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"}`}>
               <a
                 href={siteConfig.links.github}
                 target="_blank"
