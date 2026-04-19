@@ -17,6 +17,8 @@ export default function Publications() {
         <div className="grid md:grid-cols-2 gap-6">
           {publicationItems.map((item) => {
             const Icon = item.kind === "Patent" ? Award : BookOpen;
+            const badge = "badge" in item ? item.badge : null;
+            const patentNumber = "patentNumber" in item ? item.patentNumber : null;
             return (
               <a
                 key={item.title}
@@ -31,9 +33,9 @@ export default function Publications() {
                     <Icon size={20} className="text-[var(--color-gold)]" aria-hidden="true" />
                   </div>
                   <div className="flex items-center gap-2">
-                    {item.badge && (
+                    {badge && (
                       <span className="rounded-full bg-[rgba(201,164,101,0.12)] px-2 py-1 font-mono text-[10px] text-[var(--color-gold)]">
-                        {item.badge}
+                        {badge}
                       </span>
                     )}
                     <ExternalLink
@@ -47,7 +49,7 @@ export default function Publications() {
                 <div className="flex-1">
                   <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[var(--color-gold)] opacity-70">
                     {item.kind}
-                    {item.patentNumber ? ` · ${item.patentNumber}` : ""}
+                    {patentNumber ? ` · ${patentNumber}` : ""}
                   </p>
                   <h3 className="mb-3 text-base font-semibold leading-snug">{item.title}</h3>
                   <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
