@@ -6,6 +6,7 @@ import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
 import { useTheme } from "./ThemeProvider";
 import { Users } from "lucide-react";
 import Script from "next/script";
+import { siteConfig } from "@/lib/site";
 
 const volunteering = [
   {
@@ -115,7 +116,7 @@ export default function Community() {
               </p>
               <div
                 className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
-                data-url="https://calendly.com/ryan-m-mack?hide_gdpr_banner=1&primary_color=c9a465"
+                data-url={`${siteConfig.links.calendly}?hide_gdpr_banner=1&primary_color=c9a465`}
                 aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
                 style={{
                   minWidth: "320px",
@@ -131,7 +132,7 @@ export default function Community() {
               <p className="font-mono text-[10px] text-[var(--text-muted)]">
                 Powered by{" "}
                 <a
-                  href="https://calendly.com/ryan-m-mack"
+                  href={siteConfig.links.calendly}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline underline-offset-2 hover:text-current transition-colors"

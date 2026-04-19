@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Resume — Ryan Mack",
+  title: `Resume — ${siteConfig.name}`,
 };
 
 export default function ResumePage() {
   return (
     <iframe
-      src="/documents/Ryan-M-Mack-Resume.pdf"
+      src={siteConfig.resumeDocumentPath}
       className="fixed inset-0 w-full h-full border-0"
-      title="Resume — Ryan Mack"
+      title={`Resume — ${siteConfig.name}`}
     />
   );
 }

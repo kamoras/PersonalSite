@@ -3,14 +3,15 @@
 import { Mail, FileText } from "lucide-react";
 import { Github, Linkedin, Bluesky, Instagram } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
+import { mailtoUrl, siteConfig } from "@/lib/site";
 
 const social = [
-  { href: "https://github.com/kamoras",                          icon: Github,    label: "GitHub profile (opens in new tab)",         external: true  },
-  { href: "https://www.linkedin.com/in/ryan-mack",              icon: Linkedin,  label: "LinkedIn profile (opens in new tab)",        external: true  },
-  { href: "https://bsky.app/profile/ryan-mack.dev",             icon: Bluesky,   label: "Bluesky profile (opens in new tab)",         external: true  },
-  { href: "https://www.instagram.com/kamoras95/",               icon: Instagram, label: "Instagram profile (opens in new tab)",       external: true  },
-  { href: "mailto:mack.ryanm@gmail.com",                        icon: Mail,      label: "Send email",                                external: false },
-  { href: "/resume",                                             icon: FileText,  label: "View resume (opens in new tab)",            external: true  },
+  { href: siteConfig.links.github, icon: Github, label: "GitHub profile (opens in new tab)", external: true },
+  { href: siteConfig.links.linkedin, icon: Linkedin, label: "LinkedIn profile (opens in new tab)", external: true },
+  { href: siteConfig.links.bluesky, icon: Bluesky, label: "Bluesky profile (opens in new tab)", external: true },
+  { href: siteConfig.links.instagram, icon: Instagram, label: "Instagram profile (opens in new tab)", external: true },
+  { href: mailtoUrl(), icon: Mail, label: "Send email", external: false },
+  { href: siteConfig.resumePagePath, icon: FileText, label: "View resume (opens in new tab)", external: true },
 ];
 
 export default function Footer() {
@@ -38,7 +39,7 @@ export default function Footer() {
               Open to conversations, collaborations, and the right opportunities.
             </p>
             <a
-              href="mailto:mack.ryanm@gmail.com"
+              href={mailtoUrl()}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#c9a465] hover:bg-[#d4b870] text-[#100d09] rounded-lg text-sm font-semibold transition-colors"
             >
               <Mail size={15} aria-hidden="true" />
@@ -65,10 +66,10 @@ export default function Footer() {
           {/* Wordmark / copyright */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8">
             <p className="font-mono text-xs text-[var(--text-muted)]">
-              © {new Date().getFullYear()} Ryan Mack
+              © {new Date().getFullYear()} {siteConfig.name}
             </p>
             <p className="font-mono text-xs text-[var(--text-muted)]">
-              ryan-mack.dev
+              {siteConfig.domain}
             </p>
           </div>
 

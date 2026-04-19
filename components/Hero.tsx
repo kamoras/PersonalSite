@@ -6,6 +6,7 @@ import { ArrowDown, Mail, MapPin } from "lucide-react";
 import { Github, Linkedin } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import Image from "next/image";
+import { mailtoUrl, siteConfig } from "@/lib/site";
 
 const stats = [
   { value: 9, suffix: "+", label: "yrs experience" },
@@ -62,6 +63,8 @@ function AnimatedStat({
 export default function Hero() {
   const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
+  const [firstName, ...restName] = siteConfig.name.split(" ");
+  const highlightedName = restName.join(" ") || firstName;
 
   return (
     <section
@@ -98,12 +101,12 @@ export default function Hero() {
           <div className="flex-1 text-center md:text-left">
 
             <p className="font-mono text-xs tracking-[0.35em] uppercase text-[var(--color-gold)] mb-5">
-              Senior Engineer · Cisco ThousandEyes
+              Senior Engineer · {siteConfig.employer}
             </p>
 
             <h1 className="font-playfair text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-none mb-6">
-              Ryan{" "}
-              <span className="gradient-name font-bold">Mack</span>
+              {firstName}{" "}
+              <span className="gradient-name font-bold">{highlightedName}</span>
             </h1>
 
             <p className="hero-tagline text-base md:text-lg text-[var(--text-secondary)] max-w-lg leading-relaxed mb-10">
@@ -126,7 +129,7 @@ export default function Hero() {
                 View Experience
               </a>
               <a
-                href="/resume"
+                href={siteConfig.resumePagePath}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View resume (opens in new tab)"
@@ -148,9 +151,9 @@ export default function Hero() {
               className="flex items-center gap-1 mt-8 justify-center md:justify-start"
             >
               {[
-                { href: "https://github.com/kamoras", icon: Github, label: "GitHub profile (opens in new tab)" },
-                { href: "https://www.linkedin.com/in/ryan-mack", icon: Linkedin, label: "LinkedIn profile (opens in new tab)" },
-                { href: "mailto:mack.ryanm@gmail.com", icon: Mail, label: "Send email" },
+                { href: siteConfig.links.github, icon: Github, label: "GitHub profile (opens in new tab)" },
+                { href: siteConfig.links.linkedin, icon: Linkedin, label: "LinkedIn profile (opens in new tab)" },
+                { href: mailtoUrl(), icon: Mail, label: "Send email" },
               ].map(({ href, icon: Icon, label }) => (
                 <a
                   key={href}

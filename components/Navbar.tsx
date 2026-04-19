@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { Github, Linkedin, Bluesky } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
+import { siteConfig } from "@/lib/site";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -97,10 +98,6 @@ export default function Navbar() {
       ? "bg-[#100d09] md:bg-[#100d09]/92 md:backdrop-blur-md border-b border-white/[0.06]"
       : "bg-[#faf7f2] md:bg-[#faf7f2]/92 md:backdrop-blur-md border-b border-black/[0.06]";
 
-  // Solid background for the safe area cover — backdrop-blur doesn't render
-  // reliably in the safe area on iOS Safari, so we overlay a fully opaque div.
-  const solidBg = theme === "dark" ? "bg-[#100d09]" : "bg-[#faf7f2]";
-
   // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
 
@@ -180,7 +177,7 @@ export default function Navbar() {
         {/* Desktop actions */}
         <div className="hidden md:flex items-center gap-1">
           <a
-            href="https://github.com/kamoras"
+            href={siteConfig.links.github}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub profile (opens in new tab)"
@@ -189,7 +186,7 @@ export default function Navbar() {
             <Github size={16} aria-hidden="true" />
           </a>
           <a
-            href="https://www.linkedin.com/in/ryan-mack"
+            href={siteConfig.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn profile (opens in new tab)"
@@ -198,7 +195,7 @@ export default function Navbar() {
             <Linkedin size={16} aria-hidden="true" />
           </a>
           <a
-            href="https://bsky.app/profile/ryan-mack.dev"
+            href={siteConfig.links.bluesky}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Bluesky profile (opens in new tab)"
@@ -218,7 +215,7 @@ export default function Navbar() {
             )}
           </button>
           <a
-            href="/resume"
+            href={siteConfig.resumePagePath}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="View resume (opens in new tab)"
@@ -282,7 +279,7 @@ export default function Navbar() {
             })}
             <div className={`flex items-center gap-3 pt-2 border-t ${theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"}`}>
               <a
-                href="https://github.com/kamoras"
+                href={siteConfig.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub profile (opens in new tab)"
@@ -291,7 +288,7 @@ export default function Navbar() {
                 <Github size={18} aria-hidden="true" />
               </a>
               <a
-                href="https://www.linkedin.com/in/ryan-mack"
+                href={siteConfig.links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn profile (opens in new tab)"
@@ -300,7 +297,7 @@ export default function Navbar() {
                 <Linkedin size={18} aria-hidden="true" />
               </a>
               <a
-                href="https://bsky.app/profile/ryan-mack.dev"
+                href={siteConfig.links.bluesky}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Bluesky profile (opens in new tab)"
@@ -320,7 +317,7 @@ export default function Navbar() {
                 )}
               </button>
               <a
-                href="/resume"
+                href={siteConfig.resumePagePath}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View resume (opens in new tab)"

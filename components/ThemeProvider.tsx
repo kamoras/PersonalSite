@@ -18,10 +18,12 @@ export function useTheme() {
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
+  const [hasStoredPreference, setHasStoredPreference] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme") as Theme | null;
     if (stored) {
+      setHasStoredPreference(true);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(stored);
       return;
@@ -43,7 +45,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     document.body.classList.toggle("light", theme === "light");
-    localStorage.setItem("theme", theme);
+    if (hasStoredPreference) {
+      localStorage.setItem("theme", theme);
+    }
 
     const color = theme === "dark" ? "#100d09" : "#faf7f2";
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
@@ -53,9 +57,12 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       document.head.appendChild(meta);
     }
     meta.content = color;
-  }, [theme]);
+  }, [hasStoredPreference, theme]);
 
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  const toggleTheme = () => {
+    setHasStoredPreference(true);
+    setTheme((t) => (t === "dark" ? "light" : "dark"));
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

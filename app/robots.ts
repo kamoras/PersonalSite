@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -8,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://ryan-mack.dev/sitemap.xml",
+    sitemap: absoluteUrl("/sitemap.xml"),
   };
 }
