@@ -11,7 +11,6 @@ export const siteConfig = {
   employer: "Cisco ThousandEyes",
   resumeDocumentPath: "/documents/Ryan-M-Mack-Resume.pdf",
   feedPath: "/feed.xml",
-  opengraphImagePath: "/opengraph-image.png",
   links: {
     github: "https://github.com/kamoras",
     linkedin: "https://www.linkedin.com/in/ryan-mack",
