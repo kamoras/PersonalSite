@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { cache } from "react";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -101,7 +102,7 @@ function readPostFile(filename: string) {
 
 function markdownToPlainText(md: string): string {
   return md
-    .replace(/\[\^[^\]]+\]:\s*.+/gm, "")  // footnote definitions
+    .replace(/\[\^[^\]]+\]:\s*[^\n]*(?:\n[ \t]+[^\n]*)*/gm, "")  // footnote definitions (incl. indented continuations)
     .replace(/\[\^[^\]]+\]/g, "")           // footnote references
     .replace(/^#{1,6}\s+/gm, "")            // headings
     .replace(/\*{1,3}([^*\n]+)\*{1,3}/g, "$1") // bold / italic
@@ -147,7 +148,7 @@ export function getAllPostSlugs(): string[] {
     .map((f) => f.replace(/\.md$/, ""));
 }
 
-export async function getPost(slug: string): Promise<Post> {
+export const getPost = cache(async function getPost(slug: string): Promise<Post> {
   const { frontmatter, content } = readPostFile(`${slug}.md`);
 
   const processed = await unified()
@@ -168,7 +169,7 @@ export async function getPost(slug: string): Promise<Post> {
     contentHtml: processed.toString(),
     contentText: markdownToPlainText(content),
   };
-}
+});
 
 export function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-US", {
