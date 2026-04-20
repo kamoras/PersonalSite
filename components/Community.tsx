@@ -49,7 +49,7 @@ export default function Community() {
 
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
-      if (!e.origin.includes("calendly.com")) return;
+      if (e.origin !== "https://calendly.com") return;
       const data = e.data as { event?: string; payload?: { height?: string | number } };
       if (data?.event === "calendly.page_height") {
         const raw = data.payload?.height;
