@@ -103,7 +103,7 @@ export default async function PostPage({
       />
 
       {/* Back link */}
-      <nav aria-label="Breadcrumb" className="mb-10">
+      <nav aria-label="Back navigation" className="mb-10">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--color-gold)] transition-colors font-mono"

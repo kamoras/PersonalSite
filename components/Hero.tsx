@@ -25,16 +25,12 @@ function AnimatedStat({
   label: string;
   animate: boolean;
 }) {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(() => (animate ? 0 : value));
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
-    if (!isInView || !animate) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDisplay(value);
-      return;
-    }
+    if (!isInView || !animate) return;
     const duration = 1200;
     const startTime = performance.now();
     const tick = (now: number) => {
