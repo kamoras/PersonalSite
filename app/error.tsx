@@ -19,7 +19,7 @@ export default function Error({
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex-1 flex items-center justify-center px-6">
+      <main className="flex-1 flex items-center justify-center px-6">
         <div className="text-center max-w-md">
           <p
             aria-hidden="true"
@@ -48,7 +48,7 @@ export default function Error({
             </Link>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

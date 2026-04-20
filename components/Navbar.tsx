@@ -109,7 +109,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[10000] transition-all duration-300 ${navBg}`}
+      className={`fixed top-0 left-0 right-0 z-[10000] transition-colors duration-300 ${navBg}`}
     >
       {/*
           OVER-COVER HACK:
@@ -129,7 +129,7 @@ export default function Navbar() {
       {/* Scroll progress indicator */}
       <div
         aria-hidden="true"
-        className="absolute bottom-0 left-0 h-px bg-[var(--color-gold)]"
+        className="absolute bottom-0 left-0 h-px bg-[var(--color-gold)] transition-[width] duration-75 ease-out"
         style={{ width: `${scrollProgress}%` }}
       />
 

@@ -2,16 +2,23 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Page Not Found — Ryan Mack",
+  title: `Page Not Found — ${siteConfig.name}`,
 };
 
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col">
+      <a
+        href="#main-content"
+        className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:bg-[#c9a465] focus-visible:text-[#100d09] focus-visible:rounded-lg focus-visible:text-sm focus-visible:font-medium"
+      >
+        Skip to main content
+      </a>
       <Navbar />
-      <div className="flex-1 flex items-center justify-center px-6">
+      <main id="main-content" className="flex-1 flex items-center justify-center px-6">
         <div className="text-center max-w-md">
           <p
             aria-hidden="true"
@@ -40,7 +47,7 @@ export default function NotFound() {
             </Link>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );
