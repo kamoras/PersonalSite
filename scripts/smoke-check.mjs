@@ -74,6 +74,7 @@ const posts = fs.existsSync(postsDir)
 
 const home = resolveRouteFile("/");
 assertIncludes("/", home.content, 'id="main-content"');
+assertIncludes("/", home.content, 'href="#main-content"');
 assertIncludes("/", home.content, "View Experience");
 
 const blog = resolveRouteFile("/blog");

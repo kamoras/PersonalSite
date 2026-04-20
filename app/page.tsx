@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -8,6 +9,11 @@ import Community from "@/components/Community";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import HashScrollHandler from "@/components/HashScrollHandler";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: absoluteUrl() },
+};
 
 const Divider = () => (
   <div aria-hidden="true" className="ornament-divider max-w-6xl mx-auto px-6 -mt-12 mb-0 text-lg select-none">
