@@ -17,6 +17,9 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
   { label: "Blog", href: "/blog" },
 ];
+const sectionIds = navLinks
+  .filter((link) => link.href.startsWith("#"))
+  .map((link) => link.href.slice(1));
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -27,6 +30,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const closeMobileMenu = () => setMobileOpen(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -47,7 +51,7 @@ export default function Navbar() {
       },
       { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
     );
-    ["about", "experience", "publications", "projects", "community", "contact"].forEach((id) => {
+    sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -93,37 +97,60 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  const navBg =
+    theme === "dark"
+      ? "bg-[#100d09] md:bg-[#100d09]/92 md:backdrop-blur-md border-b border-white/[0.06]"
+      : "bg-[#faf7f2] md:bg-[#faf7f2]/92 md:backdrop-blur-md border-b border-black/[0.06]";
+
+  // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
+
+  const bgColor = theme === "dark" ? "#100d09" : "#faf7f2";
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-[10000] border-b border-[var(--color-card-border)] bg-[var(--color-bg)] md:backdrop-blur-md"
-      style={{ backgroundColor: "var(--color-bg)" }}
+      className={`fixed top-0 left-0 right-0 z-[10000] ${navBg}`}
+      style={{
+        backgroundColor: bgColor
+      }}
     >
-      <div 
+      {/*
+          OVER-COVER HACK:
+          This absolute div sits above the header to ensure that even during
+          iOS Safari's dynamic browser chrome transitions, no content is
+          visible in the safe area gap.
+      */}
+      <div
         aria-hidden="true"
         className="absolute bottom-full left-0 right-0 h-[100px]"
-        style={{ backgroundColor: "var(--color-bg)" }}
+        style={{ backgroundColor: bgColor }}
       />
+
+      {/* SAFE AREA SPACER */}
       <div style={{ height: "env(safe-area-inset-top, 0px)" }} />
+
+      {/* Scroll progress indicator */}
       <div
         aria-hidden="true"
         className="absolute bottom-0 left-0 h-px bg-[var(--color-gold)]"
         style={{ width: `${scrollProgress}%` }}
       />
-      
+
       <nav
         aria-label="Main navigation"
         className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between"
       >
+        {/* Logo — links to top of page */}
         <Link
           href="/"
+          onClick={closeMobileMenu}
           aria-label="Ryan Mack — back to top"
           className={`font-playfair italic text-lg font-semibold ${textMuted} hover:text-current transition-colors`}
         >
           rm
         </Link>
 
+        {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
             const isHashLink = link.href.startsWith("#");
@@ -152,6 +179,7 @@ export default function Navbar() {
           })}
         </div>
 
+        {/* Desktop actions */}
         <div className="hidden md:flex items-center gap-1">
           <a
             href={siteConfig.links.github}
@@ -192,16 +220,17 @@ export default function Navbar() {
             )}
           </button>
           <a
-            href={siteConfig.resumePagePath}
+            href={siteConfig.resumeDocumentPath}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="View resume (opens in new tab)"
+            aria-label="View resume PDF (opens in new tab)"
             className="btn-resume ml-2 px-4 py-1.5 text-sm rounded font-mono tracking-wide"
           >
             Resume
           </a>
         </div>
 
+        {/* Mobile menu toggle */}
         <button
           ref={toggleRef}
           className={`md:hidden p-2 rounded-md ${textMuted} hover:text-current transition-colors`}
@@ -226,7 +255,11 @@ export default function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
-          className="md:hidden border-t border-[var(--color-card-border)] bg-[var(--color-bg)]/96 backdrop-blur-md"
+          className={`md:hidden border-t ${
+            theme === "dark"
+              ? "border-white/[0.06] bg-[#100d09]/96"
+              : "border-black/[0.06] bg-[#faf7f2]/96"
+          } backdrop-blur-md`}
         >
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-4">
             {navLinks.map((link) => {
@@ -239,7 +272,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={resolvedHref}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={closeMobileMenu}
                   aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
                   className={`text-sm transition-colors tracking-wide py-2 ${
                     isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
@@ -254,6 +287,7 @@ export default function Navbar() {
                 href={siteConfig.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMobileMenu}
                 aria-label="GitHub profile (opens in new tab)"
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
@@ -263,6 +297,7 @@ export default function Navbar() {
                 href={siteConfig.links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMobileMenu}
                 aria-label="LinkedIn profile (opens in new tab)"
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
@@ -272,13 +307,17 @@ export default function Navbar() {
                 href={siteConfig.links.bluesky}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMobileMenu}
                 aria-label="Bluesky profile (opens in new tab)"
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
                 <Bluesky size={18} aria-hidden="true" />
               </a>
               <button
-                onClick={toggleTheme}
+                onClick={() => {
+                  closeMobileMenu();
+                  toggleTheme();
+                }}
                 aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                 className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
               >
@@ -289,10 +328,11 @@ export default function Navbar() {
                 )}
               </button>
               <a
-                href={siteConfig.resumePagePath}
+                href={siteConfig.resumeDocumentPath}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="View resume (opens in new tab)"
+                onClick={closeMobileMenu}
+                aria-label="View resume PDF (opens in new tab)"
                 className="btn-resume ml-auto px-4 py-2 text-sm rounded font-mono"
               >
                 Resume

@@ -18,13 +18,11 @@ export const metadata: Metadata = {
     url: absoluteUrl("/blog"),
     siteName: siteConfig.name,
     type: "website",
-    images: [{ url: siteConfig.opengraphImagePath, width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: `Writing — ${siteConfig.name}`,
     description: siteConfig.blogDescription,
-    images: [siteConfig.opengraphImagePath],
   },
 };
 

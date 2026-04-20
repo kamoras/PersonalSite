@@ -9,10 +9,8 @@ export const siteConfig = {
   email: "mack.ryanm@gmail.com",
   jobTitle: "Senior Software Engineer",
   employer: "Cisco ThousandEyes",
-  resumePagePath: "/resume",
   resumeDocumentPath: "/documents/Ryan-M-Mack-Resume.pdf",
   feedPath: "/feed.xml",
-  opengraphImagePath: "/opengraph-image.png",
   links: {
     github: "https://github.com/kamoras",
     linkedin: "https://www.linkedin.com/in/ryan-mack",

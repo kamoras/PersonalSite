@@ -7,6 +7,10 @@ import BlogContent from "@/components/BlogContent";
 import TextToSpeech from "@/components/TextToSpeechLoader";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
+function hasPost(slug: string): boolean {
+  return getAllPostSlugs().includes(slug);
+}
+
 export async function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
 }
@@ -17,11 +21,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const slugs = getAllPostSlugs();
-  if (!slugs.includes(slug)) return {};
+  if (!hasPost(slug)) return {};
 
   const post = await getPost(slug);
-  const postOgImage = absoluteUrl(`/blog/${slug}/opengraph-image.png`);
 
   return {
     title: `${post.title} — ${siteConfig.name}`,
@@ -38,13 +40,11 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.date,
       authors: [siteConfig.name],
-      images: [{ url: postOgImage, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: [postOgImage],
     },
   };
 }
@@ -55,8 +55,7 @@ export default async function PostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const slugs = getAllPostSlugs();
-  if (!slugs.includes(slug)) notFound();
+  if (!hasPost(slug)) notFound();
 
   const post = await getPost(slug);
   const postUrl = absoluteUrl(`/blog/${slug}`);
@@ -79,7 +78,6 @@ export default async function PostPage({
     datePublished: post.date,
     url: postUrl,
     ...(post.tags.length > 0 && { keywords: post.tags.join(", ") }),
-    image: absoluteUrl(`/blog/${slug}/opengraph-image.png`),
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
   };
 

@@ -34,6 +34,33 @@ function assertIncludes(route, content, snippet) {
   }
 }
 
+function extractMetaContent(content, attrName, attrValue) {
+  const patterns = [
+    new RegExp(`<meta[^>]+${attrName}="${attrValue}"[^>]+content="([^"]+)"`, "i"),
+    new RegExp(`<meta[^>]+content="([^"]+)"[^>]+${attrName}="${attrValue}"`, "i"),
+  ];
+
+  for (const pattern of patterns) {
+    const match = content.match(pattern);
+    if (match?.[1]) {
+      return match[1];
+    }
+  }
+
+  return null;
+}
+
+function assertExportedAsset(assetUrl, label) {
+  const pathname = assetUrl.startsWith("http://") || assetUrl.startsWith("https://")
+    ? new URL(assetUrl).pathname
+    : assetUrl;
+  const assetPath = path.join(outDir, pathname.replace(/^\//, ""));
+
+  if (!fs.existsSync(assetPath)) {
+    throw new Error(`Missing exported ${label}: ${assetPath}`);
+  }
+}
+
 if (!fs.existsSync(outDir)) {
   throw new Error("Missing build output directory: out");
 }
@@ -47,18 +74,45 @@ const posts = fs.existsSync(postsDir)
 
 const home = resolveRouteFile("/");
 assertIncludes("/", home.content, 'id="main-content"');
-assertIncludes("/", home.content, "Review Experience");
+assertIncludes("/", home.content, "View Experience");
 
 const blog = resolveRouteFile("/blog");
 assertIncludes("/blog", blog.content, "RSS Feed");
 
-const resume = resolveRouteFile("/resume");
-assertIncludes("/resume", resume.content, "Download PDF");
-assertIncludes("/resume", resume.content, "/documents/Ryan-M-Mack-Resume.pdf");
+const resumePdfPath = path.join(outDir, "documents", "Ryan-M-Mack-Resume.pdf");
+if (!fs.existsSync(resumePdfPath)) {
+  throw new Error("Missing exported resume PDF asset");
+}
+
+const faviconPath = path.join(outDir, "favicon.ico");
+if (!fs.existsSync(faviconPath)) {
+  throw new Error("Missing exported favicon asset");
+}
+
+const resumeRouteArtifact = [
+  path.join(outDir, "resume.html"),
+  path.join(outDir, "resume", "index.html"),
+].some((filePath) => fs.existsSync(filePath));
+if (resumeRouteArtifact) {
+  throw new Error("Unexpected exported /resume page artifact");
+}
 
 if (posts.length > 0) {
-  const firstPost = resolveRouteFile(`/blog/${posts[0]}`);
-  assertIncludes(`/blog/${posts[0]}`, firstPost.content, "Back to all posts");
+  const firstPostRoute = `/blog/${posts[0]}`;
+  const firstPost = resolveRouteFile(firstPostRoute);
+  assertIncludes(firstPostRoute, firstPost.content, "Back to all posts");
+
+  const ogImage = extractMetaContent(firstPost.content, "property", "og:image");
+  if (!ogImage) {
+    throw new Error(`Missing og:image metadata on ${firstPostRoute}`);
+  }
+  assertExportedAsset(ogImage, "post Open Graph image");
+
+  const twitterImage = extractMetaContent(firstPost.content, "name", "twitter:image");
+  if (!twitterImage) {
+    throw new Error(`Missing twitter:image metadata on ${firstPostRoute}`);
+  }
+  assertExportedAsset(twitterImage, "post Twitter image");
 }
 
 const feedPath = path.join(outDir, "feed.xml");
@@ -67,5 +121,16 @@ if (feed === null) {
   throw new Error("Missing generated RSS feed: out/feed.xml");
 }
 assertIncludes("/feed.xml", feed, "<rss version=\"2.0\">");
+
+const configPath = path.join(outDir, "staticwebapp.config.json");
+const config = readFileIfPresent(configPath);
+if (config === null) {
+  throw new Error("Missing exported static web app config");
+}
+const staticConfig = JSON.parse(config);
+const resumeRoute = staticConfig.routes?.find((route) => route.route === "/resume");
+if (!resumeRoute || resumeRoute.redirect !== "/documents/Ryan-M-Mack-Resume.pdf") {
+  throw new Error("Missing /resume redirect in static web app config");
+}
 
 console.log("Smoke checks passed.");
