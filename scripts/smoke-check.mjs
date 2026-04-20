@@ -98,20 +98,20 @@ if (resumeRouteArtifact) {
   throw new Error("Unexpected exported /resume page artifact");
 }
 
-if (posts.length > 0) {
-  const firstPostRoute = `/blog/${posts[0]}`;
-  const firstPost = resolveRouteFile(firstPostRoute);
-  assertIncludes(firstPostRoute, firstPost.content, "Back to all posts");
+for (const slug of posts) {
+  const postRoute = `/blog/${slug}`;
+  const postFile = resolveRouteFile(postRoute);
+  assertIncludes(postRoute, postFile.content, "Back to all posts");
 
-  const ogImage = extractMetaContent(firstPost.content, "property", "og:image");
+  const ogImage = extractMetaContent(postFile.content, "property", "og:image");
   if (!ogImage) {
-    throw new Error(`Missing og:image metadata on ${firstPostRoute}`);
+    throw new Error(`Missing og:image metadata on ${postRoute}`);
   }
   assertExportedAsset(ogImage, "post Open Graph image");
 
-  const twitterImage = extractMetaContent(firstPost.content, "name", "twitter:image");
+  const twitterImage = extractMetaContent(postFile.content, "name", "twitter:image");
   if (!twitterImage) {
-    throw new Error(`Missing twitter:image metadata on ${firstPostRoute}`);
+    throw new Error(`Missing twitter:image metadata on ${postRoute}`);
   }
   assertExportedAsset(twitterImage, "post Twitter image");
 }
