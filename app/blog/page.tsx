@@ -38,6 +38,7 @@ export default function BlogIndex() {
           </p>
           <a
             href={siteConfig.feedPath}
+            type="application/rss+xml"
             className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--text-muted)] transition-colors hover:text-[var(--color-gold)]"
           >
             RSS Feed
