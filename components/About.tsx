@@ -38,7 +38,7 @@ const skills = [
 
 const techGroups = [
   { label: "Languages", items: ["C++", "Java", "Python", "TypeScript", "C#", "Go"] },
-  { label: "Infrastructure", items: ["Kubernetes", "Docker", "AWS", "Linux", "gRPC"] },
+  { label: "Infrastructure", items: ["Kubernetes", "Docker", "AWS", "gRPC"] },
   { label: "Platforms", items: ["Linux", "Windows", "macOS", "Cisco IOS"] },
 ];
 
