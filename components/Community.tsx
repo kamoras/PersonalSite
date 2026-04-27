@@ -99,11 +99,11 @@ export default function Community() {
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+        <div className="grid md:grid-cols-2 gap-12 items-stretch">
 
           {/* Free mentoring CTA */}
-          <motion.div {...fade(0.1)}>
-            <div className={`p-6 md:p-8 rounded-2xl border border-[rgba(201,164,101,0.25)] ${cardBg} shadow-[0_0_40px_rgba(201,164,101,0.05)]`}>
+          <motion.div {...fade(0.1)} className="h-full">
+            <div className={`h-full flex flex-col p-6 md:p-8 rounded-2xl border border-[rgba(201,164,101,0.25)] ${cardBg} shadow-[0_0_40px_rgba(201,164,101,0.05)]`}>
               <div className="flex items-center gap-3 mb-5">
                 <div className={`flex-shrink-0 p-3 rounded-xl border ${borderColor} ${iconBg}`}>
                   <Users size={20} className="text-[var(--color-gold)]" aria-hidden="true" />
@@ -116,31 +116,44 @@ export default function Community() {
                 </div>
               </div>
 
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-8">
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
                 I offer free 1:1 sessions to anyone looking to break into software engineering, grow their
                 career, prep for interviews, or navigate the industry. No catch — book a time that works for you.
               </p>
 
-              <button
-                onClick={() => openCalendlyPopup(calendlyUrl)}
-                className="group flex items-center justify-between w-full px-5 py-4 rounded-xl border border-[rgba(201,164,101,0.4)] text-sm font-medium text-[var(--color-gold)] hover:bg-[rgba(201,164,101,0.08)] hover:border-[rgba(201,164,101,0.7)] transition-all duration-200"
-                aria-label="Open booking overlay to schedule a free mentoring session with Ryan Mack"
-              >
-                <span>Book a free session</span>
-                <ArrowRight size={15} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" aria-hidden="true" />
-              </button>
+              <div className="flex flex-wrap gap-2 mb-auto">
+                {["Breaking into tech", "Career growth", "Interview prep", "Resume reviews", "Navigating the industry", "Code & architecture"].map((topic) => (
+                  <span
+                    key={topic}
+                    className={`px-3 py-1 rounded-full text-xs font-mono border ${borderColor} ${iconBg} text-[var(--text-muted)]`}
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
 
-              <p className="font-mono text-[10px] text-[var(--text-muted)] mt-4">
-                Powered by{" "}
-                <a
-                  href={siteConfig.links.calendly}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-2 hover:text-current transition-colors"
+              <div className="mt-8">
+                <button
+                  onClick={() => openCalendlyPopup(calendlyUrl)}
+                  className="group flex items-center justify-between w-full px-5 py-4 rounded-xl border border-[rgba(201,164,101,0.4)] text-sm font-medium text-[var(--color-gold)] hover:bg-[rgba(201,164,101,0.08)] hover:border-[rgba(201,164,101,0.7)] transition-all duration-200"
+                  aria-label="Open booking overlay to schedule a free mentoring session with Ryan Mack"
                 >
-                  Calendly
-                </a>
-              </p>
+                  <span>Book a free session</span>
+                  <ArrowRight size={15} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" aria-hidden="true" />
+                </button>
+
+                <p className="font-mono text-[10px] text-[var(--text-muted)] mt-4">
+                  Powered by{" "}
+                  <a
+                    href={siteConfig.links.calendly}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-current transition-colors"
+                  >
+                    Calendly
+                  </a>
+                </p>
+              </div>
             </div>
           </motion.div>
 
