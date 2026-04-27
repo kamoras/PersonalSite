@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getAllPostSlugs, getPost, formatDate } from "@/lib/posts";
+import { getAllPostSlugs, getPost, getRelatedPosts, formatDate } from "@/lib/posts";
 import { ArrowLeft } from "lucide-react";
 import BlogContent from "@/components/BlogContent";
 import TextToSpeech from "@/components/TextToSpeechLoader";
+import GiscusComments from "@/components/GiscusComments";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 function hasPost(slug: string): boolean {
@@ -59,6 +60,7 @@ export default async function PostPage({
 
   const post = await getPost(slug);
   const postUrl = absoluteUrl(`/blog/${slug}`);
+  const related = getRelatedPosts(slug, post.tags);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -152,8 +154,38 @@ export default async function PostPage({
       {/* Post body */}
       <BlogContent html={post.contentHtml} />
 
+      {/* Related posts */}
+      {related.length > 0 && (
+        <section aria-label="Related posts" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
+          <h2 className="font-playfair text-xl font-semibold mb-6">Related posts</h2>
+          <ul className="space-y-4 list-none">
+            {related.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  href={`/blog/${p.slug}`}
+                  className="group block p-4 rounded-lg border border-[var(--color-card-border)] hover:border-[var(--color-gold)] transition-colors"
+                >
+                  <p className="font-semibold group-hover:text-[var(--color-gold)] transition-colors mb-1">
+                    {p.title}
+                  </p>
+                  <p className="text-sm text-[var(--text-muted)] font-mono">
+                    {formatDate(p.date)} · {p.readingTime} min read
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Comments */}
+      <section aria-label="Comments" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
+        <h2 className="font-playfair text-xl font-semibold mb-6">Discussion</h2>
+        <GiscusComments />
+      </section>
+
       {/* Footer nav */}
-      <footer className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
+      <footer className="mt-10 pt-6 border-t border-[var(--color-card-border)]">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--color-gold)] transition-colors font-mono"

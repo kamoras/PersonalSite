@@ -16,6 +16,7 @@ const navLinks = [
   { label: "Community", href: "#community" },
   { label: "Contact", href: "#contact" },
   { label: "Blog", href: "/blog" },
+  { label: "Now", href: "/now" },
 ];
 const sectionIds = navLinks
   .filter((link) => link.href.startsWith("#"))

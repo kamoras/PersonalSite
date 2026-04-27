@@ -171,6 +171,19 @@ export const getPost = cache(async function getPost(slug: string): Promise<Post>
   };
 });
 
+export function getRelatedPosts(currentSlug: string, tags: string[], limit = 3): PostMeta[] {
+  return getAllPostsMeta()
+    .filter((p) => p.slug !== currentSlug)
+    .map((p) => ({
+      post: p,
+      score: p.tags.filter((t) => tags.includes(t)).length,
+    }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || new Date(b.post.date).getTime() - new Date(a.post.date).getTime())
+    .slice(0, limit)
+    .map(({ post }) => post);
+}
+
 export function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
