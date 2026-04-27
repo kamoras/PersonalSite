@@ -1,12 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
 import { useTheme } from "./ThemeProvider";
-import { Users } from "lucide-react";
-import Script from "next/script";
+import { Users, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/lib/site";
+
+declare global {
+  interface Window {
+    Calendly?: { initPopupWidget: (opts: { url: string }) => void };
+  }
+}
+
+function openCalendlyPopup(url: string) {
+  const open = () => window.Calendly!.initPopupWidget({ url });
+
+  if (window.Calendly) {
+    open();
+    return;
+  }
+
+  if (!document.querySelector('link[href*="assets.calendly.com"]')) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://assets.calendly.com/assets/external/widget.css";
+    document.head.appendChild(link);
+  }
+
+  const script = document.createElement("script");
+  script.src = "https://assets.calendly.com/assets/external/widget.js";
+  script.onload = open;
+  document.head.appendChild(script);
+}
 
 const volunteering = [
   {
@@ -45,23 +70,6 @@ export default function Community() {
   const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
-  const [calendlyHeight, setCalendlyHeight] = useState(420);
-  const [showCalendly, setShowCalendly] = useState(false);
-
-  useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (e.origin !== "https://calendly.com") return;
-      const data = e.data as { event?: string; payload?: { height?: string | number } };
-      if (data?.event === "calendly.page_height") {
-        const raw = data.payload?.height;
-        const px = typeof raw === "number" ? raw : parseInt(raw ?? "", 10);
-        if (!Number.isNaN(px) && px > 0) setCalendlyHeight(px);
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, []);
 
   const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
   const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
@@ -75,6 +83,8 @@ export default function Community() {
           animate: isInView ? { opacity: 1, y: 0 } : {},
           transition: { duration: 0.55, delay },
         };
+
+  const calendlyUrl = `${siteConfig.links.calendly}?hide_gdpr_banner=1&primary_color=c9a465`;
 
   return (
     <section id="community" aria-labelledby="community-heading" ref={ref} className="py-32">
@@ -106,42 +116,21 @@ export default function Community() {
                 </div>
               </div>
 
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-8">
                 I offer free 1:1 sessions to anyone looking to break into software engineering, grow their
                 career, prep for interviews, or navigate the industry. No catch — book a time that works for you.
               </p>
 
-              {showCalendly ? (
-                <>
-                  <p className="sr-only">
-                    Use the scheduling widget below to book a free mentoring session.
-                  </p>
-                  <div
-                    className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
-                    data-url={`${siteConfig.links.calendly}?hide_gdpr_banner=1&primary_color=c9a465`}
-                    aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
-                    style={{
-                      minWidth: "320px",
-                      height: `${calendlyHeight}px`,
-                      transition: "height 0.3s ease",
-                    }}
-                  />
-                  <Script
-                    src="https://assets.calendly.com/assets/external/widget.js"
-                    strategy="afterInteractive"
-                  />
-                </>
-              ) : (
-                <button
-                  onClick={() => setShowCalendly(true)}
-                  className={`w-full py-3 px-5 rounded-xl border border-[rgba(201,164,101,0.4)] text-sm font-medium text-[var(--color-gold)] hover:bg-[rgba(201,164,101,0.08)] transition-colors mb-2`}
-                  aria-label="Open Calendly booking widget to schedule a free mentoring session"
-                >
-                  Book a free session
-                </button>
-              )}
+              <button
+                onClick={() => openCalendlyPopup(calendlyUrl)}
+                className="group flex items-center justify-between w-full px-5 py-4 rounded-xl border border-[rgba(201,164,101,0.4)] text-sm font-medium text-[var(--color-gold)] hover:bg-[rgba(201,164,101,0.08)] hover:border-[rgba(201,164,101,0.7)] transition-all duration-200"
+                aria-label="Open booking overlay to schedule a free mentoring session with Ryan Mack"
+              >
+                <span>Book a free session</span>
+                <ArrowRight size={15} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" aria-hidden="true" />
+              </button>
 
-              <p className="font-mono text-[10px] text-[var(--text-muted)]">
+              <p className="font-mono text-[10px] text-[var(--text-muted)] mt-4">
                 Powered by{" "}
                 <a
                   href={siteConfig.links.calendly}
