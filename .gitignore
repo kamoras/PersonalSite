@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# lighthouse ci results
+.lighthouseci/
+
+# generated files (produced at build time)
+/public/feed.xml
