@@ -1,0 +1,27 @@
+name: Bug report
+description: Something is broken or looks wrong
+labels: [bug]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: "https://ryan-mack.dev/..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you expect, and what did you see instead?
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: "e.g. Safari 17 on iOS 17.4"
+    validations:
+      required: false

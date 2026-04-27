@@ -1,0 +1,26 @@
+name: Content correction
+description: Typo, factual error, or broken link in a blog post or page copy
+labels: [content]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: "https://ryan-mack.dev/blog/..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current text
+      description: Quote the text as it appears now.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested correction
+    validations:
+      required: true
