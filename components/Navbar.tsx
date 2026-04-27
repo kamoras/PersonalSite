@@ -34,6 +34,11 @@ export default function Navbar() {
     const onScroll = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
+      // The last section can't enter the IO trigger zone when at the page bottom,
+      // so activate it directly once the user has scrolled within 50px of the end.
+      if (total > 0 && window.scrollY >= total - 50) {
+        setActiveSection(sectionIds[sectionIds.length - 1]);
+      }
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -101,7 +106,6 @@ export default function Navbar() {
       ? "bg-[#100d09] md:bg-[#100d09]/92 md:backdrop-blur-md border-b border-white/[0.06]"
       : "bg-[#faf7f2] md:bg-[#faf7f2]/92 md:backdrop-blur-md border-b border-black/[0.06]";
 
-  // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
 
   const bgColor = theme === "dark" ? "#100d09" : "#faf7f2";

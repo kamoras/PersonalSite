@@ -156,9 +156,9 @@ export default async function PostPage({
 
       {/* Related posts */}
       {related.length > 0 && (
-        <section aria-label="Related posts" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
-          <h2 className="font-playfair text-xl font-semibold mb-6">Related posts</h2>
-          <ul className="space-y-4 list-none">
+        <section aria-labelledby="related-posts-heading" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
+          <h2 id="related-posts-heading" className="font-playfair text-xl font-semibold mb-6">Related posts</h2>
+          <ul role="list" className="space-y-4 list-none">
             {related.map((p) => (
               <li key={p.slug}>
                 <Link
@@ -169,7 +169,9 @@ export default async function PostPage({
                     {p.title}
                   </p>
                   <p className="text-sm text-[var(--text-muted)] font-mono">
-                    {formatDate(p.date)} · {p.readingTime} min read
+                    {formatDate(p.date)}
+                    <span aria-hidden="true"> · </span>
+                    {p.readingTime} min read
                   </p>
                 </Link>
               </li>
@@ -178,9 +180,8 @@ export default async function PostPage({
         </section>
       )}
 
-      {/* Comments */}
-      <section aria-label="Comments" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
-        <h2 className="font-playfair text-xl font-semibold mb-6">Discussion</h2>
+      <section aria-labelledby="discussion-heading" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
+        <h2 id="discussion-heading" className="font-playfair text-xl font-semibold mb-6">Discussion</h2>
         <GiscusComments />
       </section>
 
