@@ -46,6 +46,7 @@ export default function Community() {
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
   const [calendlyHeight, setCalendlyHeight] = useState(420);
+  const [showCalendly, setShowCalendly] = useState(false);
 
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
@@ -110,23 +111,35 @@ export default function Community() {
                 career, prep for interviews, or navigate the industry. No catch — book a time that works for you.
               </p>
 
-              <p className="sr-only">
-                Use the scheduling widget below to book a free mentoring session.
-              </p>
-              <div
-                className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
-                data-url={`${siteConfig.links.calendly}?hide_gdpr_banner=1&primary_color=c9a465`}
-                aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
-                style={{
-                  minWidth: "320px",
-                  height: `${calendlyHeight}px`,
-                  transition: "height 0.3s ease",
-                }}
-              />
-              <Script
-                src="https://assets.calendly.com/assets/external/widget.js"
-                strategy="lazyOnload"
-              />
+              {showCalendly ? (
+                <>
+                  <p className="sr-only">
+                    Use the scheduling widget below to book a free mentoring session.
+                  </p>
+                  <div
+                    className="calendly-inline-widget rounded-xl overflow-hidden mb-2"
+                    data-url={`${siteConfig.links.calendly}?hide_gdpr_banner=1&primary_color=c9a465`}
+                    aria-label="Calendly booking widget — book a free mentoring session with Ryan Mack"
+                    style={{
+                      minWidth: "320px",
+                      height: `${calendlyHeight}px`,
+                      transition: "height 0.3s ease",
+                    }}
+                  />
+                  <Script
+                    src="https://assets.calendly.com/assets/external/widget.js"
+                    strategy="afterInteractive"
+                  />
+                </>
+              ) : (
+                <button
+                  onClick={() => setShowCalendly(true)}
+                  className={`w-full py-3 px-5 rounded-xl border border-[rgba(201,164,101,0.4)] text-sm font-medium text-[var(--color-gold)] hover:bg-[rgba(201,164,101,0.08)] transition-colors mb-2`}
+                  aria-label="Open Calendly booking widget to schedule a free mentoring session"
+                >
+                  Book a free session
+                </button>
+              )}
 
               <p className="font-mono text-[10px] text-[var(--text-muted)]">
                 Powered by{" "}
