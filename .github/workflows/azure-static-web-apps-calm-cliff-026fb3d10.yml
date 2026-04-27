@@ -9,11 +9,23 @@ on:
     branches:
       - main
 
+# Least-privilege default — each job grants only what it needs.
+permissions:
+  contents: read
+
+# Cancel in-progress runs on the same branch to avoid wasted runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build_and_deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     name: Build and Deploy
+    permissions:
+      contents: read
+      id-token: write  # required by Azure SWA action
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,6 +63,8 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: Build PR
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -80,10 +94,20 @@ jobs:
           retention-days: 1
 
   deploy_preview:
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    # Skip for fork PRs — secrets are unavailable there and we don't deploy
+    # untrusted code to the preview environment. Fork contributions are reviewed
+    # manually and re-submitted from a trusted branch before merging.
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.action != 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     name: Deploy Preview
     needs: build_pr
+    permissions:
+      contents: read
+      pull-requests: write  # posts deployment URL back to the PR
+      id-token: write
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -101,12 +125,16 @@ jobs:
           api_location: ""
           output_location: ""
           skip_app_build: true
+          skip_deploy_on_missing_secrets: true
 
   lighthouse:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: Lighthouse
     needs: build_pr
+    permissions:
+      contents: read
+      pull-requests: write  # posts Lighthouse report comment
     steps:
       - uses: actions/checkout@v4
 
@@ -126,6 +154,7 @@ jobs:
 
       - name: Comment PR with Lighthouse results
         if: always()
+        continue-on-error: true  # write access unavailable for fork PRs; non-fatal
         uses: actions/github-script@v7
         env:
           MANIFEST: ${{ steps.lhci.outputs.manifest }}
@@ -195,6 +224,9 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Close Pull Request
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Close Pull Request
         uses: Azure/static-web-apps-deploy@v1
