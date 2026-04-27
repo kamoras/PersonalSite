@@ -34,32 +34,23 @@ export default function Navbar() {
     const onScroll = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
-      // The last section can't enter the IO trigger zone when at the page bottom,
-      // so activate it directly once the user has scrolled within 50px of the end.
-      if (total > 0 && window.scrollY >= total - 50) {
-        setActiveSection(sectionIds[sectionIds.length - 1]);
+
+      // Activate the last section whose top edge has crossed 35% down the viewport.
+      // Position-based calculation works correctly in both scroll directions and
+      // naturally handles the last section (which IO can never activate from below).
+      const trigger = window.scrollY + window.innerHeight * 0.35;
+      let next = "";
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top + window.scrollY <= trigger) {
+          next = id;
+        }
       }
+      setActiveSection(next);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Track which section is in the reading area of the viewport
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
-    );
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
   }, []);
 
   // Focus trap, escape key, and body scroll lock for mobile menu
