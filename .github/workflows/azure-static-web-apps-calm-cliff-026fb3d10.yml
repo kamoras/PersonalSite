@@ -97,7 +97,7 @@ jobs:
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
-          configPath: .lighthouserc.json
+          configPath: .lighthouserc.js
           temporaryPublicStorage: true
         continue-on-error: true
 
