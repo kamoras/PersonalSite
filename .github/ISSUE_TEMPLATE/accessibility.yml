@@ -1,0 +1,27 @@
+name: Accessibility issue
+description: Something is hard or impossible to use with assistive technology or keyboard navigation
+labels: [accessibility]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: "https://ryan-mack.dev/..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the issue
+      description: What were you trying to do, what assistive technology or input method were you using, and what happened?
+    validations:
+      required: true
+
+  - type: input
+    id: at
+    attributes:
+      label: Assistive technology / input method
+      placeholder: "e.g. VoiceOver + Safari, keyboard-only, NVDA + Chrome"
+    validations:
+      required: false
