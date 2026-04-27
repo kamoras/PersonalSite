@@ -8,19 +8,19 @@ import { Github, Linkedin, Bluesky } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import { siteConfig } from "@/lib/site";
 
-const navLinks = [
+const sectionLinks = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
   { label: "Publications", href: "#publications" },
   { label: "Projects", href: "#projects" },
   { label: "Community", href: "#community" },
   { label: "Contact", href: "#contact" },
+];
+const pageLinks = [
   { label: "Blog", href: "/blog" },
   { label: "Now", href: "/now" },
 ];
-const sectionIds = navLinks
-  .filter((link) => link.href.startsWith("#"))
-  .map((link) => link.href.slice(1));
+const sectionIds = sectionLinks.map((link) => link.href.slice(1));
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -150,18 +150,38 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => {
-            const isHashLink = link.href.startsWith("#");
-            const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
-            const isActive = isHashLink
-              ? activeSection === link.href.slice(1)
-              : pathname.startsWith(link.href);
+        <div className="hidden md:flex items-center gap-6">
+          {(isHome ? sectionLinks : []).map((link) => {
+            const isActive = activeSection === link.href.slice(1);
             return (
               <Link
                 key={link.href}
-                href={resolvedHref}
-                aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
+                href={link.href}
+                aria-current={isActive ? "location" : undefined}
+                className={`relative text-sm transition-colors tracking-wide ${
+                  isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -bottom-1 left-0 right-0 h-px bg-[var(--color-gold)] rounded-full"
+                  />
+                )}
+              </Link>
+            );
+          })}
+          {isHome && (
+            <span aria-hidden="true" className="w-px h-4 bg-[var(--color-card-border)]" />
+          )}
+          {pageLinks.map((link) => {
+            const isActive = pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`relative text-sm transition-colors tracking-wide ${
                   isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
                 }`}
@@ -261,18 +281,33 @@ export default function Navbar() {
           } backdrop-blur-md`}
         >
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-4">
-            {navLinks.map((link) => {
-              const isHashLink = link.href.startsWith("#");
-              const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
-              const isActive = isHashLink
-                ? activeSection === link.href.slice(1)
-                : pathname.startsWith(link.href);
+            {(isHome ? sectionLinks : []).map((link) => {
+              const isActive = activeSection === link.href.slice(1);
               return (
                 <Link
                   key={link.href}
-                  href={resolvedHref}
+                  href={link.href}
                   onClick={closeMobileMenu}
-                  aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
+                  aria-current={isActive ? "location" : undefined}
+                  className={`text-sm transition-colors tracking-wide py-2 ${
+                    isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+            {isHome && (
+              <div aria-hidden="true" className={`h-px ${theme === "dark" ? "bg-white/[0.06]" : "bg-black/[0.06]"}`} />
+            )}
+            {pageLinks.map((link) => {
+              const isActive = pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMobileMenu}
+                  aria-current={isActive ? "page" : undefined}
                   className={`text-sm transition-colors tracking-wide py-2 ${
                     isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
                   }`}
