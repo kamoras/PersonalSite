@@ -43,10 +43,11 @@ components/           # React components (one per section/feature)
   ThemeProvider.tsx   # Dark/light theme + system preference support
   TextToSpeech.tsx    # Browser Speech API reader for blog posts
   BlogContent.tsx     # Markdown renderer for blog posts
+  GiscusComments.tsx  # GitHub Discussions-backed comments (giscus)
 content/
   posts/              # Blog posts as Markdown files
 lib/
-  posts.ts            # Blog post loading + frontmatter validation
+  posts.ts            # Blog post loading, frontmatter validation, related posts
   site.ts             # Site metadata, profile links, canonical URLs
   useScrollAwareInView.ts
   theme.ts            # Shared theme constants + pre-paint init script

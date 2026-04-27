@@ -44,6 +44,12 @@ New posts go in `content/posts/` as Markdown with required frontmatter: `title`,
 - **Don't force-push to `main`.**
 - **Don't merge a PR with a failing build or lint.**
 
+## Documentation
+
+When adding a new page, section, or user-facing feature:
+- Update `README.md` — add the feature to the project structure and any relevant sections.
+- Update the wiki (`https://github.com/kamoras/PersonalSite/wiki`) — edit or create the relevant wiki page. Wiki pages live in the `PersonalSite.wiki` git repo; clone it, edit, and push.
+
 ## PR workflow
 
 - Branch from `main`, name it `feature/<description>` or `fix/<description>`.
@@ -54,8 +60,9 @@ New posts go in `content/posts/` as Markdown with required frontmatter: `title`,
 ## Architecture notes
 
 - **Static export** — `output: "export"` in `next.config.ts`. No server-side rendering at runtime. No API routes. Everything is pre-rendered at build time.
-- **Theme** — `ThemeProvider` stores preference in `localStorage`, toggles `body.light` class, and updates `<meta name="theme-color">`. CSS variables in `:root` handle dark mode; `body.light` overrides handle light mode.
+- **Theme** — `ThemeProvider` stores preference in `localStorage`, toggles `html.light` class on `document.documentElement`, and updates `<meta name="theme-color">`. CSS variables in `:root` handle dark mode; `.light` overrides handle light mode. Use `useTheme()` from `components/ThemeProvider.tsx` to read current theme in client components.
 - **Fonts** — loaded via `next/font/google` in `layout.tsx`. Playfair Display is the display serif (headings only); Geist is the sans-serif body font.
 - **Animations** — framer-motion with `useScrollAwareInView` for scroll-triggered sections. Hero heading and eyebrow are plain HTML (no animation) to avoid delaying LCP.
-- **Blog** — Markdown files in `content/posts/` processed at build time by `lib/posts.ts`. The pipeline: gray-matter (frontmatter) → remark → rehype → sanitized HTML.
+- **Blog** — Markdown files in `content/posts/` processed at build time by `lib/posts.ts`. The pipeline: gray-matter (frontmatter) → remark → rehype → sanitized HTML. `getRelatedPosts(slug, tags)` returns up to 3 tag-matched posts, displayed on each post page.
+- **Comments** — `GiscusComments` (`components/GiscusComments.tsx`) renders a GitHub Discussions-backed comment thread via `@giscus/react`. It reads the current theme via `useTheme()` and maps to giscus theme tokens.
 - **iOS safe area** — `viewport-fit=cover` is set in the Viewport export. The navbar has `padding-top: env(safe-area-inset-top)`. A dedicated cover `<div>` in `layout.tsx` at `z-index: 9999` covers the safe area with `var(--color-bg)`.

@@ -8,18 +8,16 @@ import { Github, Linkedin, Bluesky } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import { siteConfig } from "@/lib/site";
 
-const navLinks = [
+const sectionLinks = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
   { label: "Publications", href: "#publications" },
   { label: "Projects", href: "#projects" },
   { label: "Community", href: "#community" },
   { label: "Contact", href: "#contact" },
-  { label: "Blog", href: "/blog" },
 ];
-const sectionIds = navLinks
-  .filter((link) => link.href.startsWith("#"))
-  .map((link) => link.href.slice(1));
+const pageLinks = [{ label: "Blog", href: "/blog" }];
+const sectionIds = sectionLinks.map((link) => link.href.slice(1));
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -36,27 +34,28 @@ export default function Navbar() {
     const onScroll = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
+
+      // When near the page bottom the last section's top can never reach the
+      // 35% trigger, so activate it directly. Position calculation takes over
+      // immediately when scrolling back up, so there's no gap between the two.
+      if (total > 0 && window.scrollY >= total - 120) {
+        setActiveSection(sectionIds[sectionIds.length - 1]);
+        return;
+      }
+
+      const trigger = window.scrollY + window.innerHeight * 0.35;
+      let next = "";
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top + window.scrollY <= trigger) {
+          next = id;
+        }
+      }
+      setActiveSection(next);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Track which section is in the reading area of the viewport
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
-    );
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
   }, []);
 
   // Focus trap, escape key, and body scroll lock for mobile menu
@@ -103,7 +102,6 @@ export default function Navbar() {
       ? "bg-[#100d09] md:bg-[#100d09]/92 md:backdrop-blur-md border-b border-white/[0.06]"
       : "bg-[#faf7f2] md:bg-[#faf7f2]/92 md:backdrop-blur-md border-b border-black/[0.06]";
 
-  // Accessible muted text colors (meet 4.5:1 contrast)
   const textMuted = "text-[var(--text-muted)]";
 
   const bgColor = theme === "dark" ? "#100d09" : "#faf7f2";
@@ -149,29 +147,36 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => {
-            const isHashLink = link.href.startsWith("#");
-            const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
-            const isActive = isHashLink
-              ? activeSection === link.href.slice(1)
-              : pathname.startsWith(link.href);
+        <div className="hidden md:flex items-center gap-6">
+          {sectionLinks.map((link) => {
+            const resolvedHref = !isHome ? `/${link.href}` : link.href;
+            const isActive = activeSection === link.href.slice(1);
             return (
               <Link
                 key={link.href}
                 href={resolvedHref}
-                aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
-                className={`relative text-sm transition-colors tracking-wide ${
-                  isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
+                aria-current={isActive ? "location" : undefined}
+                className={`text-sm transition-colors tracking-wide ${
+                  isActive ? "text-[var(--color-gold)]" : `${textMuted} hover:text-current`
                 }`}
               >
                 {link.label}
-                {isActive && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute -bottom-1 left-0 right-0 h-px bg-[var(--color-gold)] rounded-full"
-                  />
-                )}
+              </Link>
+            );
+          })}
+          <span aria-hidden="true" className="w-px h-4 bg-[var(--color-card-border)]" />
+          {pageLinks.map((link) => {
+            const isActive = pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                className={`text-sm transition-colors tracking-wide ${
+                  isActive ? "text-[var(--color-gold)]" : `${textMuted} hover:text-current`
+                }`}
+              >
+                {link.label}
               </Link>
             );
           })}
@@ -259,21 +264,35 @@ export default function Navbar() {
               : "border-black/[0.06] bg-[#faf7f2]/96"
           } backdrop-blur-md`}
         >
-          <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-4">
-            {navLinks.map((link) => {
-              const isHashLink = link.href.startsWith("#");
-              const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
-              const isActive = isHashLink
-                ? activeSection === link.href.slice(1)
-                : pathname.startsWith(link.href);
+          <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-1">
+            {sectionLinks.map((link) => {
+              const resolvedHref = !isHome ? `/${link.href}` : link.href;
+              const isActive = activeSection === link.href.slice(1);
               return (
                 <Link
                   key={link.href}
                   href={resolvedHref}
                   onClick={closeMobileMenu}
-                  aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
-                  className={`text-sm transition-colors tracking-wide py-2 ${
-                    isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
+                  aria-current={isActive ? "location" : undefined}
+                  className={`text-sm transition-colors tracking-wide py-2.5 ${
+                    isActive ? "text-[var(--color-gold)]" : `${textMuted} hover:text-current`
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+            <div aria-hidden="true" className={`h-px my-1 ${theme === "dark" ? "bg-white/[0.06]" : "bg-black/[0.06]"}`} />
+            {pageLinks.map((link) => {
+              const isActive = pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMobileMenu}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`text-sm transition-colors tracking-wide py-2.5 ${
+                    isActive ? "text-[var(--color-gold)]" : `${textMuted} hover:text-current`
                   }`}
                 >
                   {link.label}

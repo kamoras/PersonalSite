@@ -14,6 +14,7 @@
     "smoke": "node scripts/smoke-check.mjs"
   },
   "dependencies": {
+    "@giscus/react": "^3.1.0",
     "framer-motion": "^12.37.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^1.11.0",
