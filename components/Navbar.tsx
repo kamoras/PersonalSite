@@ -35,9 +35,14 @@ export default function Navbar() {
       const total = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
 
-      // Activate the last section whose top edge has crossed 35% down the viewport.
-      // Position-based calculation works correctly in both scroll directions and
-      // naturally handles the last section (which IO can never activate from below).
+      // When near the page bottom the last section's top can never reach the
+      // 35% trigger, so activate it directly. Position calculation takes over
+      // immediately when scrolling back up, so there's no gap between the two.
+      if (total > 0 && window.scrollY >= total - 120) {
+        setActiveSection(sectionIds[sectionIds.length - 1]);
+        return;
+      }
+
       const trigger = window.scrollY + window.innerHeight * 0.35;
       let next = "";
       for (const id of sectionIds) {
