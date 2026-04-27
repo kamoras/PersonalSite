@@ -65,5 +65,4 @@ When adding a new page, section, or user-facing feature:
 - **Animations** — framer-motion with `useScrollAwareInView` for scroll-triggered sections. Hero heading and eyebrow are plain HTML (no animation) to avoid delaying LCP.
 - **Blog** — Markdown files in `content/posts/` processed at build time by `lib/posts.ts`. The pipeline: gray-matter (frontmatter) → remark → rehype → sanitized HTML. `getRelatedPosts(slug, tags)` returns up to 3 posts sharing tags, used on post pages.
 - **Comments** — `GiscusComments` (`components/GiscusComments.tsx`) renders a GitHub Discussions-backed comment thread via `@giscus/react`. It reads the current theme via `useTheme()` and maps to giscus theme tokens.
-- **Now page** — `app/now/page.tsx` is a static `/now` page following the nownownow.com convention. Update `LAST_UPDATED` and content when publishing changes.
 - **iOS safe area** — `viewport-fit=cover` is set in the Viewport export. The navbar has `padding-top: env(safe-area-inset-top)`. A dedicated cover `<div>` in `layout.tsx` at `z-index: 9999` covers the safe area with `var(--color-bg)`.

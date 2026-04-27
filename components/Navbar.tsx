@@ -18,7 +18,6 @@ const sectionLinks = [
 ];
 const pageLinks = [
   { label: "Blog", href: "/blog" },
-  { label: "Now", href: "/now" },
 ];
 const sectionIds = sectionLinks.map((link) => link.href.slice(1));
 
