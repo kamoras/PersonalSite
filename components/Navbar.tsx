@@ -8,18 +8,18 @@ import { Github, Linkedin, Bluesky } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import { siteConfig } from "@/lib/site";
 
-const sectionLinks = [
+const navLinks = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
   { label: "Publications", href: "#publications" },
   { label: "Projects", href: "#projects" },
   { label: "Community", href: "#community" },
   { label: "Contact", href: "#contact" },
-];
-const pageLinks = [
   { label: "Blog", href: "/blog" },
 ];
-const sectionIds = sectionLinks.map((link) => link.href.slice(1));
+const sectionIds = navLinks
+  .filter((link) => link.href.startsWith("#"))
+  .map((link) => link.href.slice(1));
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -150,46 +150,17 @@ export default function Navbar() {
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-6">
-          {isHome ? (
-            <>
-              {sectionLinks.map((link) => {
-                const isActive = activeSection === link.href.slice(1);
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    aria-current={isActive ? "location" : undefined}
-                    className={`relative text-sm transition-colors tracking-wide ${
-                      isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
-                    }`}
-                  >
-                    {link.label}
-                    {isActive && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute -bottom-1 left-0 right-0 h-px bg-[var(--color-gold)] rounded-full"
-                      />
-                    )}
-                  </Link>
-                );
-              })}
-              <span aria-hidden="true" className="w-px h-4 bg-[var(--color-card-border)]" />
-            </>
-          ) : (
-            <Link
-              href="/"
-              className={`relative text-sm transition-colors tracking-wide ${textMuted} hover:text-current`}
-            >
-              Home
-            </Link>
-          )}
-          {pageLinks.map((link) => {
-            const isActive = pathname.startsWith(link.href);
+          {navLinks.map((link) => {
+            const isHashLink = link.href.startsWith("#");
+            const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
+            const isActive = isHashLink
+              ? activeSection === link.href.slice(1)
+              : pathname.startsWith(link.href);
             return (
               <Link
                 key={link.href}
-                href={link.href}
-                aria-current={isActive ? "page" : undefined}
+                href={resolvedHref}
+                aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
                 className={`relative text-sm transition-colors tracking-wide ${
                   isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
                 }`}
@@ -289,43 +260,18 @@ export default function Navbar() {
           } backdrop-blur-md`}
         >
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-4">
-            {isHome ? (
-              <>
-                {sectionLinks.map((link) => {
-                  const isActive = activeSection === link.href.slice(1);
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={closeMobileMenu}
-                      aria-current={isActive ? "location" : undefined}
-                      className={`text-sm transition-colors tracking-wide py-2 ${
-                        isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                })}
-                <div aria-hidden="true" className={`h-px ${theme === "dark" ? "bg-white/[0.06]" : "bg-black/[0.06]"}`} />
-              </>
-            ) : (
-              <Link
-                href="/"
-                onClick={closeMobileMenu}
-                className={`text-sm transition-colors tracking-wide py-2 ${textMuted} hover:text-current`}
-              >
-                Home
-              </Link>
-            )}
-            {pageLinks.map((link) => {
-              const isActive = pathname.startsWith(link.href);
+            {navLinks.map((link) => {
+              const isHashLink = link.href.startsWith("#");
+              const resolvedHref = isHashLink && !isHome ? `/${link.href}` : link.href;
+              const isActive = isHashLink
+                ? activeSection === link.href.slice(1)
+                : pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={resolvedHref}
                   onClick={closeMobileMenu}
-                  aria-current={isActive ? "page" : undefined}
+                  aria-current={isActive ? (isHashLink ? "location" : "page") : undefined}
                   className={`text-sm transition-colors tracking-wide py-2 ${
                     isActive ? "text-current font-medium" : `${textMuted} hover:text-current`
                   }`}
