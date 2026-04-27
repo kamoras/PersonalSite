@@ -1,5 +1,10 @@
 # ryan-mack.dev
 
+[![CI](https://github.com/kamoras/PersonalSite/actions/workflows/azure-static-web-apps-calm-cliff-026fb3d10.yml/badge.svg)](https://github.com/kamoras/PersonalSite/actions/workflows/azure-static-web-apps-calm-cliff-026fb3d10.yml)
+[![Lighthouse Accessibility](https://img.shields.io/badge/Lighthouse-Accessibility%20100-brightgreen?logo=lighthouse)](https://ryan-mack.dev)
+[![Lighthouse SEO](https://img.shields.io/badge/Lighthouse-SEO%20100-brightgreen?logo=lighthouse)](https://ryan-mack.dev)
+[![Lighthouse Best Practices](https://img.shields.io/badge/Lighthouse-Best%20Practices%2096-brightgreen?logo=lighthouse)](https://ryan-mack.dev)
+
 Personal portfolio and writing site for Ryan Mack — Senior Software Engineer at Cisco ThousandEyes.
 
 Built with Next.js static export and Tailwind CSS v4. Deployed to Azure Static Web Apps via GitHub Actions.
