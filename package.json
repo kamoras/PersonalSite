@@ -28,6 +28,9 @@
     "remark-rehype": "^11.1.2",
     "unified": "^11.0.5"
   },
+  "overrides": {
+    "postcss": "$postcss"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^25",
