@@ -78,6 +78,7 @@ export default async function PostPage({
       url: siteConfig.url,
     },
     datePublished: post.date,
+    dateModified: post.date,
     url: postUrl,
     ...(post.tags.length > 0 && { keywords: post.tags.join(", ") }),
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },

@@ -52,10 +52,11 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    type: "profile",
+    type: "website",
+    locale: "en_US",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
   },
@@ -67,6 +68,7 @@ const jsonLd = {
   "@type": "Person",
   name: siteConfig.name,
   jobTitle: siteConfig.jobTitle,
+  description: siteConfig.description,
   worksFor: {
     "@type": "Organization",
     name: siteConfig.employer,
