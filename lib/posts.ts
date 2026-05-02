@@ -92,6 +92,9 @@ function validatePostFrontmatter(data: unknown, source: string): PostFrontmatter
 
 function readPostFile(filename: string) {
   const slug = filename.replace(/\.md$/, "");
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
+    throw new Error(`Invalid post filename "${filename}": slugs must be lowercase alphanumeric with hyphens only.`);
+  }
   const source = path.join(postsDirectory, filename);
   const raw = fs.readFileSync(source, "utf8");
   const { data, content } = matter(raw);
