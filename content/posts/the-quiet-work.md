@@ -57,4 +57,4 @@ The ProPublica story about Werner Koch ran in 2015. The industry treated it as a
 
 [^6]: "OpenSSH." OpenBSD.org. https://www.openssh.com/
 
-[^7]: Krikorian, Raffi. "It's the End of the Internet as We Know It." The New York Times, April 15, 2026. http://nytimes.com/2026/04/15/opinion/mythos-open-souce-internet.html
+[^7]: Krikorian, Raffi. "It's the End of the Internet as We Know It." The New York Times, April 15, 2026. https://nytimes.com/2026/04/15/opinion/mythos-open-souce-internet.html
