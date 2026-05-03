@@ -5,6 +5,8 @@ description: "Maine just passed the first US moratorium on large data centers. S
 tags: ["software engineering", "AI", "edge computing"]
 ---
 
+*Editor's note (May 2026): Governor Janet Mills vetoed this bill on April 27, 2026. The Maine Legislature failed to override the veto on April 29. The moratorium did not become law. The post is preserved as written at the time of the Legislature's vote.*
+
 Maine became the first U.S. state to pass a moratorium on large data centers last week, covering new facilities that consume more than 20 megawatts of power for the next eighteen months.[^1] For context, 20 megawatts is roughly the scale of large hyperscale campus infrastructure, not typical regional deployments. The concerns are straightforward: electricity costs, water usage, and land use. Communities that hadn't expected to host the infrastructure powering the internet's next chapter pushed back, and their legislature listened.
 
 That seems reasonable. It's also not obvious that this is a problem for AI.
