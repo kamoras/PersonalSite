@@ -4,6 +4,7 @@ import { Mail, FileText } from "lucide-react";
 import { Github, Linkedin, Bluesky, Instagram } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import { mailtoUrl, siteConfig } from "@/lib/site";
+import NewsletterSignup from "./NewsletterSignup";
 
 const social = [
   { href: siteConfig.links.github, icon: Github, label: "GitHub profile (opens in new tab)", external: true },
@@ -45,6 +46,11 @@ export default function Footer() {
               <Mail size={15} aria-hidden="true" />
               Send a message
             </a>
+          </div>
+
+          {/* Newsletter signup */}
+          <div className={`max-w-sm mx-auto pb-10 border-b ${borderColor} mb-10`}>
+            <NewsletterSignup variant="footer" />
           </div>
 
           {/* Social row */}
