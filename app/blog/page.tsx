@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllPostsMeta, formatDate } from "@/lib/posts";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export const metadata: Metadata = {
   title: `Writing — ${siteConfig.name}`,
@@ -94,6 +95,8 @@ export default function BlogIndex() {
           ))}
         </ol>
       )}
+
+      <NewsletterSignup variant="index" />
     </div>
   );
 }

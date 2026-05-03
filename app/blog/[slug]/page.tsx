@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import BlogContent from "@/components/BlogContent";
 import TextToSpeech from "@/components/TextToSpeechLoader";
 import GiscusComments from "@/components/GiscusComments";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 function hasPost(slug: string): boolean {
@@ -154,6 +155,8 @@ export default async function PostPage({
 
       {/* Post body */}
       <BlogContent html={post.contentHtml} />
+
+      <NewsletterSignup variant="post" />
 
       {/* Related posts */}
       {related.length > 0 && (
