@@ -6,6 +6,7 @@ import { absoluteUrl, siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: `Writing — ${siteConfig.name}`,
   description: siteConfig.blogDescription,
+  keywords: ["software engineering", "AI", "tech culture", "open source", "distributed systems", "engineering blog"],
   alternates: {
     canonical: absoluteUrl("/blog"),
     types: {
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     url: absoluteUrl("/blog"),
     siteName: siteConfig.name,
     type: "website",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
