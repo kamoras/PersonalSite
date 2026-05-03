@@ -39,6 +39,7 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${{ secrets.NEXT_PUBLIC_UMAMI_WEBSITE_ID }}
+          NEXT_PUBLIC_BUTTONDOWN_API_KEY: ${{ secrets.NEXT_PUBLIC_BUTTONDOWN_API_KEY }}
 
       - name: Smoke test exported site
         run: npm run smoke
