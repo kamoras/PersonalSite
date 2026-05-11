@@ -88,17 +88,47 @@ jobs:
           path: out/
           retention-days: 1
 
+  filter_paths:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: Filter Paths
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      site: ${{ steps.filter.outputs.site }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            site:
+              - 'src/**'
+              - 'content/**'
+              - 'public/**'
+              - 'next.config.*'
+              - 'package*.json'
+              - 'tailwind.config.*'
+              - 'tsconfig.json'
+              - '.lighthouserc.js'
+              - 'staticwebapp.config.json'
+
   deploy_preview:
     # Skip for fork PRs — secrets are unavailable there and we don't deploy
     # untrusted code to the preview environment. Fork contributions are reviewed
     # manually and re-submitted from a trusted branch before merging.
+    # Skip for docs-only PRs — no staging environment needed when only
+    # CLAUDE.md, README.md, or .github/ files change; avoids hitting the
+    # Azure SWA staging environment quota.
     if: >
       github.event_name == 'pull_request' &&
       github.event.action != 'closed' &&
-      github.event.pull_request.head.repo.full_name == github.repository
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      needs.filter_paths.outputs.site == 'true'
     runs-on: ubuntu-latest
     name: Deploy Preview
-    needs: build_pr
+    needs: [build_pr, filter_paths]
     permissions:
       contents: read
       pull-requests: write  # posts deployment URL back to the PR

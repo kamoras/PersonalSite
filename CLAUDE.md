@@ -36,6 +36,12 @@ npm run lint     # ESLint — must be clean
 
 New posts go in `content/posts/` as Markdown with required frontmatter: `title`, `date`, `description`, `tags`. Slug comes from the filename.
 
+**Writing quality is the top priority on this site.** A post that says one thing sharply is better than a post that says five things loosely. The specific failure modes to avoid:
+
+- **No thesis repetition** — make a point once, clearly, then move on. If the same idea appears in three paragraphs with different phrasing, cut two of them.
+- **No vague endings** — conclusions must land on something concrete and specific. "It shouldn't be where we are" and "X is a reasonable prompt to start" are not endings; they're placeholders. End on an observation that couldn't have appeared anywhere else in the piece.
+- **No padding** — if a section could be cut by 40% without losing any actual argument, cut it. Length is not a proxy for substance.
+
 ## What to avoid
 
 - **Don't add features or abstractions beyond what's asked.** A bug fix doesn't need surrounding cleanup. Three similar lines is better than a premature abstraction.
@@ -56,6 +62,7 @@ When adding a new page, section, or user-facing feature:
 - Every PR gets a build + lint + Lighthouse CI run automatically.
 - Lighthouse gates: SEO ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90. Performance is reported but not a hard gate (CI runners throttle CPU; real-device scores are higher).
 - Keep PRs focused — one concern per PR.
+- **One commit per PR.** Amend rather than stacking additional commits. Force-push the branch after amending (`git push --force-with-lease`).
 
 ## Architecture notes
 
