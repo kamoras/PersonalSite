@@ -481,17 +481,6 @@ html.light .blog-prose a:hover {
   text-decoration: underline;
 }
 
-/* Replace the ↩ back-reference character with a clean typographic marker */
-.blog-prose [data-footnote-backref] {
-  font-size: 0;
-}
-
-.blog-prose [data-footnote-backref]::after {
-  content: "↑";
-  font-size: 0.75rem;
-  font-family: var(--font-mono), monospace;
-}
-
 /* Tables */
 .blog-prose table {
   width: 100%;
