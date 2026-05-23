@@ -8,24 +8,39 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import { visit } from "unist-util-visit";
+import type { Root, Element } from "hast";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
 
+// mdast-util-to-hast always generates back-reference <a> links inside footnote
+// definitions. Strip them from the HAST before serialization so they never
+// appear in the output HTML.
+function rehypeRemoveFootnoteBackrefs() {
+  return (tree: Root) => {
+    visit(tree, "element", (node: Element, index, parent) => {
+      if (node.properties?.dataFootnoteBackref !== undefined && parent && typeof index === "number") {
+        parent.children.splice(index, 1);
+        return index;
+      }
+    });
+  };
+}
+
 // Extend the default sanitization schema to preserve remark-gfm footnote
-// attributes that BlogContent.tsx uses for its tooltip interception.
+// attributes used by BlogContent.tsx for tooltip interception.
+// Uses the default clobberPrefix ("user-content-") — DOM clobbering protection
+// is fully active. remark-rehype is told not to add its own prefix so the
+// prefix is applied exactly once (by rehype-sanitize) to id attributes.
+// hrefs are left as plain "#fn-N" fragments; BlogContent prepends the prefix
+// when resolving the target element via getElementById.
 const sanitizeSchema = {
   ...defaultSchema,
-  // Uses the default clobberPrefix ("user-content-") — DOM clobbering protection
-  // is fully active. remark-rehype is told not to add its own prefix so the
-  // prefix is applied exactly once (by rehype-sanitize) to id attributes.
-  // hrefs are left as plain "#fn-N" fragments; BlogContent prepends the prefix
-  // when resolving the target element via getElementById.
   attributes: {
     ...defaultSchema.attributes,
     a: [
       ...((defaultSchema.attributes?.a as string[]) ?? []),
       "data-footnote-ref",
-      "data-footnote-backref",
     ],
     section: [
       ...((defaultSchema.attributes?.section as string[]) ?? []),
@@ -158,6 +173,7 @@ export const getPost = cache(async function getPost(slug: string): Promise<Post>
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: false, clobberPrefix: "" })
+    .use(rehypeRemoveFootnoteBackrefs)
     .use(rehypeSanitize, sanitizeSchema)
     .use(rehypeStringify)
     .process(content);

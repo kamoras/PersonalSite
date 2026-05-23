@@ -48,7 +48,6 @@ export default function BlogContent({ html }: { html: string }) {
 
       // Clone the footnote, strip the back-reference arrow
       const clone = footnoteEl.cloneNode(true) as HTMLElement;
-      clone.querySelector("[data-footnote-backref]")?.remove();
 
       // Associate the tooltip with the triggering anchor for screen readers
       activeAnchorRef.current?.removeAttribute("aria-describedby");
