@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion, useReducedMotion, useInView } from "framer-motion";
-import { ArrowDown, Mail, MapPin } from "lucide-react";
-import { Github, Linkedin } from "./BrandIcons";
+import { ArrowDown, MapPin } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import PrideFlag from "./PrideFlag";
 import Image from "next/image";
-import { mailtoUrl, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
+import { socialLinks } from "@/lib/socials";
 
 const stats = [
   { value: 9, suffix: "+", label: "yrs experience" },
@@ -64,6 +65,15 @@ export default function Hero() {
   const [firstName, ...restName] = siteConfig.name.split(" ");
   const highlightedName = restName.join(" ") || firstName;
 
+  // Rainbow the name during Pride Month. Read through useSyncExternalStore so the
+  // prerendered name stays gold and the swap happens client-side without a
+  // hydration mismatch when the build month differs from the visit month.
+  const isPrideMonth = useSyncExternalStore(
+    () => () => {},
+    () => new Date().getMonth() === 5,
+    () => false
+  );
+
   return (
     <section
       aria-label="Introduction"
@@ -98,13 +108,19 @@ export default function Hero() {
           {/* ── Text column ── */}
           <div className="flex-1 text-center md:text-left">
 
-            <p className="font-mono text-xs tracking-[0.35em] uppercase text-[var(--color-gold)] mb-5">
-              Senior Engineer · {siteConfig.employer}
+            <p className="font-mono text-xs tracking-[0.35em] uppercase text-[var(--color-gold)] mb-5 flex items-center gap-2.5 justify-center md:justify-start">
+              <PrideFlag
+                title="In support of LGBTQ+ Pride"
+                className="h-3.5 w-auto rounded-[2px] shadow-sm flex-shrink-0"
+              />
+              <span>Senior Engineer · {siteConfig.employer}</span>
             </p>
 
             <h1 className="font-playfair text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-none mb-6">
               {firstName}{" "}
-              <span className="gradient-name font-bold">{highlightedName}</span>
+              <span className={`gradient-name font-bold${isPrideMonth ? " gradient-name-pride" : ""}`}>
+                {highlightedName}
+              </span>
             </h1>
 
             <p className="hero-tagline text-base md:text-lg text-[var(--text-secondary)] max-w-lg leading-relaxed mb-10">
@@ -148,15 +164,11 @@ export default function Hero() {
               transition={prefersReducedMotion ? undefined : { duration: 0.5, delay: 0.35 }}
               className="flex items-center gap-1 mt-8 justify-center md:justify-start"
             >
-              {[
-                { href: siteConfig.links.github, icon: Github, label: "GitHub profile (opens in new tab)" },
-                { href: siteConfig.links.linkedin, icon: Linkedin, label: "LinkedIn profile (opens in new tab)" },
-                { href: mailtoUrl(), icon: Mail, label: "Send email" },
-              ].map(({ href, icon: Icon, label }) => (
+              {socialLinks.map(({ key, href, icon: Icon, label }) => (
                 <a
-                  key={href}
+                  key={key}
                   href={href}
-                  target={href.startsWith("mailto") ? undefined : "_blank"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
                   className="p-2.5 rounded-md text-[var(--text-muted)] hover:text-current transition-colors"

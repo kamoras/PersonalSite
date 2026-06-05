@@ -4,9 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Moon, Sun, Menu, X } from "lucide-react";
-import { Github, Linkedin, Bluesky } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import { siteConfig } from "@/lib/site";
+import { socialLinks } from "@/lib/socials";
 
 const sectionLinks = [
   { label: "About", href: "#about" },
@@ -184,33 +184,18 @@ export default function Navbar() {
 
         {/* Desktop actions */}
         <div className="hidden md:flex items-center gap-1">
-          <a
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub profile (opens in new tab)"
-            className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
-          >
-            <Github size={16} aria-hidden="true" />
-          </a>
-          <a
-            href={siteConfig.links.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn profile (opens in new tab)"
-            className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
-          >
-            <Linkedin size={16} aria-hidden="true" />
-          </a>
-          <a
-            href={siteConfig.links.bluesky}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Bluesky profile (opens in new tab)"
-            className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
-          >
-            <Bluesky size={16} aria-hidden="true" />
-          </a>
+          {socialLinks.map(({ key, href, icon: Icon, label }) => (
+            <a
+              key={key}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
+            >
+              <Icon size={16} aria-hidden="true" />
+            </a>
+          ))}
           <button
             onClick={toggleTheme}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
@@ -300,36 +285,19 @@ export default function Navbar() {
               );
             })}
             <div className={`flex items-center gap-3 pt-2 border-t ${theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"}`}>
-              <a
-                href={siteConfig.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeMobileMenu}
-                aria-label="GitHub profile (opens in new tab)"
-                className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
-              >
-                <Github size={18} aria-hidden="true" />
-              </a>
-              <a
-                href={siteConfig.links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeMobileMenu}
-                aria-label="LinkedIn profile (opens in new tab)"
-                className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
-              >
-                <Linkedin size={18} aria-hidden="true" />
-              </a>
-              <a
-                href={siteConfig.links.bluesky}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeMobileMenu}
-                aria-label="Bluesky profile (opens in new tab)"
-                className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
-              >
-                <Bluesky size={18} aria-hidden="true" />
-              </a>
+              {socialLinks.map(({ key, href, icon: Icon, label }) => (
+                <a
+                  key={key}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMobileMenu}
+                  aria-label={label}
+                  className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
+                >
+                  <Icon size={18} aria-hidden="true" />
+                </a>
+              ))}
               <button
                 onClick={() => {
                   closeMobileMenu();

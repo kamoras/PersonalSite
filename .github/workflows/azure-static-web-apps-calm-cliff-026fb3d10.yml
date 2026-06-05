@@ -104,7 +104,9 @@ jobs:
         with:
           filters: |
             site:
-              - 'src/**'
+              - 'app/**'
+              - 'components/**'
+              - 'lib/**'
               - 'content/**'
               - 'public/**'
               - 'next.config.*'

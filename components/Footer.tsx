@@ -1,18 +1,9 @@
 "use client";
 
 import { Mail, FileText } from "lucide-react";
-import { Github, Linkedin, Bluesky, Instagram } from "./BrandIcons";
 import { useTheme } from "./ThemeProvider";
 import { mailtoUrl, siteConfig } from "@/lib/site";
-
-const social = [
-  { href: siteConfig.links.github, icon: Github, label: "GitHub profile (opens in new tab)", external: true },
-  { href: siteConfig.links.linkedin, icon: Linkedin, label: "LinkedIn profile (opens in new tab)", external: true },
-  { href: siteConfig.links.bluesky, icon: Bluesky, label: "Bluesky profile (opens in new tab)", external: true },
-  { href: siteConfig.links.instagram, icon: Instagram, label: "Instagram profile (opens in new tab)", external: true },
-  { href: mailtoUrl(), icon: Mail, label: "Send email", external: false },
-  { href: siteConfig.resumeDocumentPath, icon: FileText, label: "View resume PDF (opens in new tab)", external: true },
-];
+import { socialLinks } from "@/lib/socials";
 
 export default function Footer() {
   const { theme } = useTheme();
@@ -49,11 +40,11 @@ export default function Footer() {
 
           {/* Social row */}
           <div className={`flex items-center justify-center gap-2 pb-10 border-b ${borderColor}`}>
-            {social.map(({ href, icon: Icon, label, external }) => (
+            {socialLinks.map(({ key, href, icon: Icon, label }) => (
               <a
-                key={label}
+                key={key}
                 href={href}
-                target={external ? "_blank" : undefined}
+                target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
                 className="p-3 rounded-lg text-[var(--text-muted)] hover:text-current transition-colors"
@@ -61,6 +52,15 @@ export default function Footer() {
                 <Icon size={18} aria-hidden="true" />
               </a>
             ))}
+            <a
+              href={siteConfig.resumeDocumentPath}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View resume PDF (opens in new tab)"
+              className="p-3 rounded-lg text-[var(--text-muted)] hover:text-current transition-colors"
+            >
+              <FileText size={18} aria-hidden="true" />
+            </a>
           </div>
 
           {/* Wordmark / copyright */}
