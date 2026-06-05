@@ -37,9 +37,10 @@ components/           # React components (one per section/feature)
   About.tsx
   Experience.tsx
   Publications.tsx
-  Projects.tsx
+  Projects.tsx        # Personal projects (Civitas, Spliced)
   Community.tsx
   Footer.tsx
+  PrideFlag.tsx       # Progress Pride flag (SVG) accent in the hero eyebrow
   ThemeProvider.tsx   # Dark/light theme + system preference support
   TextToSpeech.tsx    # Browser Speech API reader for blog posts
   BlogContent.tsx     # Markdown renderer for blog posts
@@ -49,6 +50,7 @@ content/
 lib/
   posts.ts            # Blog post loading, frontmatter validation, related posts
   site.ts             # Site metadata, profile links, canonical URLs
+  socials.tsx         # Canonical social profile list (hero, navbar, footer)
   useScrollAwareInView.ts
   theme.ts            # Shared theme constants + pre-paint init script
 public/

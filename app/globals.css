@@ -178,6 +178,48 @@ html.light .gradient-name {
   animation: text-shimmer 7s linear infinite;
 }
 
+/* Scroll exactly one tile (300% = the .gradient-name background-size) so the
+   loop point lands on an identical frame — no restart hitch. Paired with the
+   red→red cyclic gradients below, the rainbow scrolls perfectly seamlessly. */
+@keyframes text-shimmer-pride {
+  from { background-position: 300% center; }
+  to   { background-position: 0% center; }
+}
+
+/* Pride Month override — gradient + animation only; size, clip and the
+   reduced-motion freeze are inherited from .gradient-name. Brightened tones so
+   every stripe clears 3:1 (WCAG large-text) on the near-black background, and
+   the gradient ends on the colour it starts with so the repeating tile wraps
+   red→red with no hard seam. */
+.gradient-name-pride {
+  background-image: linear-gradient(
+    to right,
+    #ff5a5a 0%,
+    #ffae3b 17%,
+    #ffe45e 33%,
+    #4ade80 50%,
+    #38bdf8 67%,
+    #c084fc 83%,
+    #ff5a5a 100%
+  );
+  animation: text-shimmer-pride 7s linear infinite;
+}
+
+/* Deepened tones so every stripe clears 3:1 on the light parchment background. */
+html.light .gradient-name-pride {
+  background-image: linear-gradient(
+    to right,
+    #c81e1e 0%,
+    #b45309 17%,
+    #8a6d00 33%,
+    #15803d 50%,
+    #1d4ed8 67%,
+    #7e22ce 83%,
+    #c81e1e 100%
+  );
+  animation: text-shimmer-pride 7s linear infinite;
+}
+
 /* ─── Experience card hover ──────────────────────────────────────────────────*/
 .exp-card {
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
