@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
+import yaml from "js-yaml";
 
 const rootDir = process.cwd();
 const postsDir = path.join(rootDir, "content", "posts");
@@ -21,10 +21,15 @@ function escapeXml(value) {
     .replaceAll("'", "&apos;");
 }
 
+function parseFrontmatter(raw) {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(raw);
+  return match ? yaml.load(match[1]) ?? {} : {};
+}
+
 function parsePost(filename) {
   const slug = filename.replace(/\.md$/, "");
   const source = fs.readFileSync(path.join(postsDir, filename), "utf8");
-  const { data } = matter(source);
+  const data = parseFrontmatter(source);
 
   if (
     typeof data.title !== "string" ||
