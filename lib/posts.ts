@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
+import yaml from "js-yaml";
 import { cache } from "react";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -74,6 +74,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
+const frontmatterPattern = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/;
+
+function parseFrontmatter(raw: string): { data: unknown; content: string } {
+  const match = frontmatterPattern.exec(raw);
+  if (!match) {
+    return { data: {}, content: raw };
+  }
+  return { data: yaml.load(match[1]) ?? {}, content: raw.slice(match[0].length) };
+}
+
 function validatePostFrontmatter(data: unknown, source: string): PostFrontmatter {
   if (!isRecord(data)) {
     throw new Error(`Invalid frontmatter in ${source}: expected an object.`);
@@ -112,7 +122,7 @@ function readPostFile(filename: string) {
   }
   const source = path.join(postsDirectory, filename);
   const raw = fs.readFileSync(source, "utf8");
-  const { data, content } = matter(raw);
+  const { data, content } = parseFrontmatter(raw);
   const frontmatter = validatePostFrontmatter(data, source);
 
   return { slug, content, frontmatter };

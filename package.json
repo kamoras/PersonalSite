@@ -16,7 +16,7 @@
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "framer-motion": "^12.40.0",
-    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.2.0",
     "lucide-react": "^1.21.0",
     "next": "^16.2.9",
     "react": "19.2.7",
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.1",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
