@@ -109,10 +109,12 @@ export default function Hero() {
           <div className="flex-1 text-center md:text-left">
 
             <p className="font-mono text-xs tracking-[0.35em] uppercase text-[var(--color-gold)] mb-5 flex items-center gap-2.5 justify-center md:justify-start">
-              <PrideFlag
-                title="In support of LGBTQ+ Pride"
-                className="h-3.5 w-auto rounded-[2px] shadow-sm flex-shrink-0"
-              />
+              {isPrideMonth && (
+                <PrideFlag
+                  title="In support of LGBTQ+ Pride"
+                  className="h-3.5 w-auto rounded-[2px] shadow-sm flex-shrink-0"
+                />
+              )}
               <span>Senior Engineer · {siteConfig.employer}</span>
             </p>
 
