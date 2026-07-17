@@ -16,7 +16,7 @@
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "framer-motion": "^12.42.2",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^5.2.1",
     "lucide-react": "^1.25.0",
     "next": "^16.2.9",
     "react": "19.2.7",
