@@ -123,6 +123,14 @@ if (feed === null) {
 }
 assertIncludes("/feed.xml", feed, "<rss version=\"2.0\">");
 
+// A missing website ID drops the <Script> silently — the build stays green and
+// the site ships with no analytics at all. Fail here instead.
+const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+if (umamiWebsiteId) {
+  assertIncludes("/", home.content, "https://cloud.umami.is/script.js");
+  assertIncludes("/", home.content, umamiWebsiteId);
+}
+
 const configPath = path.join(outDir, "staticwebapp.config.json");
 const config = readFileIfPresent(configPath);
 if (config === null) {

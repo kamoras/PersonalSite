@@ -100,17 +100,17 @@ Invalid or incomplete frontmatter fails fast during build-time content loading w
 | Variable | Required | Purpose |
 |---|---|---|
 | `AZURE_STATIC_WEB_APPS_API_TOKEN_*` | Deploy only | Azure SWA deployment token |
-| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Optional | Enables Umami analytics |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Deploy only | Enables Umami analytics. Must be a repository Actions **secret** — a variable of the same name will not resolve, and the deploy job fails fast if it is empty. |
 
 ## CI/CD
 
 Every PR runs:
 - **Build** — `npm run build` (static export must succeed)
-- **Smoke** — validates the exported homepage, blog, resume PDF + redirect, and RSS feed
+- **Smoke** — validates the exported homepage, blog, resume PDF + redirect, RSS feed, and the Umami tracker when an analytics ID is configured
 - **Lint** — ESLint
 - **Lighthouse** — SEO ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90, Performance reported (warn only). Results posted as a PR comment.
 
-Merges to `main` deploy automatically to Azure Static Web Apps.
+Merges to `main` deploy automatically to Azure Static Web Apps. Dependabot auto-merges are the exception — GitHub does not raise `push` events for commits made with `GITHUB_TOKEN`, so those merges land on `main` without deploying. Use the workflow's **Run workflow** button on `main` to ship them.
 
 ## Design system
 
