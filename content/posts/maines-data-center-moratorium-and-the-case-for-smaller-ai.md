@@ -29,7 +29,7 @@ That question of what AI actually needs ended up shaping how I approached a proj
 
 ## What I Built on a Pi
 
-I've been working on a project called Civitas, a platform that scores U.S. senators and House representatives on how closely they represent their constituents. It pulls from voting records, campaign finance data, floor speeches, and stated platforms, and produces scores across four dimensions: funding independence, promise persistence, independent voting, and funding diversity. The scoring system is necessarily imperfect, more a structured lens than an objective measure.
+I've been working on a project called [Civitas](https://civitas-research.org/), a platform that scores U.S. senators and House representatives on how closely they represent their constituents. It pulls from voting records, campaign finance data, floor speeches, and stated platforms, and produces scores across four dimensions: funding independence, promise persistence, independent voting, and funding diversity. The scoring system is necessarily imperfect, more a structured lens than an objective measure.
 
 It runs on a Raspberry Pi 5 with 16GB of RAM, sitting on my desk at home. It pulls data from government APIs like Congress.gov, the FEC, and GovInfo, but all AI inference happens locally. No cloud compute. No GPU. No calls to OpenAI or Anthropic or anyone else.
 
