@@ -21,11 +21,11 @@ const projects: Project[] = [
   {
     name: "Civitas",
     tagline: "Expose the Machine",
-    href: "https://civitas.paramain.com/",
-    ariaLabel: "Visit Civitas — political transparency platform (opens in new tab)",
+    href: "https://civitas-research.org/",
+    ariaLabel: "Visit Civitas — open source political transparency platform (opens in new tab)",
     icon: BarChart2,
     description:
-      "A political transparency platform that aggregates public federal records to surface connections between campaign donations and legislative voting. AI analysis runs entirely on a Raspberry Pi 5 — no cloud APIs, no data leaves the device.",
+      "An open source political transparency platform that aggregates public federal records to surface connections between campaign donations and legislative voting. AI analysis runs entirely on a Raspberry Pi 5 — no cloud APIs, no data leaves the device.",
     stats: [
       { value: "535", label: "Congress members scored" },
       { value: "47", label: "Presidents analyzed" },
