@@ -36,7 +36,46 @@ export default function Publications() {
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          {/* Article */}
+          <motion.a
+            href="https://medium.com/thousandeyes-engineering/reducing-toil-concrete-strategies-for-sustainable-velocity-a45e43d9e385"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Read: Reducing Toil: Concrete Strategies for Sustainable Velocity — ThousandEyes Engineering (opens in new tab)"
+            {...fade(0.1)}
+            className={`group relative p-6 md:p-8 rounded-2xl border ${borderColor} ${cardBg} flex flex-col gap-5 transition-[border-color,box-shadow,transform] duration-[250ms] hover:border-[rgba(201,164,101,0.3)] hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.22)]`}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className={`flex-shrink-0 p-3 rounded-xl border ${borderColor} ${iconBg}`}>
+                <BookOpen size={20} className="text-[var(--color-gold)]" aria-hidden="true" />
+              </div>
+              <ExternalLink
+                size={14}
+                className="text-[var(--text-muted)] mt-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                aria-hidden="true"
+              />
+            </div>
+
+            <div className="flex-1">
+              <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-gold)] opacity-70 mb-2">
+                Article
+              </p>
+              <h3 className="text-base font-semibold leading-snug mb-3">
+                Reducing Toil: Concrete Strategies for Sustainable Velocity
+              </h3>
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                Published in the ThousandEyes Engineering blog — how consolidating fragmented C++ release pipelines and automating cross-platform agent performance validation reclaimed engineering time, and why toil reduction belongs in the roadmap rather than the margins.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 mt-auto">
+              <span className="font-mono text-xs text-[var(--text-muted)]">ThousandEyes Engineering</span>
+              <span aria-hidden="true" className="text-[var(--text-muted)] opacity-40">·</span>
+              <span className="font-mono text-xs text-[var(--text-muted)]">Medium</span>
+            </div>
+          </motion.a>
 
           {/* Article */}
           <motion.a
@@ -44,7 +83,7 @@ export default function Publications() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Read: Enhancing Support for Multiple Platforms — ThousandEyes Engineering (opens in new tab)"
-            {...fade(0.1)}
+            {...fade(0.15)}
             className={`group relative p-6 md:p-8 rounded-2xl border ${borderColor} ${cardBg} flex flex-col gap-5 transition-[border-color,box-shadow,transform] duration-[250ms] hover:border-[rgba(201,164,101,0.3)] hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.22)]`}
           >
             <div className="flex items-start justify-between gap-4">
@@ -83,7 +122,7 @@ export default function Publications() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="View patent US 12,562,955 B1 on USPTO (opens in new tab)"
-            {...fade(0.15)}
+            {...fade(0.2)}
             className={`group relative p-6 md:p-8 rounded-2xl border ${borderColor} ${cardBg} flex flex-col gap-5 transition-[border-color,box-shadow,transform] duration-[250ms] hover:border-[rgba(201,164,101,0.3)] hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.22)]`}
           >
             <div className="flex items-start justify-between gap-4">
