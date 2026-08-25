@@ -48,14 +48,12 @@ const education = [
     school: "Georgia Institute of Technology",
     detail: "Specialization: Human-Computer Interaction",
     period: "Jan 2022 — Aug 2026",
-    current: true,
   },
   {
     degree: "B.S.E., Computer Science and Engineering",
     school: "University of Connecticut",
     detail: null,
     period: "Aug 2013 — May 2017",
-    current: false,
   },
 ];
 
@@ -156,14 +154,7 @@ export default function About() {
                 {education.map((edu) => (
                   <div key={edu.school} className="flex items-start gap-3">
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mb-0.5">
-                        <p className="text-sm font-medium leading-snug">{edu.degree}</p>
-                        {edu.current && (
-                          <span className={`font-mono text-[10px] ${theme === "dark" ? "text-emerald-400" : "text-emerald-700"}`}>
-                            In Progress
-                          </span>
-                        )}
-                      </div>
+                      <p className="text-sm font-medium leading-snug mb-0.5">{edu.degree}</p>
                       <p className="text-xs text-[var(--text-secondary)]">{edu.school}</p>
                       {edu.detail && (
                         <p className="text-xs text-[var(--text-muted)] mt-0.5">{edu.detail}</p>
