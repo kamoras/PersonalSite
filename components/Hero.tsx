@@ -26,18 +26,20 @@ function AnimatedStat({
   label: string;
   animate: boolean;
 }) {
-  const [display, setDisplay] = useState(() => (animate ? 0 : value));
+  // Always start at 0: the prerendered HTML can't know the visitor's motion
+  // preference, so starting at `value` for reduced motion breaks hydration.
+  const [display, setDisplay] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
-    if (!isInView || !animate) return;
-    const duration = 1200;
+    if (!isInView) return;
+    const duration = animate ? 1200 : 0;
     const startTime = performance.now();
     let raf: number;
     const tick = (now: number) => {
       const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const progress = duration ? Math.min(elapsed / duration, 1) : 1;
       // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setDisplay(Math.round(eased * value));
@@ -61,6 +63,9 @@ function AnimatedStat({
 
 export default function Hero() {
   const { theme } = useTheme();
+  // `initial` is inlined into the prerendered HTML, where the motion preference
+  // is unknown, so it must not depend on it or hydration fails. Reduced motion
+  // zeroes the transition instead, which lands on the final state immediately.
   const prefersReducedMotion = useReducedMotion();
   const [firstName, ...restName] = siteConfig.name.split(" ");
   const highlightedName = restName.join(" ") || firstName;
@@ -133,9 +138,9 @@ export default function Hero() {
             </p>
 
             <motion.div
-              initial={prefersReducedMotion ? undefined : { opacity: 0, y: 16 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={prefersReducedMotion ? undefined : { duration: 0.5, delay: 0.24, ease: "easeOut" }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.24, ease: "easeOut" }}
               className="flex flex-wrap items-center gap-3 justify-center md:justify-start"
             >
               <a
@@ -161,9 +166,9 @@ export default function Hero() {
 
             {/* Social icons */}
             <motion.div
-              initial={prefersReducedMotion ? undefined : { opacity: 0 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1 }}
-              transition={prefersReducedMotion ? undefined : { duration: 0.5, delay: 0.35 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.35 }}
               className="flex items-center gap-1 mt-8 justify-center md:justify-start"
             >
               {socialLinks.map(({ key, href, icon: Icon, label }) => (
@@ -182,9 +187,9 @@ export default function Hero() {
 
             {/* Stats */}
             <motion.div
-              initial={prefersReducedMotion ? undefined : { opacity: 0 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1 }}
-              transition={prefersReducedMotion ? undefined : { duration: 0.5, delay: 0.5 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.5 }}
               className={`flex items-center gap-8 mt-10 pt-8 border-t ${
                 theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"
               } justify-center md:justify-start`}
@@ -203,9 +208,9 @@ export default function Hero() {
 
           {/* ── Photo column ── */}
           <motion.div
-            initial={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.96 }}
-            animate={prefersReducedMotion ? undefined : { opacity: 1, scale: 1 }}
-            transition={prefersReducedMotion ? undefined : { duration: 0.7, delay: 0.15, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.7, delay: 0.15, ease: "easeOut" }}
             className="flex-shrink-0"
           >
             {/* Gradient border frame — gilded portrait */}
@@ -233,9 +238,9 @@ export default function Hero() {
         {/* Decorative scroll hint */}
         <motion.div
           aria-hidden="true"
-          initial={prefersReducedMotion ? undefined : { opacity: 0 }}
-          animate={prefersReducedMotion ? undefined : { opacity: 1 }}
-          transition={prefersReducedMotion ? undefined : { duration: 0.5, delay: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 1 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--text-muted)]"
         >
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase">Scroll</span>

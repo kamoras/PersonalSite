@@ -61,14 +61,11 @@ export default function Projects() {
   const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
   const iconBg = theme === "dark" ? "bg-white/[0.03]" : "bg-black/[0.02]";
 
-  const fade = (delay = 0) =>
-    prefersReducedMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 20 },
-          animate: isInView ? { opacity: 1, y: 0 } : {},
-          transition: { duration: 0.55, delay },
-        };
+  const fade = (delay = 0) => ({
+    initial: { opacity: 0, y: 20 },
+    animate: isInView ? { opacity: 1, y: 0 } : {},
+    transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.55, delay },
+  });
 
   return (
     <section id="projects" aria-labelledby="projects-heading" ref={ref} className="py-32">

@@ -75,14 +75,11 @@ export default function Community() {
   const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
   const iconBg = theme === "dark" ? "bg-white/[0.03]" : "bg-black/[0.02]";
 
-  const fade = (delay = 0) =>
-    prefersReducedMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 20 },
-          animate: isInView ? { opacity: 1, y: 0 } : {},
-          transition: { duration: 0.55, delay },
-        };
+  const fade = (delay = 0) => ({
+    initial: { opacity: 0, y: 20 },
+    animate: isInView ? { opacity: 1, y: 0 } : {},
+    transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.55, delay },
+  });
 
   const calendlyUrl = `${siteConfig.links.calendly}?hide_gdpr_banner=1&primary_color=c9a465`;
 
@@ -166,13 +163,9 @@ export default function Community() {
               {volunteering.map((v, i) => (
                 <motion.li
                   key={v.org}
-                  {...(prefersReducedMotion
-                    ? {}
-                    : {
-                        initial: { opacity: 0, x: 12 },
-                        animate: isInView ? { opacity: 1, x: 0 } : {},
-                        transition: { duration: 0.4, delay: 0.25 + i * 0.07 },
-                      })}
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.4, delay: 0.25 + i * 0.07 }}
                   className={`p-4 rounded-xl border ${borderColor} ${cardBg}`}
                 >
                   <div className="flex items-start justify-between gap-2 mb-0.5">

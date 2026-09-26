@@ -64,14 +64,11 @@ export default function About() {
 
   const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
 
-  const fade = (delay = 0) =>
-    prefersReducedMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 20 },
-          animate: isInView ? { opacity: 1, y: 0 } : {},
-          transition: { duration: 0.55, delay },
-        };
+  const fade = (delay = 0) => ({
+    initial: { opacity: 0, y: 20 },
+    animate: isInView ? { opacity: 1, y: 0 } : {},
+    transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.55, delay },
+  });
 
   return (
     <section id="about" aria-labelledby="about-heading" ref={ref} className="py-32">
@@ -172,13 +169,9 @@ export default function About() {
             {skills.map((skill, i) => (
               <motion.div
                 key={skill.title}
-                {...(prefersReducedMotion
-                  ? {}
-                  : {
-                      initial: { opacity: 0, y: 16 },
-                      animate: isInView ? { opacity: 1, y: 0 } : {},
-                      transition: { duration: 0.5, delay: 0.2 + i * 0.07 },
-                    })}
+                initial={{ opacity: 0, y: 16 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.2 + i * 0.07 }}
                 className={`relative p-5 rounded-xl border border-l-[3px] ${borderColor} ${
                   theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]"
                 }`}

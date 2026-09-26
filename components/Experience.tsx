@@ -127,13 +127,9 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
     <motion.article
       ref={ref}
       aria-label={`${exp.title} at ${exp.company}${exp.current ? ", current role" : ""}`}
-      {...(prefersReducedMotion
-        ? {}
-        : {
-            initial: { opacity: 0, y: 24 },
-            animate: isInView ? { opacity: 1, y: 0 } : {},
-            transition: { duration: 0.5, delay: index * 0.05 },
-          })}
+      initial={{ opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: index * 0.05 }}
       className={`exp-card p-6 md:p-8 rounded-2xl border ${borderColor} ${cardBg} ${
         exp.current ? "shadow-[0_0_40px_rgba(201,164,101,0.07)]" : ""
       }`}
@@ -212,13 +208,9 @@ export default function Experience() {
     <section id="experience" aria-labelledby="experience-heading" ref={ref} className="py-32">
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
-          {...(prefersReducedMotion
-            ? {}
-            : {
-                initial: { opacity: 0, y: 20 },
-                animate: isInView ? { opacity: 1, y: 0 } : {},
-                transition: { duration: 0.6 },
-              })}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.6 }}
           className="mb-20"
         >
           <p
