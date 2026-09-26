@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 const rootDir = process.cwd();
 const postsDir = path.join(rootDir, "content", "posts");
@@ -23,7 +23,7 @@ function escapeXml(value) {
 
 function parseFrontmatter(raw) {
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(raw);
-  return match ? yaml.load(match[1]) ?? {} : {};
+  return match ? load(match[1]) ?? {} : {};
 }
 
 function parsePost(filename) {

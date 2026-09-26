@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { cache } from "react";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -81,7 +81,7 @@ function parseFrontmatter(raw: string): { data: unknown; content: string } {
   if (!match) {
     return { data: {}, content: raw };
   }
-  return { data: yaml.load(match[1]) ?? {}, content: raw.slice(match[0].length) };
+  return { data: load(match[1]) ?? {}, content: raw.slice(match[0].length) };
 }
 
 function validatePostFrontmatter(data: unknown, source: string): PostFrontmatter {

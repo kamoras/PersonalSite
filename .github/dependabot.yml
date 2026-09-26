@@ -15,3 +15,7 @@ updates:
       # Re-enable once eslint-config-next ships with a compatible plugin version.
       - dependency-name: "eslint"
         update-types: ["version-update:semver-major"]
+      # typescript-eslint (bundled by eslint-config-next) refuses to load under
+      # TypeScript 7, which breaks `npm run lint`. Re-enable once it supports TS 7.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
