@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { FOOTNOTE_ID_PREFIX } from "@/lib/constants";
 
 interface Tooltip {
   html: string;
@@ -9,6 +8,20 @@ interface Tooltip {
 }
 
 const TOOLTIP_ID = "footnote-tooltip";
+
+// Footnote refs already point aria-describedby at the "Footnotes" heading;
+// swap in the tooltip while it is open and put the original back afterwards.
+function describeWithTooltip(anchor: Element) {
+  anchor.setAttribute("data-describedby", anchor.getAttribute("aria-describedby") ?? "");
+  anchor.setAttribute("aria-describedby", TOOLTIP_ID);
+}
+
+function restoreDescription(anchor: Element) {
+  const original = anchor.getAttribute("data-describedby");
+  if (original) anchor.setAttribute("aria-describedby", original);
+  else anchor.removeAttribute("aria-describedby");
+  anchor.removeAttribute("data-describedby");
+}
 
 export default function BlogContent({ html }: { html: string }) {
   const articleRef = useRef<HTMLElement>(null);
@@ -18,10 +31,9 @@ export default function BlogContent({ html }: { html: string }) {
 
   const closeTooltip = useCallback(() => setTooltip(null), []);
 
-  // Remove aria-describedby from the triggering anchor when tooltip closes
   useEffect(() => {
-    if (!tooltip) {
-      activeAnchorRef.current?.removeAttribute("aria-describedby");
+    if (!tooltip && activeAnchorRef.current) {
+      restoreDescription(activeAnchorRef.current);
       activeAnchorRef.current = null;
     }
   }, [tooltip]);
@@ -38,24 +50,20 @@ export default function BlogContent({ html }: { html: string }) {
 
       e.preventDefault();
 
-      const rawId = anchor.getAttribute("href")?.slice(1);
-      if (!rawId) return;
+      const targetId = anchor.getAttribute("href")?.slice(1);
+      if (!targetId) return;
 
-      // hrefs are plain "#fn-N"; rehype-sanitize prefixes element ids with
-      // FOOTNOTE_ID_PREFIX, so resolve the target element accordingly.
-      const footnoteEl = document.getElementById(FOOTNOTE_ID_PREFIX + rawId);
+      const footnoteEl = document.getElementById(targetId);
       if (!footnoteEl) return;
 
-      // Clone the footnote, strip the back-reference arrow
-      const clone = footnoteEl.cloneNode(true) as HTMLElement;
-
-      // Associate the tooltip with the triggering anchor for screen readers
-      activeAnchorRef.current?.removeAttribute("aria-describedby");
-      anchor.setAttribute("aria-describedby", TOOLTIP_ID);
-      activeAnchorRef.current = anchor;
+      if (activeAnchorRef.current !== anchor) {
+        if (activeAnchorRef.current) restoreDescription(activeAnchorRef.current);
+        describeWithTooltip(anchor);
+        activeAnchorRef.current = anchor;
+      }
 
       setTooltip({
-        html: clone.innerHTML,
+        html: footnoteEl.innerHTML,
         anchorRect: anchor.getBoundingClientRect(),
       });
     };

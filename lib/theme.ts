@@ -5,15 +5,18 @@ export const THEME_EVENT = "themechange";
 export const DARK_THEME_COLOR = "#100d09";
 export const LIGHT_THEME_COLOR = "#faf7f2";
 
+// localStorage throws when storage is blocked (Safari with cookies disabled,
+// sandboxed iframes), so every access is guarded.
 export const themeInitializationScript = `
 (() => {
-  const storageKey = "${THEME_STORAGE_KEY}";
   const root = document.documentElement;
-  const media = window.matchMedia("(prefers-color-scheme: light)");
-  const stored = window.localStorage.getItem(storageKey);
+  let stored = null;
+  try {
+    stored = window.localStorage.getItem("${THEME_STORAGE_KEY}");
+  } catch {}
   const theme = stored === "light" || stored === "dark"
     ? stored
-    : (media.matches ? "light" : "dark");
+    : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
   root.classList.toggle("light", theme === "light");
   root.style.colorScheme = theme;
   const color = theme === "light" ? "${LIGHT_THEME_COLOR}" : "${DARK_THEME_COLOR}";

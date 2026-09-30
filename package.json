@@ -20,19 +20,21 @@
     "lucide-react": "^1.47.0",
     "next": "^16.3.6",
     "react": "19.3.0",
-    "react-dom": "^19.3.0",
+    "react-dom": "19.3.0",
     "rehype-sanitize": "^6.0.0",
     "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0"
   },
   "overrides": {
     "postcss": "$postcss"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "@types/hast": "^3.0.5",
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19.3.0",

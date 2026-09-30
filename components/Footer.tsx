@@ -1,13 +1,9 @@
-"use client";
-
 import { Mail, FileText } from "lucide-react";
-import { useTheme } from "./ThemeProvider";
 import { mailtoUrl, siteConfig } from "@/lib/site";
 import { socialLinks } from "@/lib/socials";
 
 export default function Footer() {
-  const { theme } = useTheme();
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
+  const borderColor = "border-[var(--color-card-border)]";
 
   return (
     <footer id="contact" className="relative overflow-hidden">

@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Matches the pre-paint html.light class, so theme-specific markup is correct
+   in the prerendered HTML before React hydrates. */
+@custom-variant light (&:where(.light, .light *));
+
 @theme {
   --font-sans:    var(--font-geist-sans), system-ui, sans-serif;
   --font-mono:    var(--font-geist-mono), monospace;
@@ -11,7 +15,7 @@
    Warm dark academia palette.
    All text values verified ≥ 4.5:1 WCAG AA contrast ratio.
 
-   Dark bg:  #0e0c0a   Light bg: #faf7f2
+   Dark bg:  #100d09   Light bg: #faf7f2
 ─────────────────────────────────────────────────────────────────────────────*/
 :root {
   /* Dark mode */
@@ -23,6 +27,13 @@
   --color-card-border: rgba(255, 255, 255, 0.08);
   --color-card-bg:     rgba(255, 255, 255, 0.02);
   --color-code-bg:     rgba(255, 255, 255, 0.06);
+  --color-nav-border:  rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.15);
+  --color-border-hover:  rgba(255, 255, 255, 0.25);
+  --color-surface-subtle: rgba(255, 255, 255, 0.03);
+  --color-chip-bg:     rgba(255, 255, 255, 0.05);
+  --color-elevated:    #1a1714;
+  --color-success:     #34d399;  /* 10:1 contrast — status labels             */
 }
 
 html.light {
@@ -35,6 +46,13 @@ html.light {
   --color-card-border: rgba(0, 0, 0, 0.08);
   --color-card-bg:     rgba(0, 0, 0, 0.01);
   --color-code-bg:     rgba(0, 0, 0, 0.05);
+  --color-nav-border:  rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.15);
+  --color-border-hover:  rgba(0, 0, 0, 0.2);
+  --color-surface-subtle: rgba(0, 0, 0, 0.02);
+  --color-chip-bg:     rgba(0, 0, 0, 0.05);
+  --color-elevated:    #faf7f2;
+  --color-success:     #036a4d;  /*  6.2:1 on bg, 5.2:1 on its 10% tint chip   */
 }
 
 /* ─── Serif headings — dark academia signature ───────────────────────────────*/
@@ -97,11 +115,7 @@ html.light .ornament-divider::after {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 4.5rem; /* offset for fixed navbar */
-  background-color: #100d09; /* fills iOS safe area canvas — body bg doesn't reach there */
-}
-
-html.light {
-  background-color: #faf7f2;
+  background-color: var(--color-bg); /* fills iOS safe area canvas — body bg doesn't reach there */
 }
 
 body {
@@ -514,13 +528,20 @@ html.light .blog-prose a:hover {
   line-height: 1.6;
 }
 
+/* Underlined, not colour alone, so links stay distinguishable in the list. */
 .blog-prose [data-footnotes] a {
   color: var(--color-gold);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: rgba(201, 164, 101, 0.4);
+  text-underline-offset: 3px;
+}
+
+html.light .blog-prose [data-footnotes] a {
+  text-decoration-color: rgba(122, 92, 18, 0.4);
 }
 
 .blog-prose [data-footnotes] a:hover {
-  text-decoration: underline;
+  text-decoration-color: var(--color-gold);
 }
 
 /* Tables */

@@ -2,6 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllPostsMeta, formatDate } from "@/lib/posts";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import { ogImage } from "@/lib/og";
+
+const blogOgImage = ogImage("/blog/og.png", `Writing — ${siteConfig.name}`);
 
 export const metadata: Metadata = {
   title: `Writing — ${siteConfig.name}`,
@@ -20,11 +23,13 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     type: "website",
     locale: "en_US",
+    images: [blogOgImage],
   },
   twitter: {
     card: "summary_large_image",
     title: `Writing — ${siteConfig.name}`,
     description: siteConfig.blogDescription,
+    images: [blogOgImage],
   },
 };
 

@@ -10,6 +10,7 @@ import rehypeStringify from "rehype-stringify";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { visit } from "unist-util-visit";
 import type { Root, Element } from "hast";
+import { FOOTNOTE_ID_PREFIX } from "@/lib/constants";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
 
@@ -27,13 +28,29 @@ function rehypeRemoveFootnoteBackrefs() {
   };
 }
 
+// rehype-sanitize prefixes every id with FOOTNOTE_ID_PREFIX but leaves the
+// in-page hrefs that point at them untouched, so footnote links would miss
+// their targets without JavaScript. Rewrite those hrefs to match.
+function rehypePrefixFragmentLinks() {
+  return (tree: Root) => {
+    const ids = new Set<string>();
+    visit(tree, "element", (node: Element) => {
+      if (typeof node.properties?.id === "string") ids.add(node.properties.id);
+    });
+    visit(tree, "element", (node: Element) => {
+      const href = node.properties?.href;
+      if (node.tagName !== "a" || typeof href !== "string" || !href.startsWith("#")) return;
+      const target = FOOTNOTE_ID_PREFIX + href.slice(1);
+      if (ids.has(target)) node.properties.href = `#${target}`;
+    });
+  };
+}
+
 // Extend the default sanitization schema to preserve remark-gfm footnote
 // attributes used by BlogContent.tsx for tooltip interception.
 // Uses the default clobberPrefix ("user-content-") — DOM clobbering protection
 // is fully active. remark-rehype is told not to add its own prefix so the
 // prefix is applied exactly once (by rehype-sanitize) to id attributes.
-// hrefs are left as plain "#fn-N" fragments; BlogContent prepends the prefix
-// when resolving the target element via getElementById.
 const sanitizeSchema = {
   ...defaultSchema,
   attributes: {
@@ -133,10 +150,12 @@ function markdownToPlainText(md: string): string {
     .replace(/\[\^[^\]]+\]:\s*[^\n]*(?:\n[ \t]+[^\n]*)*/gm, "")  // footnote definitions (incl. indented continuations)
     .replace(/\[\^[^\]]+\]/g, "")           // footnote references
     .replace(/^#{1,6}\s+/gm, "")            // headings
+    .replace(/^>[ \t]?/gm, "")              // blockquote markers
+    .replace(/^[ \t]*(?:[-*+]|\d{1,3}[.)])[ \t]+/gm, "") // list markers (years like "2026." are prose)
     .replace(/\*{1,3}([^*\n]+)\*{1,3}/g, "$1") // bold / italic
     .replace(/_{1,3}([^_\n]+)_{1,3}/g, "$1")
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")    // images (before links, which would leave a stray "!")
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // links → label
-    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")    // images
     .replace(/`{1,3}[^`]+`{1,3}/g, "")       // inline / fenced code
     .replace(/^[-*_]{3,}\s*$/gm, "")         // horizontal rules
     .replace(/\n{3,}/g, "\n\n")
@@ -185,6 +204,7 @@ export const getPost = cache(async function getPost(slug: string): Promise<Post>
     .use(remarkRehype, { allowDangerousHtml: false, clobberPrefix: "" })
     .use(rehypeRemoveFootnoteBackrefs)
     .use(rehypeSanitize, sanitizeSchema)
+    .use(rehypePrefixFragmentLinks)
     .use(rehypeStringify)
     .process(content);
 

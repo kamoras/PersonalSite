@@ -27,13 +27,19 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
   const closeMobileMenu = () => setMobileOpen(false);
 
   useEffect(() => {
-    const onScroll = () => {
+    const update = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
+
+      // Section links only point at in-page anchors on the homepage.
+      if (!isHome) {
+        setActiveSection("");
+        return;
+      }
 
       // When near the page bottom the last section's top can never reach the
       // 35% trigger, so activate it directly. Position calculation takes over
@@ -53,12 +59,28 @@ export default function Navbar() {
       }
       setActiveSection(next);
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
-  // Focus trap, escape key, and body scroll lock for mobile menu
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [isHome]);
+
+  // Focus trap (menu + its toggle, so the close button stays reachable),
+  // escape key, and body scroll lock for the mobile menu
   useEffect(() => {
     if (!mobileOpen) return;
 
@@ -74,9 +96,10 @@ export default function Navbar() {
         return;
       }
       if (e.key === "Tab") {
-        const focusable = Array.from(
-          menuRef.current?.querySelectorAll<HTMLElement>("a, button") ?? []
-        );
+        const focusable = [
+          toggleRef.current,
+          ...Array.from(menuRef.current?.querySelectorAll<HTMLElement>("a, button") ?? []),
+        ].filter((el): el is HTMLElement => el !== null);
         if (focusable.length === 0) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
@@ -97,18 +120,11 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  const navBg =
-    theme === "dark"
-      ? "bg-[#100d09] md:bg-[#100d09]/92 md:backdrop-blur-md border-b border-white/[0.06]"
-      : "bg-[#faf7f2] md:bg-[#faf7f2]/92 md:backdrop-blur-md border-b border-black/[0.06]";
-
   const textMuted = "text-[var(--text-muted)]";
-
-  const bgColor = theme === "dark" ? "#100d09" : "#faf7f2";
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[10000] transition-colors duration-300 ${navBg}`}
+      className="fixed top-0 left-0 right-0 z-[10000] transition-colors duration-300 bg-[var(--color-bg)] md:bg-[var(--color-bg)]/92 md:backdrop-blur-md border-b border-[var(--color-nav-border)]"
     >
       {/*
           OVER-COVER HACK:
@@ -118,8 +134,7 @@ export default function Navbar() {
       */}
       <div
         aria-hidden="true"
-        className="absolute bottom-full left-0 right-0 h-[100px]"
-        style={{ backgroundColor: bgColor }}
+        className="absolute bottom-full left-0 right-0 h-[100px] bg-[var(--color-bg)]"
       />
 
       {/* SAFE AREA SPACER */}
@@ -201,11 +216,8 @@ export default function Navbar() {
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
             className={`p-2.5 rounded-md ${textMuted} hover:text-current transition-colors`}
           >
-            {theme === "dark" ? (
-              <Sun size={16} aria-hidden="true" />
-            ) : (
-              <Moon size={16} aria-hidden="true" />
-            )}
+            <Sun size={16} aria-hidden="true" className="light:hidden" />
+            <Moon size={16} aria-hidden="true" className="hidden light:block" />
           </button>
           <a
             href={siteConfig.resumeDocumentPath}
@@ -237,17 +249,11 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div
+        <nav
           id="mobile-menu"
           ref={menuRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Navigation menu"
-          className={`md:hidden border-t ${
-            theme === "dark"
-              ? "border-white/[0.06] bg-[#100d09]/96"
-              : "border-black/[0.06] bg-[#faf7f2]/96"
-          } backdrop-blur-md`}
+          aria-label="Mobile navigation"
+          className="md:hidden border-t border-[var(--color-nav-border)] bg-[var(--color-bg)]/96 backdrop-blur-md"
         >
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-1">
             {sectionLinks.map((link) => {
@@ -267,7 +273,7 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div aria-hidden="true" className={`h-px my-1 ${theme === "dark" ? "bg-white/[0.06]" : "bg-black/[0.06]"}`} />
+            <div aria-hidden="true" className="h-px my-1 bg-[var(--color-nav-border)]" />
             {pageLinks.map((link) => {
               const isActive = pathname.startsWith(link.href);
               return (
@@ -284,7 +290,7 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className={`flex items-center gap-3 pt-2 border-t ${theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"}`}>
+            <div className="flex items-center gap-3 pt-2 border-t border-[var(--color-card-border)]">
               {socialLinks.map(({ key, href, icon: Icon, label }) => (
                 <a
                   key={key}
@@ -324,7 +330,7 @@ export default function Navbar() {
               </a>
             </div>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );

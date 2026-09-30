@@ -1,9 +1,9 @@
 # ryan-mack.dev
 
 [![CI](https://github.com/kamoras/PersonalSite/actions/workflows/azure-static-web-apps-calm-cliff-026fb3d10.yml/badge.svg)](https://github.com/kamoras/PersonalSite/actions/workflows/azure-static-web-apps-calm-cliff-026fb3d10.yml)
-[![Lighthouse Accessibility](https://img.shields.io/badge/Lighthouse-Accessibility%20100-brightgreen?logo=lighthouse)](https://ryan-mack.dev)
-[![Lighthouse SEO](https://img.shields.io/badge/Lighthouse-SEO%20100-brightgreen?logo=lighthouse)](https://ryan-mack.dev)
-[![Lighthouse Best Practices](https://img.shields.io/badge/Lighthouse-Best%20Practices%2096-brightgreen?logo=lighthouse)](https://ryan-mack.dev)
+[![Lighthouse Accessibility](https://img.shields.io/badge/Lighthouse-Accessibility%20100-brightgreen?logo=lighthouse)](https://www.ryan-mack.dev)
+[![Lighthouse SEO](https://img.shields.io/badge/Lighthouse-SEO%20100-brightgreen?logo=lighthouse)](https://www.ryan-mack.dev)
+[![Lighthouse Best Practices](https://img.shields.io/badge/Lighthouse-Best%20Practices%2096-brightgreen?logo=lighthouse)](https://www.ryan-mack.dev)
 
 Personal portfolio and writing site for Ryan Mack — Senior Software Engineer at Cisco ThousandEyes.
 
@@ -28,8 +28,9 @@ Built with Next.js static export and Tailwind CSS v4. Deployed to Azure Static W
 ```
 app/                  # Next.js App Router pages and layouts
   blog/               # Blog index + dynamic [slug] pages
-  layout.tsx          # Root layout (fonts, metadata, theme-color)
+  layout.tsx          # Root layout (fonts, metadata, theme init script)
   page.tsx            # Homepage (assembles all sections)
+  og.png/             # Social card image route handlers (also under blog/ and blog/[slug]/)
   globals.css         # Design tokens, base styles, animations
 components/           # React components (one per section/feature)
   Navbar.tsx
@@ -41,6 +42,7 @@ components/           # React components (one per section/feature)
   Community.tsx
   Footer.tsx
   PrideFlag.tsx       # Progress Pride flag (SVG) accent in the hero eyebrow
+  SkipLink.tsx        # Keyboard skip-to-content link shared by every layout
   ThemeProvider.tsx   # Dark/light theme + system preference support
   TextToSpeech.tsx    # Browser Speech API reader for blog posts
   BlogContent.tsx     # Markdown renderer for blog posts
@@ -49,7 +51,8 @@ content/
   posts/              # Blog posts as Markdown files
 lib/
   posts.ts            # Blog post loading, frontmatter validation, related posts
-  site.ts             # Site metadata, profile links, canonical URLs
+  site.ts             # Site metadata, profile links, canonical URLs (www host)
+  og.ts               # Shared social image size + metadata helper
   socials.tsx         # Canonical social profile list (hero, navbar, footer)
   useScrollAwareInView.ts
   theme.ts            # Shared theme constants + pre-paint init script
@@ -106,7 +109,7 @@ Invalid or incomplete frontmatter fails fast during build-time content loading w
 
 Every PR runs:
 - **Build** — `npm run build` (static export must succeed)
-- **Smoke** — validates the exported homepage, blog, resume PDF + redirect, and RSS feed
+- **Smoke** — validates the exported homepage, blog, resume PDF + redirect, RSS feed, `.png` social images, and in-page footnote links
 - **Lint** — ESLint
 - **Lighthouse** — SEO ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90, Performance reported (warn only). Results posted as a PR comment.
 

@@ -45,7 +45,7 @@ The reason Composer is cheap to *run* is more about the architecture: a sparse M
 
 To be fair to the other side, the picture isn't as tidy as "small specialized models win." The most telling detail might be that **Cursor itself is also placing the big bet**: alongside Composer 2.5, the company announced it's training a much larger model from scratch with SpaceXAI, using 10× more total compute on the Colossus 2 cluster's million H100-equivalents.[^cursor][^decoder] In other words, even the poster child for the specialized approach is hedging toward scale. And benchmarks are not the same as your codebase — early user reports already note Composer 2.5 occasionally losing the plot mid-task and stalling.[^newstack] This is not an ad for Cursor, and I'm not claiming the model is perfect.
 
-Composer 2.5 doesn't settle whether specialized models are the better path. But it's the strongest evidence I've seen that they're worth a serious consideration.
+Composer 2.5 doesn't settle whether specialized models are the better path. But it's the strongest evidence I've seen that they're worth serious consideration.
 
 ---
 

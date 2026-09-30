@@ -1,21 +1,19 @@
 import { ImageResponse } from "next/og";
 import { getAllPostSlugs, getPost } from "@/lib/posts";
 import { siteConfig } from "@/lib/site";
+import { ogImageSize } from "@/lib/og";
 
 export const dynamic = "force-static";
-export const alt = `${siteConfig.name} article card`;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
 }
 
-export default async function Image({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   const { slug } = await params;
   const post = await getPost(slug);
 
@@ -111,6 +109,6 @@ export default async function Image({
         </div>
       </div>
     ),
-    size
+    ogImageSize
   );
 }

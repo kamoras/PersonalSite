@@ -106,7 +106,7 @@ export default function TextToSpeech({
   if (!supported) return null;
 
   return (
-    <div className="flex items-center gap-2.5" aria-label="Article reader controls">
+    <div role="group" className="flex items-center gap-2.5" aria-label="Article reader controls">
       <Volume2 size={13} aria-hidden="true" className="text-[var(--color-gold)]" />
       <span className="text-xs font-mono text-[var(--text-muted)]">Listen</span>
 

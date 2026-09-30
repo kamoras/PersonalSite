@@ -1,12 +1,10 @@
 import { ImageResponse } from "next/og";
 import { siteConfig } from "@/lib/site";
+import { ogImageSize } from "@/lib/og";
 
 export const dynamic = "force-static";
-export const alt = `Writing — ${siteConfig.name}`;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
 
-export default function Image() {
+export function GET() {
   return new ImageResponse(
     (
       <div
@@ -23,6 +21,7 @@ export default function Image() {
           position: "relative",
         }}
       >
+        {/* Subtle warm radial glow */}
         <div
           style={{
             position: "absolute",
@@ -36,6 +35,7 @@ export default function Image() {
           }}
         />
 
+        {/* Gold accent bar */}
         <div
           style={{
             width: "48px",
@@ -46,43 +46,48 @@ export default function Image() {
           }}
         />
 
+        {/* Name */}
         <div
           style={{
-            fontSize: "22px",
-            letterSpacing: "0.26em",
-            textTransform: "uppercase",
-            color: "#c9a465",
-            fontFamily: "monospace",
-            marginBottom: "28px",
-          }}
-        >
-          Writing
-        </div>
-
-        <div
-          style={{
-            fontSize: "72px",
+            fontSize: "86px",
             fontWeight: "700",
             color: "#ede8df",
             lineHeight: 1.05,
             letterSpacing: "-0.02em",
-            marginBottom: "24px",
+            marginBottom: "20px",
           }}
         >
-          Thoughts &amp; perspectives
+          {siteConfig.name}
         </div>
 
+        {/* Title */}
         <div
           style={{
-            fontSize: "26px",
+            fontSize: "30px",
             color: "#a8a090",
-            lineHeight: 1.45,
-            maxWidth: "820px",
+            marginBottom: "12px",
+            letterSpacing: "0.01em",
+            fontWeight: "400",
           }}
         >
-          On software, technology, and whatever else is worth putting into words.
+          {siteConfig.jobTitle}
         </div>
 
+        {/* Company */}
+        <div
+          style={{
+            fontSize: "22px",
+            color: "#c9a465",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            fontFamily: "monospace",
+            fontWeight: "400",
+          }}
+        >
+          {siteConfig.employer}
+        </div>
+
+        {/* Domain — bottom right */}
         <div
           style={{
             position: "absolute",
@@ -97,6 +102,7 @@ export default function Image() {
           {siteConfig.domain}
         </div>
 
+        {/* Thin bottom gold line */}
         <div
           style={{
             position: "absolute",
@@ -109,6 +115,6 @@ export default function Image() {
         />
       </div>
     ),
-    { ...size }
+    ogImageSize
   );
 }

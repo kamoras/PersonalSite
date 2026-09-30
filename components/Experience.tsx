@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
-import { useTheme } from "./ThemeProvider";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 
@@ -112,16 +111,13 @@ const experiences = [
 type Experience = (typeof experiences)[0];
 
 function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
-  const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
   const borderColor = exp.current
     ? "border-[rgba(201,164,101,0.35)]"
-    : theme === "dark"
-    ? "border-white/[0.08]"
-    : "border-black/[0.08]";
-  const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
+    : "border-[var(--color-card-border)]";
+  const cardBg = "bg-[var(--color-card-bg)]";
 
   return (
     <motion.article
@@ -141,7 +137,7 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
         >
           <Image
             src={exp.logo}
-            alt={`${exp.company} logo`}
+            alt=""
             width={48}
             height={48}
             className="w-full h-full object-contain p-1"
@@ -156,8 +152,8 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
             </div>
             {exp.current && (
               <div className="flex-shrink-0 flex items-center gap-1.5 pt-0.5">
-                <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full animate-pulse ${theme === "dark" ? "bg-emerald-400" : "bg-emerald-600"}`} />
-                <span className={`font-mono text-xs ${theme === "dark" ? "text-emerald-400" : "text-emerald-700"}`}>Current</span>
+                <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full animate-pulse bg-[var(--color-success)]" />
+                <span className="font-mono text-xs text-[var(--color-success)]">Current</span>
               </div>
             )}
           </div>
@@ -186,9 +182,7 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
             {exp.tags.map((tag) => (
               <li
                 key={tag}
-                className={`px-2.5 py-0.5 rounded-md font-mono text-xs text-[var(--text-muted)] ${
-                  theme === "dark" ? "bg-white/5" : "bg-black/5"
-                }`}
+                className="px-2.5 py-0.5 rounded-md font-mono text-xs text-[var(--text-muted)] bg-[var(--color-chip-bg)]"
               >
                 {tag}
               </li>

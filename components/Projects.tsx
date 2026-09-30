@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
-import { useTheme } from "./ThemeProvider";
 import { ExternalLink, BarChart2, AudioLines } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -53,13 +52,12 @@ const projects: Project[] = [
 ];
 
 export default function Projects() {
-  const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
-  const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
-  const iconBg = theme === "dark" ? "bg-white/[0.03]" : "bg-black/[0.02]";
+  const borderColor = "border-[var(--color-card-border)]";
+  const cardBg = "bg-[var(--color-card-bg)]";
+  const iconBg = "bg-[var(--color-surface-subtle)]";
 
   const fade = (delay = 0) => ({
     initial: { opacity: 0, y: 20 },
@@ -104,8 +102,8 @@ export default function Projects() {
                         Personal Project
                       </p>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full animate-pulse ${theme === "dark" ? "bg-emerald-400" : "bg-emerald-600"}`} />
-                        <span className={`font-mono text-xs ${theme === "dark" ? "text-emerald-400" : "text-emerald-700"}`}>
+                        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full animate-pulse bg-[var(--color-success)]" />
+                        <span className="font-mono text-xs text-[var(--color-success)]">
                           Live
                         </span>
                       </div>

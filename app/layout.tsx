@@ -4,6 +4,7 @@ import Script from "next/script";
 import ThemeProvider from "@/components/ThemeProvider";
 import { siteConfig } from "@/lib/site";
 import { themeInitializationScript } from "@/lib/theme";
+import { ogImage } from "@/lib/og";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,13 +26,14 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+// theme-color is deliberately not set here: Next.js would emit one tag per
+// color scheme and re-insert them on client navigation, overriding a manual
+// theme toggle. The theme script and ThemeProvider own a single tag instead.
 export const viewport: Viewport = {
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#100d09" },
-    { media: "(prefers-color-scheme: light)", color: "#faf7f2" },
-  ],
 };
+
+const homeOgImage = ogImage("/og.png", `${siteConfig.name} — ${siteConfig.jobTitle} at ${siteConfig.employer}`);
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -40,12 +42,10 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.name }],
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
       { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/favicon.png", type: "image/png", sizes: "96x96" },
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-    shortcut: ["/favicon.ico"],
   },
   openGraph: {
     title: siteConfig.name,
@@ -54,11 +54,13 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     type: "website",
     locale: "en_US",
+    images: [homeOgImage],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
+    images: [homeOgImage],
   },
   metadataBase: new URL(siteConfig.url),
 };
@@ -102,6 +104,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}>
         <script dangerouslySetInnerHTML={{ __html: themeInitializationScript }} />
+        {/* framer-motion prerenders entrance animations at opacity 0 and only
+            reveals them after hydration, so without JavaScript the page would
+            stay blank. */}
+        <noscript>
+          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

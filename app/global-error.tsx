@@ -39,7 +39,6 @@ export default function GlobalError({
               fontSize: "2.25rem",
               fontWeight: 300,
               letterSpacing: "-0.025em",
-              marginBottom: "1rem",
               margin: "0 0 1rem",
             }}
           >

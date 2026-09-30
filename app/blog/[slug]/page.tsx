@@ -7,6 +7,7 @@ import BlogContent from "@/components/BlogContent";
 import TextToSpeech from "@/components/TextToSpeechLoader";
 import GiscusComments from "@/components/GiscusComments";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import { ogImage } from "@/lib/og";
 
 function hasPost(slug: string): boolean {
   return getAllPostSlugs().includes(slug);
@@ -25,6 +26,7 @@ export async function generateMetadata({
   if (!hasPost(slug)) return {};
 
   const post = await getPost(slug);
+  const image = ogImage(`/blog/${slug}/og.png`, post.title);
 
   return {
     title: `${post.title} — ${siteConfig.name}`,
@@ -41,11 +43,14 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.date,
       authors: [siteConfig.name],
+      locale: "en_US",
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
+      images: [image],
     },
   };
 }

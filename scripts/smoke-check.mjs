@@ -98,22 +98,35 @@ if (resumeRouteArtifact) {
   throw new Error("Unexpected exported /resume page artifact");
 }
 
+// Social images need a .png extension: Azure Static Web Apps derives the
+// Content-Type from it, and scrapers reject application/octet-stream.
+function assertSocialImages(route, content) {
+  for (const [attrName, attrValue] of [["property", "og:image"], ["name", "twitter:image"]]) {
+    const imageUrl = extractMetaContent(content, attrName, attrValue);
+    if (!imageUrl) {
+      throw new Error(`Missing ${attrValue} metadata on ${route}`);
+    }
+    if (!new URL(imageUrl).pathname.endsWith(".png")) {
+      throw new Error(`${attrValue} on ${route} must be a .png path: ${imageUrl}`);
+    }
+    assertExportedAsset(imageUrl, `${attrValue} for ${route}`);
+  }
+}
+
+assertSocialImages("/", home.content);
+assertSocialImages("/blog", blog.content);
+
 for (const slug of posts) {
   const postRoute = `/blog/${slug}`;
   const postFile = resolveRouteFile(postRoute);
   assertIncludes(postRoute, postFile.content, "Back to all posts");
+  assertSocialImages(postRoute, postFile.content);
 
-  const ogImage = extractMetaContent(postFile.content, "property", "og:image");
-  if (!ogImage) {
-    throw new Error(`Missing og:image metadata on ${postRoute}`);
+  for (const [, fragment] of postFile.content.matchAll(/href="#([^"]+)"/g)) {
+    if (!postFile.content.includes(`id="${fragment}"`)) {
+      throw new Error(`Broken in-page link #${fragment} on ${postRoute}`);
+    }
   }
-  assertExportedAsset(ogImage, "post Open Graph image");
-
-  const twitterImage = extractMetaContent(postFile.content, "name", "twitter:image");
-  if (!twitterImage) {
-    throw new Error(`Missing twitter:image metadata on ${postRoute}`);
-  }
-  assertExportedAsset(twitterImage, "post Twitter image");
 }
 
 const feedPath = path.join(outDir, "feed.xml");
@@ -121,7 +134,7 @@ const feed = readFileIfPresent(feedPath);
 if (feed === null) {
   throw new Error("Missing generated RSS feed: out/feed.xml");
 }
-assertIncludes("/feed.xml", feed, "<rss version=\"2.0\">");
+assertIncludes("/feed.xml", feed, "<rss version=\"2.0\"");
 
 const configPath = path.join(outDir, "staticwebapp.config.json");
 const config = readFileIfPresent(configPath);

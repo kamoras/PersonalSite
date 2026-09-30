@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
-import { useTheme } from "./ThemeProvider";
 import { GraduationCap, ExternalLink } from "lucide-react";
 
 const skills = [
@@ -60,11 +59,10 @@ const education = [
 ];
 
 export default function About() {
-  const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
+  const borderColor = "border-[var(--color-card-border)]";
 
   const fade = (delay = 0) => ({
     initial: { opacity: 0, y: 20 },
@@ -97,7 +95,7 @@ export default function About() {
               network visibility possible for enterprises worldwide.
             </p>
             <p className="text-base leading-relaxed text-[var(--text-secondary)]">
-              Over 9+ years across research labs, startups, and Cisco-scale infrastructure,
+              Over nine years across research labs, startups, and Cisco-scale infrastructure,
               I&apos;ve owned every phase of the development lifecycle — inventing new systems
               with <span className="text-current font-medium">a granted patent and patents pending</span>,
               scaling production software to thousands of customers, and mentoring the
@@ -109,7 +107,7 @@ export default function About() {
               <span
                 className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono border ${borderColor} text-[var(--text-muted)]`}
               >
-                <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${theme === "dark" ? "bg-emerald-400" : "bg-emerald-600"}`} />
+                <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-[var(--color-success)]" />
                 Patent Granted
               </span>
               <span
@@ -193,9 +191,7 @@ export default function About() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.2 + i * 0.07 }}
-                className={`relative p-5 rounded-xl border border-l-[3px] ${borderColor} ${
-                  theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]"
-                }`}
+                className={`relative p-5 rounded-xl border border-l-[3px] ${borderColor} bg-[var(--color-card-bg)]`}
                 style={{ borderLeftColor: skill.accentColor }}
               >
                 <p className="font-mono text-[10px] text-[var(--color-gold)] mb-3 tracking-widest opacity-70">

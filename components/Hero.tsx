@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { motion, useReducedMotion, useInView } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, MapPin } from "lucide-react";
-import { useTheme } from "./ThemeProvider";
 import PrideFlag from "./PrideFlag";
 import Image from "next/image";
 import { siteConfig } from "@/lib/site";
@@ -26,20 +25,23 @@ function AnimatedStat({
   label: string;
   animate: boolean;
 }) {
-  // Always start at 0: the prerendered HTML can't know the visitor's motion
-  // preference, so starting at `value` for reduced motion breaks hydration.
-  const [display, setDisplay] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  // Start at the real value so the prerendered HTML (and visitors without JS)
+  // show it. The count-up only runs when the stat is on screen at load, where
+  // the row is still fading in from opacity 0 and the reset to 0 is hidden; a
+  // stat below the fold (e.g. landscape phones) keeps its value rather than
+  // visibly snapping to 0 when scrolled to.
+  const [display, setDisplay] = useState(value);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isInView) return;
-    const duration = animate ? 1200 : 0;
+    const el = ref.current;
+    if (!animate || !el || el.getBoundingClientRect().top >= window.innerHeight) return;
+    const duration = 1200;
     const startTime = performance.now();
     let raf: number;
     const tick = (now: number) => {
       const elapsed = now - startTime;
-      const progress = duration ? Math.min(elapsed / duration, 1) : 1;
+      const progress = Math.min(elapsed / duration, 1);
       // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setDisplay(Math.round(eased * value));
@@ -47,7 +49,7 @@ function AnimatedStat({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [isInView, value, animate]);
+  }, [value, animate]);
 
   return (
     <div ref={ref} className="flex flex-col items-center md:items-start">
@@ -62,7 +64,6 @@ function AnimatedStat({
 }
 
 export default function Hero() {
-  const { theme } = useTheme();
   // `initial` is inlined into the prerendered HTML, where the motion preference
   // is unknown, so it must not depend on it or hydration fails. Reduced motion
   // zeroes the transition instead, which lands on the final state immediately.
@@ -82,7 +83,7 @@ export default function Hero() {
   return (
     <section
       aria-label="Introduction"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-svh flex items-center justify-center overflow-hidden"
     >
       {/* Decorative grid */}
       <div
@@ -154,11 +155,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View resume PDF (opens in new tab)"
-                className={`px-6 py-3 rounded-lg text-sm font-medium border transition-colors ${
-                  theme === "dark"
-                    ? "border-white/15 hover:border-white/25 hover:bg-white/5"
-                    : "border-black/15 hover:border-black/20 hover:bg-black/5"
-                }`}
+                className="px-6 py-3 rounded-lg text-sm font-medium border border-[var(--color-border-strong)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-chip-bg)] transition-colors"
               >
                 View Resume
               </a>
@@ -190,9 +187,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.5 }}
-              className={`flex items-center gap-8 mt-10 pt-8 border-t ${
-                theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"
-              } justify-center md:justify-start`}
+              className="flex items-center gap-8 mt-10 pt-8 border-t border-[var(--color-card-border)] justify-center md:justify-start"
             >
               {stats.map(({ value, suffix, label }) => (
                 <AnimatedStat

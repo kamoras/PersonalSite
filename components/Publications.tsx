@@ -2,17 +2,15 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
-import { useTheme } from "./ThemeProvider";
 import { ExternalLink, BookOpen, Award } from "lucide-react";
 
 export default function Publications() {
-  const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
-  const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
-  const iconBg = theme === "dark" ? "bg-white/[0.03]" : "bg-black/[0.02]";
+  const borderColor = "border-[var(--color-card-border)]";
+  const cardBg = "bg-[var(--color-card-bg)]";
+  const iconBg = "bg-[var(--color-surface-subtle)]";
 
   const fade = (delay = 0) => ({
     initial: { opacity: 0, y: 20 },
@@ -128,11 +126,7 @@ export default function Publications() {
               </div>
               <div className="flex items-center gap-2">
                 <span
-                  className={`font-mono text-[10px] px-2 py-1 rounded-full ${
-                    theme === "dark"
-                      ? "text-emerald-400 bg-emerald-400/10"
-                      : "text-emerald-700 bg-emerald-700/10"
-                  }`}
+                  className="font-mono text-[10px] px-2 py-1 rounded-full text-[var(--color-success)] bg-[var(--color-success)]/10"
                 >
                   Granted
                 </span>

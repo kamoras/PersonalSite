@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
-import { useTheme } from "./ThemeProvider";
 import { Users, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 
@@ -12,25 +11,41 @@ declare global {
   }
 }
 
-function openCalendlyPopup(url: string) {
-  const open = () => window.Calendly!.initPopupWidget({ url });
+let calendlyLoader: Promise<void> | null = null;
 
-  if (window.Calendly) {
-    open();
-    return;
-  }
+function loadCalendly(): Promise<void> {
+  calendlyLoader ??= new Promise<void>((resolve, reject) => {
+    if (!document.querySelector('link[href*="assets.calendly.com"]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://assets.calendly.com/assets/external/widget.css";
+      document.head.appendChild(link);
+    }
 
-  if (!document.querySelector('link[href*="assets.calendly.com"]')) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://assets.calendly.com/assets/external/widget.css";
-    document.head.appendChild(link);
-  }
+    const script = document.createElement("script");
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.onload = () => resolve();
+    script.onerror = () => {
+      script.remove();
+      calendlyLoader = null;
+      reject(new Error("Calendly widget failed to load"));
+    };
+    document.head.appendChild(script);
+  });
+  return calendlyLoader;
+}
 
-  const script = document.createElement("script");
-  script.src = "https://assets.calendly.com/assets/external/widget.js";
-  script.onload = open;
-  document.head.appendChild(script);
+// The booking button is a real link to Calendly, so it still works when the
+// widget script is blocked (ad blockers, strict privacy settings). The
+// fallback navigates in place because a window.open after an async load is no
+// longer tied to the click and gets popup-blocked.
+function openCalendlyPopup(event: React.MouseEvent<HTMLAnchorElement>, url: string) {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+  event.preventDefault();
+  const fallback = () => window.location.assign(url);
+  loadCalendly()
+    .then(() => (window.Calendly ? window.Calendly.initPopupWidget({ url }) : fallback()))
+    .catch(fallback);
 }
 
 const volunteering = [
@@ -67,13 +82,12 @@ const volunteering = [
 ];
 
 export default function Community() {
-  const { theme } = useTheme();
   const prefersReducedMotion = useReducedMotion();
   const { ref, isInView } = useScrollAwareInView({ margin: "-80px" });
 
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
-  const cardBg = theme === "dark" ? "bg-white/[0.02]" : "bg-black/[0.01]";
-  const iconBg = theme === "dark" ? "bg-white/[0.03]" : "bg-black/[0.02]";
+  const borderColor = "border-[var(--color-card-border)]";
+  const cardBg = "bg-[var(--color-card-bg)]";
+  const iconBg = "bg-[var(--color-surface-subtle)]";
 
   const fade = (delay = 0) => ({
     initial: { opacity: 0, y: 20 },
@@ -130,14 +144,17 @@ export default function Community() {
               </div>
 
               <div className="mt-8">
-                <button
-                  onClick={() => openCalendlyPopup(calendlyUrl)}
+                <a
+                  href={calendlyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => openCalendlyPopup(event, calendlyUrl)}
                   className="group flex items-center justify-between w-full px-5 py-4 rounded-xl border border-[rgba(201,164,101,0.4)] text-sm font-medium text-[var(--color-gold)] hover:bg-[rgba(201,164,101,0.08)] hover:border-[rgba(201,164,101,0.7)] transition-all duration-200"
-                  aria-label="Open booking overlay to schedule a free mentoring session with Ryan Mack"
+                  aria-label="Book a free mentoring session with Ryan Mack on Calendly"
                 >
                   <span>Book a free session</span>
                   <ArrowRight size={15} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" aria-hidden="true" />
-                </button>
+                </a>
 
                 <p className="font-mono text-[10px] text-[var(--text-muted)] mt-4">
                   Powered by{" "}
@@ -148,6 +165,7 @@ export default function Community() {
                     className="underline underline-offset-2 hover:text-current transition-colors"
                   >
                     Calendly
+                    <span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </p>
               </div>
@@ -172,8 +190,8 @@ export default function Community() {
                     <p className="text-sm font-medium leading-snug">{v.org}</p>
                     {v.current && (
                       <div className="flex items-center gap-1 flex-shrink-0 pt-0.5">
-                        <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full animate-pulse ${theme === "dark" ? "bg-emerald-400" : "bg-emerald-600"}`} />
-                        <span className={`font-mono text-[10px] ${theme === "dark" ? "text-emerald-400" : "text-emerald-700"}`}>
+                        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full animate-pulse bg-[var(--color-success)]" />
+                        <span className="font-mono text-[10px] text-[var(--color-success)]">
                           Ongoing
                         </span>
                       </div>
