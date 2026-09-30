@@ -34,7 +34,7 @@ app/                  # Next.js App Router pages and layouts
 components/           # React components (one per section/feature)
   Navbar.tsx
   Hero.tsx
-  About.tsx
+  About.tsx           # Bio, skills, education (M.S. links to verified Parchment credential)
   Experience.tsx
   Publications.tsx
   Projects.tsx        # Personal projects (Civitas, Spliced)

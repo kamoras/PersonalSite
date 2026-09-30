@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useScrollAwareInView } from "@/lib/useScrollAwareInView";
 import { useTheme } from "./ThemeProvider";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, ExternalLink } from "lucide-react";
 
 const skills = [
   {
@@ -48,12 +48,14 @@ const education = [
     school: "Georgia Institute of Technology",
     detail: "Specialization: Human-Computer Interaction",
     period: "Jan 2022 — Aug 2026",
+    credentialUrl: "https://www.parchment.com/lp/award/ded1d8e1-c469-4ee3-afdb-89df135911c3",
   },
   {
     degree: "B.S.E., Computer Science and Engineering",
     school: "University of Connecticut",
     detail: null,
     period: "Aug 2013 — May 2017",
+    credentialUrl: null,
   },
 ];
 
@@ -151,7 +153,26 @@ export default function About() {
                 {education.map((edu) => (
                   <div key={edu.school} className="flex items-start gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium leading-snug mb-0.5">{edu.degree}</p>
+                      <p className="text-sm font-medium leading-snug mb-0.5">
+                        {edu.credentialUrl ? (
+                          <a
+                            href={edu.credentialUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${edu.degree}, ${edu.school}: verified credential on Parchment (opens in new tab)`}
+                            className="group underline decoration-[var(--text-muted)] decoration-1 underline-offset-4 hover:text-[var(--color-gold)] hover:decoration-[var(--color-gold)] transition-colors"
+                          >
+                            {edu.degree}
+                            <ExternalLink
+                              size={12}
+                              className="inline ml-1.5 align-[-1px] text-[var(--text-muted)] group-hover:text-[var(--color-gold)] transition-colors"
+                              aria-hidden="true"
+                            />
+                          </a>
+                        ) : (
+                          edu.degree
+                        )}
+                      </p>
                       <p className="text-xs text-[var(--text-secondary)]">{edu.school}</p>
                       {edu.detail && (
                         <p className="text-xs text-[var(--text-muted)] mt-0.5">{edu.detail}</p>
