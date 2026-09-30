@@ -20,19 +20,19 @@ type Project = {
 const projects: Project[] = [
   {
     name: "Civitas",
-    tagline: "Expose the Machine",
+    tagline: "Read the Record",
     href: "https://civitas-research.org/",
-    ariaLabel: "Visit Civitas — open source political transparency platform (opens in new tab)",
+    ariaLabel: "Visit Civitas — open source public-record scorecard for Congress, presidents, and justices (opens in new tab)",
     icon: BarChart2,
     description:
-      "An open source political transparency platform that aggregates public federal records to surface connections between campaign donations and legislative voting. AI analysis runs entirely on a Raspberry Pi 5 — no cloud APIs, no data leaves the device.",
+      "An open source scorecard for every member of Congress, every president, and the sitting Supreme Court, built only from public records, plus state ballots and daily civic news. Scores come from published formulas, not AI. The whole site, language model included, runs on one Raspberry Pi 5 at home: no cloud hosting, no accounts, no outside money.",
     stats: [
       { value: "535", label: "Congress members scored" },
-      { value: "47", label: "Presidents analyzed" },
-      { value: "9", label: "SCOTUS justices" },
+      { value: "9", label: "Justices scored" },
       { value: "Nightly", label: "Pipeline updates" },
+      { value: "7W", label: "Power budget, whole site" },
     ],
-    tags: ["FEC", "Congress.gov", "GovInfo", "Federal Register", "BLS", "Senate Lobbying"],
+    tags: ["FEC", "Congress.gov", "Voteview", "GovInfo", "Federal Register", "Lobbying (LDA)", "Oyez"],
   },
   {
     name: "Spliced",
