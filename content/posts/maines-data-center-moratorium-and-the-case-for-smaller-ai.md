@@ -6,7 +6,7 @@ pullquote: "For many human-scale problems, the bottleneck isn't a lack of parame
 tags: ["software engineering", "AI", "edge computing"]
 ---
 
-*Editor's note (May 2026): Governor Janet Mills vetoed this bill on April 27, 2026. The Maine Legislature failed to override the veto on April 29. The moratorium did not become law. The post is preserved as written at the time of the Legislature's vote.*
+*Editor's note (May 2026): Governor Janet Mills vetoed this bill on April 27, 2026. The Maine Legislature failed to override the veto on April 29. The moratorium did not become law. The post is preserved as written at the time of the Legislature's vote, except for the Pi's power and electricity figures, updated in October 2026 to match the measurements Civitas now publishes.*
 
 Maine became the first U.S. state to pass a moratorium on large data centers last week, covering new facilities that consume more than 20 megawatts of power for the next eighteen months.[^1] For context, 20 megawatts is roughly the scale of large hyperscale campus infrastructure, not typical regional deployments. The concerns are straightforward: electricity costs, water usage, and land use. Communities that hadn't expected to host the infrastructure powering the internet's next chapter pushed back, and their legislature listened.
 
@@ -38,7 +38,7 @@ The main model is `all-MiniLM-L6-v2`, a compact sentence-transformer with a mode
 
 The remaining five percent goes to Qwen 2.5 at 1.5 billion parameters, running via llama.cpp compiled for ARM. It handles the things that genuinely need generation: senator narrative summaries, promise evaluations, issue summaries for the action center. About 500 calls a day, three seconds each.
 
-At cloud API rates, 180,000 LLM calls per year would run somewhere between $1,800 and $9,000 depending on the model and pricing tier.[^3] On the Pi, it's roughly $20 in electricity.
+At cloud API rates, 180,000 LLM calls per year would run somewhere between $1,800 and $9,000 depending on the model and pricing tier.[^3] On the Pi, it's roughly $12 in electricity.[^8]
 
 This isn't a model for replacing cloud infrastructure. It's a demonstration of how much can be done without it.
 
@@ -48,7 +48,7 @@ The 1.5B model is a tradeoff, but one the project's requirements made easy to ac
 
 The same thinking shaped the classification approach. It's tempting to pipe everything through a capable language model, but for something like categorizing a bill as "Labor" or "Healthcare," a sentence-transformer with cosine similarity is faster, cheaper, and more explainable. You can trace exactly why a classification happened. Send the same question to an LLM and you'll often arrive at a similar answer, but with significantly more compute and less transparency.
 
-Maine's moratorium targets facilities over 20 megawatts. The Pi draws about 12 watts under full load.
+Maine's moratorium targets facilities over 20 megawatts. The Pi runs on a budget of 7 watts.
 
 ## The Models We Already Have
 
@@ -73,3 +73,5 @@ The next time you reach for a large model API to power a feature, it's worth pau
 [^6]: "The Dirty Secret Behind Big Tech's AI Arms Race: Massive Hardware Investments That Are Obsolete in 3 Years," Fortune, April 15, 2026. https://fortune.com/2026/04/15/data-centers-hyperscalers-spending-billions-on-hardware-thats-worthless-in-3-years/
 
 [^7]: Tyson, A., & Kikuchi, E. (2023). "Growing public concern about the role of artificial intelligence in daily life." Pew Research Center. https://www.pewresearch.org/short-reads/2023/08/28/growing-public-concern-about-the-role-of-artificial-intelligence-in-daily-life/
+
+[^8]: Civitas, "Environmental impact," last reviewed September 29, 2026. The whole machine is budgeted at 7 watts around the clock, about 61 kWh a year, set above the 3.3-watt average and 6.9-watt peak measured on the board during the nightly pipeline. https://civitas-research.org/environmental
