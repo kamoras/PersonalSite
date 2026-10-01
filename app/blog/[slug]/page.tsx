@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getAllPostSlugs, getPost, getRelatedPosts, formatDate } from "@/lib/posts";
-import { ArrowLeft } from "lucide-react";
-import BlogContent from "@/components/BlogContent";
-import TextToSpeech from "@/components/TextToSpeechLoader";
+import Image from "next/image";
+import { getAdjacentPosts, getAllPostSlugs, getPost, getRelatedPosts } from "@/lib/posts";
+import { formatDate, formatShortDate } from "@/lib/format";
+import { Bluesky, Linkedin } from "@/components/BrandIcons";
+import ArticleBody from "@/components/ArticleBody";
+import CopyLink from "@/components/CopyLink";
+import ListenButton from "@/components/ListenButton";
 import GiscusComments from "@/components/GiscusComments";
+import SiteFrame from "@/components/SiteFrame";
+import BookingLink from "@/components/BookingLink";
+import { SiteFooter } from "@/components/Footer";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import { ogImage } from "@/lib/og";
 
 function hasPost(slug: string): boolean {
   return getAllPostSlugs().includes(slug);
@@ -25,9 +32,10 @@ export async function generateMetadata({
   if (!hasPost(slug)) return {};
 
   const post = await getPost(slug);
+  const image = ogImage(`/blog/${slug}/og.png`, post.title);
 
   return {
-    title: `${post.title} — ${siteConfig.name}`,
+    title: `${post.title} | ${siteConfig.name}`,
     description: post.description,
     keywords: post.tags,
     alternates: {
@@ -41,11 +49,14 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.date,
       authors: [siteConfig.name],
+      locale: "en_US",
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
+      images: [image],
     },
   };
 }
@@ -94,8 +105,59 @@ export default async function PostPage({
     ],
   };
 
+  const { newer, older } = getAdjacentPosts(slug);
+  const listenText = `${post.title}. ${post.contentText}`;
+  const essayToc = [
+    ...post.headings.map(({ id, text }) => ({ id, text })),
+    ...(post.notesCount > 0 ? [{ id: "user-content-footnote-label", text: "Notes" }] : []),
+    { id: "discussion", text: "Discussion" },
+  ];
+  const tocLinks = (className: string) => (
+    <ol className={className}>
+      {essayToc.map(({ id, text }) => (
+        <li key={id}>
+          <a href={`#${id}`} data-section={id}>
+            <span className="t">{text}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  );
+  const shareText = encodeURIComponent(`${post.title} ${postUrl}`);
+
   return (
-    <div className="max-w-3xl mx-auto px-6 pb-24" style={{ paddingTop: "calc(7rem + env(safe-area-inset-top, 0px))" }}>
+    <SiteFrame
+      currentPage="writing"
+      railLabel="Essay contents"
+      rail={
+        <>
+          <Link className="back-link" href="/blog"><span aria-hidden="true">←</span> All essays</Link>
+          <p className="label rail-label essay-label" aria-hidden="true">In this essay</p>
+          <p className="essay-title" aria-hidden="true">{post.title}</p>
+          <div className="relative">
+            <span className="progress" data-progress aria-hidden="true" />
+            {tocLinks("toc")}
+          </div>
+        </>
+      }
+      railFoot={<ListenButton text={listenText} minutes={post.readingTime} />}
+      sheet={
+        <>
+          <p className="label sheet-label">In this essay</p>
+          {tocLinks("")}
+          <p className="label sheet-label spaced">Site</p>
+          <ol>
+            <li>
+              <Link href="/blog">All essays</Link>
+            </li>
+            <li>
+              <Link href="/">Home</Link>
+            </li>
+          </ol>
+        </>
+      }
+      footer={<SiteFooter />}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
@@ -105,97 +167,119 @@ export default async function PostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* Back link */}
-      <nav aria-label="Back navigation" className="mb-10">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--color-gold)] transition-colors font-mono"
-        >
-          <ArrowLeft size={14} aria-hidden="true" />
-          All posts
-        </Link>
-      </nav>
+      <article className="read" aria-labelledby="post-title">
+        <header className="post-head">
+          <p className="meta">
+            <time dateTime={post.date}>{formatDate(post.date)}</time> · {post.readingTime} min read
+          </p>
+          <h1 className="post-title" id="post-title">{post.title}</h1>
+          <div className="head-grid">
+            <p className="deck">{post.description}</p>
+            <div className="byline">
+              <Image src="/images/ryan.jpg" alt="" width={104} height={104} />
+              <p className="meta">
+                <b>{siteConfig.name}</b>
+                {siteConfig.jobTitle},<br />
+                {siteConfig.employer}
+              </p>
+            </div>
+          </div>
+          <div className="toolbar" data-print-hidden>
+            <ListenButton text={listenText} minutes={post.readingTime} showStop />
+            <ul className="tags topic-tags" aria-label="Topics">
+              {post.tags.map((tag) => (
+                <li key={tag}>
+                  <Link href={`/blog?topic=${encodeURIComponent(tag)}`}>{tag}</Link>
+                </li>
+              ))}
+            </ul>
+            <span className="spacer" />
+            <div className="share">
+              <CopyLink url={postUrl} />
+              <a href={`https://bsky.app/intent/compose?text=${shareText}`} target="_blank" rel="noopener noreferrer">
+                <Bluesky width={15} height={15} aria-hidden="true" />
+                <span className="stext">Bluesky</span>
+                <span className="sr-only"> (share, opens in new tab)</span>
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin width={15} height={15} aria-hidden="true" />
+                <span className="stext">LinkedIn</span>
+                <span className="sr-only"> (share, opens in new tab)</span>
+              </a>
+            </div>
+          </div>
+        </header>
 
-      {/* Post header */}
-      <header className="mb-10">
-        <h1 className="font-playfair text-3xl md:text-4xl font-semibold leading-tight mb-5">
-          {post.title}
-        </h1>
+        <ArticleBody html={post.contentHtml} />
 
-        <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--text-muted)] font-mono mb-5">
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
-          <span aria-hidden="true">·</span>
-          <span>{post.readingTime} min read</span>
-          <span aria-hidden="true">·</span>
-          <TextToSpeech title={post.title} text={post.contentText} />
+        <div className="end" data-print-hidden>
+          <div>
+            <div className="author">
+              <Image src="/images/ryan.jpg" alt="" width={128} height={128} />
+              <div>
+                <p>
+                  <b>{siteConfig.name}</b> is a senior software engineer at {siteConfig.employer}, where he works on
+                  the Enterprise Agent. He offers free 1:1 mentorship to anyone breaking into the field.
+                </p>
+                <p className="links">
+                  <BookingLink className="textlink">Book a session</BookingLink>
+                  <a className="textlink" href={siteConfig.feedPath} type="application/rss+xml">Subscribe via RSS</a>
+                </p>
+              </div>
+            </div>
+          </div>
+          {related.length > 0 && (
+            <aside className="related" aria-labelledby="related-heading">
+              <h2 className="label" id="related-heading">Related essays</h2>
+              <ol>
+                {related.map((p) => (
+                  <li key={p.slug}>
+                    <Link href={`/blog/${p.slug}`}>{p.title}</Link>
+                    <span className="meta">
+                      {formatShortDate(p.date)}, {p.date.slice(0, 4)} · {p.readingTime} min
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </aside>
+          )}
         </div>
 
-        {post.tags.length > 0 && (
-          <ul aria-label="Tags" className="flex flex-wrap gap-2 list-none mb-8">
-            {post.tags.map((tag) => (
-              <li
-                key={tag}
-                className="text-xs font-mono px-2.5 py-0.5 rounded-md border border-[rgba(201,164,101,0.25)] text-[var(--color-gold)]"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
+        {(older || newer) && (
+          <nav className="pager" aria-label="More essays" data-print-hidden>
+            {older && (
+              <Link href={`/blog/${older.slug}`} rel="prev">
+                <span className="label"><span aria-hidden="true">←</span> Older</span>
+                <b>{older.title}</b>
+              </Link>
+            )}
+            {newer && (
+              <Link href={`/blog/${newer.slug}`} rel="next" className="newer">
+                <span className="label">Newer <span aria-hidden="true">→</span></span>
+                <b>{newer.title}</b>
+              </Link>
+            )}
+          </nav>
         )}
 
-        {/* Ornamental divider */}
-        <div
-          aria-hidden="true"
-          className="ornament-divider text-lg select-none"
-        >
-          ◆
-        </div>
-      </header>
-
-      {/* Post body */}
-      <BlogContent html={post.contentHtml} />
-
-      {/* Related posts */}
-      {related.length > 0 && (
-        <section aria-labelledby="related-posts-heading" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
-          <h2 id="related-posts-heading" className="font-playfair text-xl font-semibold mb-6">Related posts</h2>
-          <ul role="list" className="space-y-4 list-none">
-            {related.map((p) => (
-              <li key={p.slug}>
-                <Link
-                  href={`/blog/${p.slug}`}
-                  className="group block p-4 rounded-lg border border-[var(--color-card-border)] hover:border-[var(--color-gold)] transition-colors"
-                >
-                  <p className="font-semibold group-hover:text-[var(--color-gold)] transition-colors mb-1">
-                    {p.title}
-                  </p>
-                  <p className="text-sm text-[var(--text-muted)] font-mono">
-                    {formatDate(p.date)}
-                    <span aria-hidden="true"> · </span>
-                    {p.readingTime} min read
-                  </p>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <section className="discussion" id="discussion" data-track aria-labelledby="discussion-heading" data-print-hidden>
+          <div className="discussion-head">
+            <h2 id="discussion-heading">Discussion</h2>
+          </div>
+          <div className="giscus-frame">
+            <GiscusComments />
+          </div>
         </section>
-      )}
-
-      <section aria-labelledby="discussion-heading" className="mt-16 pt-10 border-t border-[var(--color-card-border)]">
-        <h2 id="discussion-heading" className="font-playfair text-xl font-semibold mb-6">Discussion</h2>
-        <GiscusComments />
-      </section>
-
-      {/* Footer nav */}
-      <footer className="mt-10 pt-6 border-t border-[var(--color-card-border)]">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--color-gold)] transition-colors font-mono"
-        >
-          <ArrowLeft size={14} aria-hidden="true" />
-          Back to all posts
-        </Link>
-      </footer>
-    </div>
+        <aside className="disc-note" aria-label="About comments" data-print-hidden>
+          <p className="mnote">
+            Comments live in GitHub Discussions on the site&rsquo;s repository. Sign in with GitHub to join in.
+          </p>
+        </aside>
+      </article>
+    </SiteFrame>
   );
 }

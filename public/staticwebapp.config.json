@@ -4,6 +4,12 @@
       "route": "/resume",
       "redirect": "/documents/Ryan-M-Mack-Resume.pdf",
       "statusCode": 302
+    },
+    {
+      "route": "/_next/static/*",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      }
     }
   ],
   "globalHeaders": {
@@ -12,6 +18,11 @@
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
-    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' https://assets.calendly.com https://cloud.umami.is https://giscus.app; style-src 'self' 'unsafe-inline' https://assets.calendly.com; img-src 'self' data: https:; font-src 'self'; frame-src 'self' https://calendly.com https://giscus.app; connect-src 'self' https://calendly.com https://cloud.umami.is https://api-gateway.umami.dev https://api.github.com; object-src 'none'; base-uri 'self'; form-action 'self'"
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' https://assets.calendly.com https://cloud.umami.is https://giscus.app; style-src 'self' 'unsafe-inline' https://assets.calendly.com; img-src 'self' data: https:; font-src 'self'; frame-src 'self' https://calendly.com https://giscus.app; connect-src 'self' https://calendly.com https://cloud.umami.is https://api-gateway.umami.dev https://api.github.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+  },
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html"
+    }
   }
 }

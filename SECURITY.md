@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest deployment of [ryan-mack.dev](https://ryan-mack.dev) is actively maintained.
+Only the latest deployment of [ryan-mack.dev](https://www.ryan-mack.dev) is actively maintained.
 
 ## Reporting a Vulnerability
 

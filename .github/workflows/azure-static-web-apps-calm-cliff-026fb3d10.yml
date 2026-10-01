@@ -109,12 +109,12 @@ jobs:
               - 'lib/**'
               - 'content/**'
               - 'public/**'
+              - 'scripts/**'
               - 'next.config.*'
+              - 'postcss.config.*'
               - 'package*.json'
-              - 'tailwind.config.*'
               - 'tsconfig.json'
               - '.lighthouserc.js'
-              - 'staticwebapp.config.json'
 
   deploy_preview:
     # Skip for fork PRs — secrets are unavailable there and we don't deploy
@@ -217,7 +217,7 @@ jobs:
               '|-----|:-----------:|:-------------:|:--------------:|:---:|',
               ...rows,
               '',
-              '_🟢 ≥ 90 · 🟡 ≥ 80 · 🔴 < 80 — Performance gate: 80, all others: 90_',
+              '_🟢 ≥ 90 · 🟡 ≥ 80 · 🔴 < 80 — SEO, Accessibility, Best Practices gate at 90; Performance warns below 80 but does not fail_',
             ].join('\n');
 
             const { data: comments } = await github.rest.issues.listComments({

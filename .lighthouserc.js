@@ -3,7 +3,11 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: "./out",
-      url: ["http://localhost/", "http://localhost/blog.html"],
+      url: [
+        "http://localhost/",
+        "http://localhost/blog.html",
+        "http://localhost/blog/beyond-the-prompt.html",
+      ],
       numberOfRuns: 1,
     },
     assert: {

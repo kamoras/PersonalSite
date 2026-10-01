@@ -75,10 +75,10 @@ const posts = fs.existsSync(postsDir)
 const home = resolveRouteFile("/");
 assertIncludes("/", home.content, 'id="main-content"');
 assertIncludes("/", home.content, 'href="#main-content"');
-assertIncludes("/", home.content, "View Experience");
+assertIncludes("/", home.content, "Read the essays");
 
 const blog = resolveRouteFile("/blog");
-assertIncludes("/blog", blog.content, "RSS Feed");
+assertIncludes("/blog", blog.content, "Subscribe via RSS");
 
 const resumePdfPath = path.join(outDir, "documents", "Ryan-M-Mack-Resume.pdf");
 if (!fs.existsSync(resumePdfPath)) {
@@ -98,22 +98,35 @@ if (resumeRouteArtifact) {
   throw new Error("Unexpected exported /resume page artifact");
 }
 
+// Social images need a .png extension: Azure Static Web Apps derives the
+// Content-Type from it, and scrapers reject application/octet-stream.
+function assertSocialImages(route, content) {
+  for (const [attrName, attrValue] of [["property", "og:image"], ["name", "twitter:image"]]) {
+    const imageUrl = extractMetaContent(content, attrName, attrValue);
+    if (!imageUrl) {
+      throw new Error(`Missing ${attrValue} metadata on ${route}`);
+    }
+    if (!new URL(imageUrl).pathname.endsWith(".png")) {
+      throw new Error(`${attrValue} on ${route} must be a .png path: ${imageUrl}`);
+    }
+    assertExportedAsset(imageUrl, `${attrValue} for ${route}`);
+  }
+}
+
+assertSocialImages("/", home.content);
+assertSocialImages("/blog", blog.content);
+
 for (const slug of posts) {
   const postRoute = `/blog/${slug}`;
   const postFile = resolveRouteFile(postRoute);
-  assertIncludes(postRoute, postFile.content, "Back to all posts");
+  assertIncludes(postRoute, postFile.content, "All essays");
+  assertSocialImages(postRoute, postFile.content);
 
-  const ogImage = extractMetaContent(postFile.content, "property", "og:image");
-  if (!ogImage) {
-    throw new Error(`Missing og:image metadata on ${postRoute}`);
+  for (const [, fragment] of postFile.content.matchAll(/href="#([^"]+)"/g)) {
+    if (!postFile.content.includes(`id="${fragment}"`)) {
+      throw new Error(`Broken in-page link #${fragment} on ${postRoute}`);
+    }
   }
-  assertExportedAsset(ogImage, "post Open Graph image");
-
-  const twitterImage = extractMetaContent(postFile.content, "name", "twitter:image");
-  if (!twitterImage) {
-    throw new Error(`Missing twitter:image metadata on ${postRoute}`);
-  }
-  assertExportedAsset(twitterImage, "post Twitter image");
 }
 
 const feedPath = path.join(outDir, "feed.xml");
@@ -121,7 +134,7 @@ const feed = readFileIfPresent(feedPath);
 if (feed === null) {
   throw new Error("Missing generated RSS feed: out/feed.xml");
 }
-assertIncludes("/feed.xml", feed, "<rss version=\"2.0\">");
+assertIncludes("/feed.xml", feed, "<rss version=\"2.0\"");
 
 const configPath = path.join(outDir, "staticwebapp.config.json");
 const config = readFileIfPresent(configPath);
@@ -132,6 +145,29 @@ const staticConfig = JSON.parse(config);
 const resumeRoute = staticConfig.routes?.find((route) => route.route === "/resume");
 if (!resumeRoute || resumeRoute.redirect !== "/documents/Ryan-M-Mack-Resume.pdf") {
   throw new Error("Missing /resume redirect in static web app config");
+}
+
+// Every root-relative link in the export must resolve to an exported file.
+function listHtmlFiles(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) return entry.name === "_next" ? [] : listHtmlFiles(full);
+    return entry.name.endsWith(".html") ? [full] : [];
+  });
+}
+
+for (const file of listHtmlFiles(outDir)) {
+  const content = fs.readFileSync(file, "utf8");
+  for (const [, href] of content.matchAll(/href="(\/[^"#?]*)/g)) {
+    if (href.startsWith("/_next/") || href === "/resume") continue;
+    const clean = href.replace(/^\//, "");
+    const candidates = clean === ""
+      ? [path.join(outDir, "index.html")]
+      : [path.join(outDir, clean), path.join(outDir, `${clean}.html`), path.join(outDir, clean, "index.html")];
+    if (!candidates.some((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile())) {
+      throw new Error(`Broken internal link ${href} in ${path.relative(outDir, file)}`);
+    }
+  }
 }
 
 console.log("Smoke checks passed.");

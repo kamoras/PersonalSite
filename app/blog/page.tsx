@@ -1,10 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getAllPostsMeta, formatDate } from "@/lib/posts";
+import { Rss } from "lucide-react";
+import SiteFrame from "@/components/SiteFrame";
+import EssayArchive from "@/components/EssayArchive";
+import { SiteFooter } from "@/components/Footer";
+import { getAllPostsMeta, getTopics } from "@/lib/posts";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import { ogImage } from "@/lib/og";
+
+const blogOgImage = ogImage("/blog/og.png", `Writing | ${siteConfig.name}`);
 
 export const metadata: Metadata = {
-  title: `Writing — ${siteConfig.name}`,
+  title: `Writing | ${siteConfig.name}`,
   description: siteConfig.blogDescription,
   keywords: ["software engineering", "AI", "tech culture", "open source", "distributed systems", "engineering blog"],
   alternates: {
@@ -14,86 +21,59 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: `Writing — ${siteConfig.name}`,
+    title: `Writing | ${siteConfig.name}`,
     description: siteConfig.blogDescription,
     url: absoluteUrl("/blog"),
     siteName: siteConfig.name,
     type: "website",
     locale: "en_US",
+    images: [blogOgImage],
   },
   twitter: {
     card: "summary_large_image",
-    title: `Writing — ${siteConfig.name}`,
+    title: `Writing | ${siteConfig.name}`,
     description: siteConfig.blogDescription,
+    images: [blogOgImage],
   },
 };
 
 export default function BlogIndex() {
   const posts = getAllPostsMeta();
+  const years = [...new Set(posts.map((p) => p.date.slice(0, 4)))];
 
   return (
-    <div className="max-w-3xl mx-auto px-6 pb-24" style={{ paddingTop: "calc(7rem + env(safe-area-inset-top, 0px))" }}>
-      <header className="mb-14">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)]">
-            Writing
-          </p>
-          <a
-            href={siteConfig.feedPath}
-            type="application/rss+xml"
-            className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--text-muted)] transition-colors hover:text-[var(--color-gold)]"
-          >
-            RSS Feed
-          </a>
+    <SiteFrame
+      currentPage="writing"
+      footer={<SiteFooter />}
+      tocExtra={years.map((year) => (
+        <li key={year} className="sub">
+          <a href={`#y${year}`}>{year}</a>
+        </li>
+      ))}
+    >
+      <header className="wrap page-head">
+        <h1 className="page-title">Writing</h1>
+        <div className="intro-grid">
+          <div>
+            <p className="page-intro">{siteConfig.blogDescription}</p>
+            <div className="actions">
+              <a className="btn" href={siteConfig.feedPath} type="application/rss+xml">
+                <Rss size={14} aria-hidden="true" />
+                Subscribe via RSS
+              </a>
+              <Link className="textlink" href="/#community">Free mentorship</Link>
+            </div>
+          </div>
         </div>
-        <h1 className="font-playfair text-4xl md:text-5xl font-light tracking-tight mb-4">
-          Thoughts &amp; <span className="font-semibold">perspectives</span>
-        </h1>
-        <p className="hero-tagline text-[var(--text-muted)] text-lg">
-          On software, technology, and whatever else is worth putting into words.
-        </p>
       </header>
 
-      {posts.length === 0 ? (
-        <p className="text-[var(--text-muted)]">No posts yet — check back soon.</p>
-      ) : (
-        <ol aria-label="Blog posts" className="flex flex-col gap-6 list-none">
-          {posts.map((post) => (
-            <li key={post.slug}>
-              <Link href={`/blog/${post.slug}`} className="group block">
-                <article className="blog-card rounded-2xl border p-6 md:p-8">
-                  <h2 className="font-playfair text-xl md:text-2xl font-semibold mb-2 group-hover:text-[var(--color-gold)] transition-colors">
-                    {post.title}
-                  </h2>
-
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--text-muted)] font-mono mb-4">
-                    <time dateTime={post.date}>{formatDate(post.date)}</time>
-                    <span aria-hidden="true">·</span>
-                    <span>{post.readingTime} min read</span>
-                  </div>
-
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-5">
-                    {post.description}
-                  </p>
-
-                  {post.tags.length > 0 && (
-                    <ul aria-label="Tags" className="flex flex-wrap gap-2 list-none">
-                      {post.tags.map((tag) => (
-                        <li
-                          key={tag}
-                          className="text-xs font-mono px-2.5 py-0.5 rounded-md border border-[rgba(201,164,101,0.25)] text-[var(--color-gold)]"
-                        >
-                          {tag}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </article>
-              </Link>
-            </li>
-          ))}
-        </ol>
-      )}
-    </div>
+      <div className="wrap">
+        {posts.length === 0 ? (
+          <p className="page-intro">No essays yet. Check back soon.</p>
+        ) : (
+          <EssayArchive posts={posts} topics={getTopics(posts)} />
+        )}
+      </div>
+    </SiteFrame>
   );
 }

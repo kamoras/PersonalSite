@@ -17,7 +17,7 @@ export default function GiscusComments() {
       reactionsEnabled="1"
       emitMetadata="0"
       inputPosition="top"
-      theme={theme === "light" ? "light" : "dark_dimmed"}
+      theme={theme === "light" ? "noborder_light" : "transparent_dark"}
       lang="en"
       loading="lazy"
     />

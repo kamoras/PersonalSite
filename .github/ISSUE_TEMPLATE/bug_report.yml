@@ -6,7 +6,7 @@ body:
     id: url
     attributes:
       label: Page URL
-      placeholder: "https://ryan-mack.dev/..."
+      placeholder: "https://www.ryan-mack.dev/..."
     validations:
       required: true
 

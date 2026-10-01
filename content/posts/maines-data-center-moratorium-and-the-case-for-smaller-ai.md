@@ -2,6 +2,7 @@
 title: "Maine's Data Center Moratorium and the Case for Smaller AI"
 date: "2026-04-15"
 description: "Maine just passed the first US moratorium on large data centers. Some will read that as a blow to AI. I think it might be the opposite."
+pullquote: "For many human-scale problems, the bottleneck isn't a lack of parameters. It's a lack of thoughtful application."
 tags: ["software engineering", "AI", "edge computing"]
 ---
 
@@ -15,7 +16,7 @@ Some will read it that way, as a statement that slowing data center expansion me
 
 Hyperscalers are on track to spend something like $700 billion on data center infrastructure in 2026 alone.[^5] That level of spending is hard to read as purely demand-driven. It looks more like a race to secure capacity ahead of consolidation, a hedge against being caught short if demand materializes as projected. Much of this hardware will be depreciated within a few years, even if it remains operational beyond that.[^6] Companies understand this and are building anyway, because the upside of owning that capacity is enormous if demand meets expectations. The result is a buildout shaped as much by financial positioning as by technical necessity.
 
-Training frontier models genuinely requires enormous compute. Runs for models like GPT-4, Gemini, and Claude are widely understood to consume millions of GPU-hours.[^4] Inference, by contrast, is often far less demanding. While some large-scale products benefit from centralized infrastructure, many inference workloads run comfortably on a single machine or small cluster. Training is an episodic cost; inference is the day-to-day use, and for many tasks its requirements are far more modest than the current conversation suggests. That doesn't mean centralized infrastructure isn't essential — large-scale systems and consumer platforms depend on it. But it does suggest that not every application needs to be built at that scale.
+Training frontier models genuinely requires enormous compute. Runs for models like GPT-4, Gemini, and Claude are widely understood to consume millions of GPU-hours.[^4] Inference, by contrast, is often far less demanding. While some large-scale products benefit from centralized infrastructure, many inference workloads run comfortably on a single machine or small cluster. Training is an episodic cost; inference is the day-to-day use, and for many tasks its requirements are far more modest than the current conversation suggests. That doesn't mean centralized infrastructure isn't essential; large-scale systems and consumer platforms depend on it. But it does suggest that not every application needs to be built at that scale.
 
 If anything, restrictions like Maine's could be good for the field, not because they limit AI, but because they force more careful use of infrastructure.
 

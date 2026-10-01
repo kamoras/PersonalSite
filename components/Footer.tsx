@@ -1,80 +1,84 @@
-"use client";
-
-import { Mail, FileText } from "lucide-react";
-import { useTheme } from "./ThemeProvider";
+import { FileText, Rss } from "lucide-react";
 import { mailtoUrl, siteConfig } from "@/lib/site";
 import { socialLinks } from "@/lib/socials";
 
-export default function Footer() {
-  const { theme } = useTheme();
-  const borderColor = theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]";
-
+function Socials() {
   return (
-    <footer id="contact" className="relative overflow-hidden">
-      {/* Ambient top glow */}
-      <div aria-hidden="true" className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-[rgba(201,164,101,0.35)] to-transparent" />
-      <div aria-hidden="true" className="absolute -top-16 left-1/2 -translate-x-1/2 w-[500px] h-48 rounded-full pointer-events-none blur-3xl" style={{ background: "radial-gradient(circle, rgba(201,164,101,0.06) 0%, transparent 70%)" }} />
+    <ul className="socials" aria-label="Elsewhere">
+      {socialLinks.map(({ key, href, name, handle, icon: Icon }) => (
+        <li key={key}>
+          <a href={href} target="_blank" rel="noopener noreferrer">
+            <Icon aria-hidden="true" />
+            {name}
+            <span className="handle">
+              {handle} <span aria-hidden="true">↗︎</span>
+            </span>
+            <span className="sr-only"> (opens in new tab)</span>
+          </a>
+        </li>
+      ))}
+      <li>
+        <a href={siteConfig.resumeDocumentPath} target="_blank" rel="noopener noreferrer">
+          <FileText aria-hidden="true" />
+          Résumé
+          <span className="handle">
+            PDF <span aria-hidden="true">↗︎</span>
+          </span>
+          <span className="sr-only"> (opens in new tab)</span>
+        </a>
+      </li>
+      <li>
+        <a href={siteConfig.feedPath} type="application/rss+xml">
+          <Rss aria-hidden="true" />
+          RSS
+          <span className="handle">feed.xml</span>
+        </a>
+      </li>
+    </ul>
+  );
+}
 
-      <div className={`border-t ${borderColor} relative`}>
-        <div className="max-w-6xl mx-auto px-6 pt-20 pb-12">
+function Fine() {
+  return (
+    <div className="fine meta">
+      <span>© {new Date().getFullYear()} {siteConfig.name}</span>
+      <span>{siteConfig.domain}</span>
+    </div>
+  );
+}
 
-          {/* CTA block — centered */}
-          <div className="text-center mb-16">
-            <p aria-hidden="true" className="font-mono text-xs tracking-[0.3em] uppercase text-[var(--color-gold)] mb-5">
-              06 — Contact
-            </p>
-            <h2 className="font-playfair text-4xl md:text-5xl font-light tracking-tight mb-4">
-              Let&apos;s <span className="font-semibold">connect</span>
-            </h2>
-            <p className="text-[var(--text-secondary)] text-base max-w-sm mx-auto mb-8 leading-relaxed">
-              Open to conversations, collaborations, and the right opportunities.
-            </p>
-            <a
-              href={mailtoUrl()}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#c9a465] hover:bg-[#d4b870] text-[#100d09] rounded-lg text-sm font-semibold transition-colors"
-            >
-              <Mail size={15} aria-hidden="true" />
-              Send a message
-            </a>
-          </div>
-
-          {/* Social row */}
-          <div className={`flex items-center justify-center gap-2 pb-10 border-b ${borderColor}`}>
-            {socialLinks.map(({ key, href, icon: Icon, label }) => (
-              <a
-                key={key}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="p-3 rounded-lg text-[var(--text-muted)] hover:text-current transition-colors"
-              >
-                <Icon size={18} aria-hidden="true" />
-              </a>
-            ))}
-            <a
-              href={siteConfig.resumeDocumentPath}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View resume PDF (opens in new tab)"
-              className="p-3 rounded-lg text-[var(--text-muted)] hover:text-current transition-colors"
-            >
-              <FileText size={18} aria-hidden="true" />
-            </a>
-          </div>
-
-          {/* Wordmark / copyright */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8">
-            <p className="font-mono text-xs text-[var(--text-muted)]">
-              © {new Date().getFullYear()} {siteConfig.name}
-            </p>
-            <p className="font-mono text-xs text-[var(--text-muted)]">
-              {siteConfig.domain}
-            </p>
-          </div>
-
+export function ContactFooter() {
+  return (
+    <footer className="wrap colophon" id="contact" data-track aria-labelledby="contact-heading">
+      <div className="colophon-inner">
+        <div className="reveal">
+          <h2 id="contact-heading" className="contact-h">
+            Let&rsquo;s connect
+          </h2>
+          <p className="intro">Open to conversations, collaborations, and the right opportunities.</p>
+          <a className="email" href={mailtoUrl()}>{siteConfig.email}</a>
         </div>
+        <Socials />
       </div>
+      <Fine />
+    </footer>
+  );
+}
+
+export function SiteFooter() {
+  return (
+    <footer className="wrap colophon" aria-label="Site footer">
+      <div className="colophon-inner">
+        <div>
+          <p className="label margin-h">Contact</p>
+          <a className="email small" href={mailtoUrl()}>{siteConfig.email}</a>
+          <p className="intro quiet">
+            Open to conversations, collaborations, and the right opportunities.
+          </p>
+        </div>
+        <Socials />
+      </div>
+      <Fine />
     </footer>
   );
 }

@@ -1,251 +1,68 @@
-"use client";
-
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { motion, useReducedMotion, useInView } from "framer-motion";
-import { ArrowDown, MapPin } from "lucide-react";
-import { useTheme } from "./ThemeProvider";
-import PrideFlag from "./PrideFlag";
 import Image from "next/image";
+import CountUp from "./CountUp";
+import PrideFlag from "./PrideFlag";
 import { siteConfig } from "@/lib/site";
-import { socialLinks } from "@/lib/socials";
 
 const stats = [
-  { value: 9, suffix: "+", label: "yrs experience" },
-  { value: 5, suffix: "",  label: "companies" },
-  { value: 7, suffix: "",  label: "engineering roles" },
+  { value: 9, suffix: "+", label: "Years in industry" },
+  { value: 5, suffix: "", label: "Companies" },
+  { value: 7, suffix: "", label: "Engineering roles" },
 ];
 
-function AnimatedStat({
-  value,
-  suffix,
-  label,
-  animate,
-}: {
-  value: number;
-  suffix: string;
-  label: string;
-  animate: boolean;
-}) {
-  // Always start at 0: the prerendered HTML can't know the visitor's motion
-  // preference, so starting at `value` for reduced motion breaks hydration.
-  const [display, setDisplay] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (!isInView) return;
-    const duration = animate ? 1200 : 0;
-    const startTime = performance.now();
-    let raf: number;
-    const tick = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = duration ? Math.min(elapsed / duration, 1) : 1;
-      // Ease out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(eased * value));
-      if (progress < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [isInView, value, animate]);
-
-  return (
-    <div ref={ref} className="flex flex-col items-center md:items-start">
-      <span className="font-mono text-2xl font-bold tabular-nums leading-none">
-        {display}{suffix}
-      </span>
-      <span className="font-mono text-xs text-[var(--text-muted)] mt-1 tracking-wide">
-        {label}
-      </span>
-    </div>
-  );
-}
-
+// Server-rendered and unanimated (apart from the surname's CSS shimmer), so
+// the name — the LCP element — paints with the first frame.
 export default function Hero() {
-  const { theme } = useTheme();
-  // `initial` is inlined into the prerendered HTML, where the motion preference
-  // is unknown, so it must not depend on it or hydration fails. Reduced motion
-  // zeroes the transition instead, which lands on the final state immediately.
-  const prefersReducedMotion = useReducedMotion();
-  const [firstName, ...restName] = siteConfig.name.split(" ");
-  const highlightedName = restName.join(" ") || firstName;
-
-  // Rainbow the name during Pride Month. Read through useSyncExternalStore so the
-  // prerendered name stays gold and the swap happens client-side without a
-  // hydration mismatch when the build month differs from the visit month.
-  const isPrideMonth = useSyncExternalStore(
-    () => () => {},
-    () => new Date().getMonth() === 5,
-    () => false
-  );
+  const [firstName, ...rest] = siteConfig.name.split(" ");
 
   return (
-    <section
-      aria-label="Introduction"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      {/* Decorative grid */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)`,
-          backgroundSize: "64px 64px",
-        }}
-      />
+    <section className="wrap hero" aria-labelledby="name">
+      <div className="hero-top">
+        <PrideFlag title="Progress Pride flag, in support of LGBTQ+ Pride" className="pride-flag" />
+      </div>
 
-      {/* Decorative blue orb — technical, cool */}
-      <div
-        aria-hidden="true"
-        className="absolute top-1/3 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.06] blur-3xl pointer-events-none"
-        style={{ background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)" }}
-      />
-      {/* Decorative amber orb — warmth, personality */}
-      <div
-        aria-hidden="true"
-        className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[400px] h-[400px] rounded-full opacity-[0.05] blur-3xl pointer-events-none"
-        style={{ background: "radial-gradient(circle, #c9a465 0%, transparent 70%)" }}
-      />
+      <h1 className="name" id="name">
+        {firstName} <em>{rest.join(" ")}</em>
+      </h1>
 
-      <div className="relative max-w-6xl mx-auto px-6 pb-20 w-full" style={{ paddingTop: "calc(6rem + env(safe-area-inset-top, 0px))" }}>
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-16 md:gap-20">
-
-          {/* ── Text column ── */}
-          <div className="flex-1 text-center md:text-left">
-
-            <p className="font-mono text-xs tracking-[0.35em] uppercase text-[var(--color-gold)] mb-5 flex items-center gap-2.5 justify-center md:justify-start">
-              {isPrideMonth && (
-                <PrideFlag
-                  title="In support of LGBTQ+ Pride"
-                  className="h-3.5 w-auto rounded-[2px] shadow-sm flex-shrink-0"
-                />
-              )}
-              <span>Senior Engineer · {siteConfig.employer}</span>
-            </p>
-
-            <h1 className="font-playfair text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-none mb-6">
-              {firstName}{" "}
-              <span className={`gradient-name font-bold${isPrideMonth ? " gradient-name-pride" : ""}`}>
-                {highlightedName}
-              </span>
-            </h1>
-
-            <p className="hero-tagline text-base md:text-lg text-[var(--text-secondary)] max-w-lg leading-relaxed mb-10">
-              <span className="inline-flex items-center gap-2">
-                Guilford, Connecticut
-                <MapPin size={14} aria-hidden="true" />
-              </span>
-            </p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.24, ease: "easeOut" }}
-              className="flex flex-wrap items-center gap-3 justify-center md:justify-start"
-            >
-              <a
-                href="#experience"
-                className="px-6 py-3 bg-[#c9a465] hover:bg-[#d4b870] text-[#100d09] rounded-lg text-sm font-semibold transition-colors"
-              >
-                View Experience
-              </a>
-              <a
-                href={siteConfig.resumeDocumentPath}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="View resume PDF (opens in new tab)"
-                className={`px-6 py-3 rounded-lg text-sm font-medium border transition-colors ${
-                  theme === "dark"
-                    ? "border-white/15 hover:border-white/25 hover:bg-white/5"
-                    : "border-black/15 hover:border-black/20 hover:bg-black/5"
-                }`}
-              >
-                View Resume
-              </a>
-            </motion.div>
-
-            {/* Social icons */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.35 }}
-              className="flex items-center gap-1 mt-8 justify-center md:justify-start"
-            >
-              {socialLinks.map(({ key, href, icon: Icon, label }) => (
-                <a
-                  key={key}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="p-2.5 rounded-md text-[var(--text-muted)] hover:text-current transition-colors"
-                >
-                  <Icon size={18} aria-hidden="true" />
-                </a>
-              ))}
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.5 }}
-              className={`flex items-center gap-8 mt-10 pt-8 border-t ${
-                theme === "dark" ? "border-white/[0.08]" : "border-black/[0.08]"
-              } justify-center md:justify-start`}
-            >
-              {stats.map(({ value, suffix, label }) => (
-                <AnimatedStat
-                  key={label}
-                  value={value}
-                  suffix={suffix}
-                  label={label}
-                  animate={!prefersReducedMotion}
-                />
-              ))}
-            </motion.div>
+      <div className="grid-margin hero-grid">
+        <div>
+          <p className="lede">
+            I lead development on the <b>Enterprise Agent</b> at Cisco ThousandEyes, the product that makes network
+            visibility possible for enterprises worldwide. I also build small, efficient things on my own time,
+            mentor for free, and write footnoted essays on engineering judgment.
+          </p>
+          <div className="actions">
+            <a className="btn solid" href="#writing">
+              Read the essays
+            </a>
+            <a className="textlink" href={siteConfig.resumeDocumentPath} target="_blank" rel="noopener noreferrer">
+              Résumé (PDF)<span className="sr-only"> (opens in new tab)</span>
+            </a>
+            <a className="textlink" href="#community">Free mentorship</a>
           </div>
-
-          {/* ── Photo column ── */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.7, delay: 0.15, ease: "easeOut" }}
-            className="flex-shrink-0"
-          >
-            {/* Gradient border frame — gilded portrait */}
-            <div
-              className="relative w-52 h-52 md:w-64 md:h-64 rounded-2xl p-[2px] rotate-1"
-              style={{
-                background: "linear-gradient(135deg, rgba(201,164,101,0.7) 0%, rgba(240,208,128,0.35) 50%, rgba(201,164,101,0.2) 100%)",
-              }}
-            >
-              {/* Outer glow */}
-              <div aria-hidden="true" className="absolute -inset-4 rounded-3xl blur-2xl" style={{ background: "radial-gradient(circle, rgba(201,164,101,0.12) 0%, transparent 70%)" }} />
-              <div className="relative w-full h-full rounded-[14px] overflow-hidden">
-                <Image
-                  src="/images/ryan.jpg"
-                  alt="Ryan Mack"
-                  fill
-                  className="object-cover object-top"
-                  priority
-                />
+          <dl className="hero-stats">
+            {stats.map(({ value, suffix, label }) => (
+              <div key={label}>
+                <dt className="label">{label}</dt>
+                <dd>
+                  <CountUp value={value} suffix={suffix} />
+                </dd>
               </div>
-            </div>
-          </motion.div>
+            ))}
+          </dl>
         </div>
 
-        {/* Decorative scroll hint */}
-        <motion.div
-          aria-hidden="true"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--text-muted)]"
-        >
-          <span className="font-mono text-[10px] tracking-[0.3em] uppercase">Scroll</span>
-          <ArrowDown size={12} className="animate-bounce" />
-        </motion.div>
+        <aside className="hero-margin" aria-label="Highlights">
+          <Image className="portrait" src="/images/ryan.jpg" alt="Ryan Mack" width={240} height={240} priority />
+          <div>
+            <p className="mnote">
+              <b>Patent granted</b>, Feb 24, 2026. US 12,562,955 B1, on network monitoring across vantage points.
+            </p>
+            <p className="mnote">
+              <b>M.S. Computer Science</b>, Georgia Tech, specializing in Human-Computer Interaction.
+            </p>
+          </div>
+        </aside>
       </div>
     </section>
   );

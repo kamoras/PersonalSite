@@ -1,21 +1,19 @@
 import { ImageResponse } from "next/og";
 import { getAllPostSlugs, getPost } from "@/lib/posts";
 import { siteConfig } from "@/lib/site";
+import { ogImageSize } from "@/lib/og";
 
 export const dynamic = "force-static";
-export const alt = `${siteConfig.name} article card`;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
 }
 
-export default async function Image({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   const { slug } = await params;
   const post = await getPost(slug);
 
@@ -23,14 +21,14 @@ export default async function Image({
     (
       <div
         style={{
-          background: "#100d09",
+          background: "#14110d",
           width: "100%",
           height: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 88px",
-          color: "#ede8df",
+          color: "#eee7da",
           position: "relative",
         }}
       >
@@ -39,7 +37,7 @@ export default async function Image({
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(circle at top right, rgba(201,164,101,0.16), transparent 35%), radial-gradient(circle at left center, rgba(59,130,246,0.12), transparent 30%)",
+              "radial-gradient(circle at top right, rgba(212,174,107,0.16), transparent 35%), radial-gradient(circle at left center, rgba(212,174,107,0.06), transparent 30%)",
           }}
         />
 
@@ -49,7 +47,7 @@ export default async function Image({
               fontSize: "18px",
               letterSpacing: "0.26em",
               textTransform: "uppercase",
-              color: "#c9a465",
+              color: "#d4ae6b",
               fontFamily: "monospace",
             }}
           >
@@ -69,7 +67,7 @@ export default async function Image({
             style={{
               fontSize: "26px",
               lineHeight: 1.45,
-              color: "#a8a090",
+              color: "#a39985",
               maxWidth: "920px",
             }}
           >
@@ -93,17 +91,17 @@ export default async function Image({
                 width: "12px",
                 height: "12px",
                 borderRadius: "999px",
-                background: "#c9a465",
+                background: "#d4ae6b",
               }}
             />
-            <div style={{ fontSize: "22px", color: "#ede8df" }}>{siteConfig.name}</div>
+            <div style={{ fontSize: "22px", color: "#eee7da" }}>{siteConfig.name}</div>
           </div>
           <div
             style={{
               fontSize: "18px",
               letterSpacing: "0.08em",
               fontFamily: "monospace",
-              color: "#8a8275",
+              color: "#a39985",
             }}
           >
             {siteConfig.domain}
@@ -111,6 +109,6 @@ export default async function Image({
         </div>
       </div>
     ),
-    size
+    ogImageSize
   );
 }

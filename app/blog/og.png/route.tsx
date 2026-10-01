@@ -1,17 +1,15 @@
 import { ImageResponse } from "next/og";
 import { siteConfig } from "@/lib/site";
+import { ogImageSize } from "@/lib/og";
 
 export const dynamic = "force-static";
-export const alt = `Writing — ${siteConfig.name}`;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
 
-export default function Image() {
+export function GET() {
   return new ImageResponse(
     (
       <div
         style={{
-          background: "#100d09",
+          background: "#14110d",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -31,7 +29,7 @@ export default function Image() {
             width: "600px",
             height: "600px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(201,164,101,0.07) 0%, transparent 65%)",
+            background: "radial-gradient(circle, rgba(212,174,107,0.07) 0%, transparent 65%)",
             pointerEvents: "none",
           }}
         />
@@ -40,7 +38,7 @@ export default function Image() {
           style={{
             width: "48px",
             height: "3px",
-            background: "#c9a465",
+            background: "#d4ae6b",
             marginBottom: "40px",
             borderRadius: "2px",
           }}
@@ -51,7 +49,7 @@ export default function Image() {
             fontSize: "22px",
             letterSpacing: "0.26em",
             textTransform: "uppercase",
-            color: "#c9a465",
+            color: "#d4ae6b",
             fontFamily: "monospace",
             marginBottom: "28px",
           }}
@@ -63,7 +61,7 @@ export default function Image() {
           style={{
             fontSize: "72px",
             fontWeight: "700",
-            color: "#ede8df",
+            color: "#eee7da",
             lineHeight: 1.05,
             letterSpacing: "-0.02em",
             marginBottom: "24px",
@@ -75,7 +73,7 @@ export default function Image() {
         <div
           style={{
             fontSize: "26px",
-            color: "#a8a090",
+            color: "#a39985",
             lineHeight: 1.45,
             maxWidth: "820px",
           }}
@@ -104,11 +102,11 @@ export default function Image() {
             left: "0",
             right: "0",
             height: "3px",
-            background: "linear-gradient(to right, transparent, rgba(201,164,101,0.4), transparent)",
+            background: "linear-gradient(to right, transparent, rgba(212,174,107,0.4), transparent)",
           }}
         />
       </div>
     ),
-    { ...size }
+    ogImageSize
   );
 }
