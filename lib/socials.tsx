@@ -4,17 +4,18 @@ import { siteConfig } from "@/lib/site";
 
 export type SocialLink = {
   key: string;
+  name: string;
+  handle: string;
   href: string;
-  label: string;
   icon: ComponentType<SVGProps<SVGSVGElement> & { size?: number }>;
 };
 
-// Single source of truth for the social profile icons. Rendered identically in
-// the hero, navbar (desktop + mobile), and footer so the set never drifts.
+// Single source of truth for the social profiles, rendered in the rail, the
+// mobile contents sheet and the footers so the set never drifts.
 // Email lives separately as the dedicated contact action, not a profile.
 export const socialLinks: SocialLink[] = [
-  { key: "github", href: siteConfig.links.github, label: "GitHub profile (opens in new tab)", icon: Github },
-  { key: "linkedin", href: siteConfig.links.linkedin, label: "LinkedIn profile (opens in new tab)", icon: Linkedin },
-  { key: "bluesky", href: siteConfig.links.bluesky, label: "Bluesky profile (opens in new tab)", icon: Bluesky },
-  { key: "instagram", href: siteConfig.links.instagram, label: "Instagram profile (opens in new tab)", icon: Instagram },
+  { key: "github", name: "GitHub", handle: "kamoras", href: siteConfig.links.github, icon: Github },
+  { key: "linkedin", name: "LinkedIn", handle: "ryan-mack", href: siteConfig.links.linkedin, icon: Linkedin },
+  { key: "bluesky", name: "Bluesky", handle: "@ryan-mack.dev", href: siteConfig.links.bluesky, icon: Bluesky },
+  { key: "instagram", name: "Instagram", handle: "kamoras95", href: siteConfig.links.instagram, icon: Instagram },
 ];

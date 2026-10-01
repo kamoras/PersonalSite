@@ -8,7 +8,10 @@ const outputPath = path.join(rootDir, "public", "feed.xml");
 
 const site = {
   title: "Ryan Mack",
-  url: "https://ryan-mack.dev",
+  url: "https://www.ryan-mack.dev",
+  // Item GUIDs were minted on the apex host. Changing them would make feed
+  // readers show every post again as new, so they keep the original host.
+  guidBase: "https://ryan-mack.dev",
   description: "Writing about software, technology, and whatever else is worth putting into words.",
 };
 
@@ -45,6 +48,7 @@ function parsePost(filename) {
     description: data.description.trim(),
     date: data.date,
     url: `${site.url}/blog/${slug}`,
+    guid: `${site.guidBase}/blog/${slug}`,
   };
 }
 
@@ -55,7 +59,7 @@ function buildFeed(posts) {
     <item>
       <title>${escapeXml(post.title)}</title>
       <link>${post.url}</link>
-      <guid>${post.url}</guid>
+      <guid isPermaLink="false">${post.guid}</guid>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
       <description>${escapeXml(post.description)}</description>
     </item>`
@@ -63,10 +67,11 @@ function buildFeed(posts) {
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(site.title)}</title>
     <link>${site.url}</link>
+    <atom:link href="${site.url}/feed.xml" rel="self" type="application/rss+xml" />
     <description>${escapeXml(site.description)}</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>

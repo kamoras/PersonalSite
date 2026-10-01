@@ -15,9 +15,9 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#100d09",
-          color: "#faf7f2",
-          fontFamily: "system-ui, sans-serif",
+          backgroundColor: "#14110d",
+          color: "#eee7da",
+          fontFamily: "Georgia, serif",
           padding: "1.5rem",
         }}
       >
@@ -28,7 +28,7 @@ export default function GlobalError({
               fontSize: "0.75rem",
               letterSpacing: "0.3em",
               textTransform: "uppercase",
-              color: "#c9a465",
+              color: "#d4ae6b",
               marginBottom: "1.25rem",
             }}
           >
@@ -39,7 +39,6 @@ export default function GlobalError({
               fontSize: "2.25rem",
               fontWeight: 300,
               letterSpacing: "-0.025em",
-              marginBottom: "1rem",
               margin: "0 0 1rem",
             }}
           >
@@ -47,7 +46,7 @@ export default function GlobalError({
           </h1>
           <p
             style={{
-              color: "#a8a090",
+              color: "#a39985",
               fontSize: "1rem",
               lineHeight: 1.625,
               margin: "0 0 2rem",
@@ -70,8 +69,8 @@ export default function GlobalError({
                 alignItems: "center",
                 gap: "0.5rem",
                 padding: "0.75rem 1.5rem",
-                backgroundColor: "#c9a465",
-                color: "#100d09",
+                backgroundColor: "#d4ae6b",
+                color: "#14110d",
                 border: "none",
                 borderRadius: "0.5rem",
                 fontSize: "0.875rem",
@@ -92,8 +91,8 @@ export default function GlobalError({
                 borderRadius: "0.5rem",
                 fontSize: "0.875rem",
                 fontWeight: 500,
-                color: "#a8a090",
-                border: "1px solid rgba(255,255,255,0.08)",
+                color: "#a39985",
+                border: "1px solid rgba(238,231,218,0.5)",
                 textDecoration: "none",
               }}
             >

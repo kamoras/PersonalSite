@@ -2,14 +2,15 @@
 title: "Beyond the Prompt"
 date: "2026-03-30"
 description: "The fear about AI in software engineering is that it replaces engineers. The more immediate risk runs in the opposite direction."
+pullquote: "When the doing is automated, the deciding becomes the entire job."
 tags: ["software engineering", "AI", "craft"]
 ---
 
-Software engineers have always been hired to think. Code is just the artifact of that thinking, not the work itself. That distinction feels obvious—until tools make it easy to skip straight to the artifact.
+Software engineers have always been hired to think. Code is just the artifact of that thinking, not the work itself. That distinction feels obvious, until tools make it easy to skip straight to the artifact.
 
 Much of the conversation around AI in software is driven by fear of replacement: that language models will eventually write code well enough to make engineers redundant. Maybe they will, someday. But that's not what's happening right now.
 
-What's happening instead is almost the inverse. The human parts of engineering—judgment, context, accountability—aren't being diminished by capable models. They're being exposed.
+What's happening instead is almost the inverse. The human parts of engineering (judgment, context, accountability) aren't being diminished by capable models. They're being exposed.
 
 When the doing is automated, the deciding becomes the entire job. AI doesn't remove that responsibility. It just makes it harder to hide from.
 
@@ -73,11 +74,11 @@ The tool amplifies what the engineer brings, in both directions.
 
 Speed is one way to think about what these tools offer. But there's another reading worth sitting with: if implementation takes less time, that time doesn't just disappear. It can go into understanding the problem before any code exists, or into actually testing and verifying the result before it ships. The engineers who handle this well aren't just moving faster. They're moving the time: out of implementation and into the parts of the job that mattered more anyway.
 
-The people who built the foundations we rely on—operating systems, protocols, the infrastructure most software runs on—understood what they built not as a side effect of shipping, but as the work itself. Code was a record of thought: something they could explain and stand behind.
+The people who built the foundations we rely on, the operating systems, protocols, and infrastructure most software runs on, understood what they built not as a side effect of shipping, but as the work itself. Code was a record of thought: something they could explain and stand behind.
 
 That standard has never been universal. What's new is how easy it is to bypass it.
 
-Engineers who truly understand their systems—not just whether tests pass, but how things behave under load, what happens when something unexpected arrives, where the edges are—are more valuable now, not less. That kind of clarity can't be prompted into existence.
+Engineers who truly understand their systems are more valuable now, not less. That means knowing not just whether tests pass, but how things behave under load, what happens when something unexpected arrives, and where the edges are. That kind of clarity can't be prompted into existence.
 
 AI doesn't answer the question of what it means to be an engineer. It sharpens it.
 

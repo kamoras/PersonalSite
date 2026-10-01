@@ -9,13 +9,20 @@ import {
   type Theme,
 } from "@/lib/theme";
 
+// localStorage throws when storage is blocked; a throwing getSnapshot would
+// take down the whole tree, so fall back to the system preference instead.
 function readStoredTheme(): Theme | null {
-  const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  if (stored === "dark" || stored === "light") {
-    return stored;
-  }
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "dark" || stored === "light") {
+      return stored;
+    }
+  } catch {}
   return null;
 }
+
+// Without storage the choice lives here for the rest of the page's lifetime.
+let sessionTheme: Theme | null = null;
 
 function readSystemTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
@@ -26,7 +33,7 @@ function getThemeSnapshot(): Theme {
     return "dark";
   }
 
-  return readStoredTheme() ?? readSystemTheme();
+  return readStoredTheme() ?? sessionTheme ?? readSystemTheme();
 }
 
 function subscribeToTheme(onChange: () => void): () => void {
@@ -36,7 +43,7 @@ function subscribeToTheme(onChange: () => void): () => void {
 
   const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
   const notifyIfSystemDriven = () => {
-    if (!readStoredTheme()) {
+    if (!readStoredTheme() && !sessionTheme) {
       onChange();
     }
   };
@@ -92,7 +99,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
-    window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    sessionTheme = nextTheme;
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {}
     window.dispatchEvent(new Event(THEME_EVENT));
   };
 

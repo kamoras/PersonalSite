@@ -1,7 +1,9 @@
 export const siteConfig = {
   name: "Ryan Mack",
   domain: "ryan-mack.dev",
-  url: "https://ryan-mack.dev",
+  // The apex domain 301-redirects to www (Squarespace DNS forwarding), so www
+  // is the canonical host for canonical URLs, the sitemap, and social cards.
+  url: "https://www.ryan-mack.dev",
   description:
     "Software engineer at Cisco ThousandEyes. Writing about technology, engineering, and whatever else is worth thinking about.",
   blogDescription:
