@@ -22,6 +22,12 @@ export const siteConfig = {
   },
 } as const;
 
+// JSON-LD is inlined in a <script>; escaping "<" keeps a title or description
+// containing "</script>" from ending the block early.
+export function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 export function absoluteUrl(path = ""): string {
   return new URL(path, siteConfig.url).toString();
 }

@@ -54,8 +54,9 @@ export default function About() {
         <div className="reveal">
           <div className="bio">
             <p>
-              I&rsquo;m Ryan, a Senior Software Engineer at <b>Cisco ThousandEyes</b> leading development on the
-              Enterprise Agent, the core product that makes network visibility possible for enterprises worldwide.
+              I&rsquo;m Ryan, a Senior Software Engineer at <b>Cisco ThousandEyes</b>. I lead development on the
+              Enterprise Agent, the software customers run inside their own networks to measure the paths to the apps
+              and services they depend on.
             </p>
             <p>
               Over nine years across research labs, startups, and Cisco-scale infrastructure, I&rsquo;ve owned every

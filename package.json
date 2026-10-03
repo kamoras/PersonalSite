@@ -9,6 +9,7 @@
     "dev": "next dev",
     "prebuild": "node scripts/generate-feed.mjs",
     "build": "next build",
+    "postbuild": "node scripts/csp-hashes.mjs",
     "start": "next start",
     "lint": "eslint .",
     "smoke": "node scripts/smoke-check.mjs"
@@ -29,17 +30,17 @@
     "unist-util-visit": "^5.1.0"
   },
   "overrides": {
-    "postcss": "$postcss"
+    "postcss": "$postcss",
+    "flatted": "^3.4.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/hast": "^3.0.5",
-    "@types/node": "^26",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19.3.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.7",
-    "flatted": "^3.4.4",
     "postcss": "^8.5.28",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3"

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist_Mono, Newsreader } from "next/font/google";
 import Script from "next/script";
 import ThemeProvider from "@/components/ThemeProvider";
-import { siteConfig } from "@/lib/site";
+import { serializeJsonLd, siteConfig } from "@/lib/site";
 import { themeInitializationScript } from "@/lib/theme";
 import { ogImage } from "@/lib/og";
 import "./globals.css";
@@ -25,10 +25,13 @@ const newsreader = Newsreader({
   display: "swap",
 });
 
+// Labels only, so it isn't worth a preload competing with the text that
+// becomes the largest paint.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
+  preload: false,
 });
 
 // theme-color is deliberately not set here: Next.js would emit one tag per
@@ -114,7 +117,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitializationScript }} />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
         <ThemeProvider>{children}</ThemeProvider>
         {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (

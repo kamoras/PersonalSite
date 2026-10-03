@@ -19,7 +19,7 @@ Built with Next.js static export and Tailwind CSS v4. Deployed to Azure Static W
 | Icons | lucide-react |
 | Blog | Markdown → unified/remark/rehype pipeline |
 | Fonts | Fraunces, Newsreader, Geist Mono (via `next/font/google`) |
-| Analytics | Umami (self-hosted, opt-in via env var) |
+| Analytics | Umami Cloud (cookieless; enabled when `NEXT_PUBLIC_UMAMI_WEBSITE_ID` is set) |
 | Hosting | Azure Static Web Apps |
 | CI/CD | GitHub Actions |
 
@@ -69,6 +69,8 @@ public/
   documents/          # Resume PDF and other downloadable assets
 scripts/
   generate-feed.mjs   # RSS feed generation before build
+  csp-hashes.mjs      # Postbuild: allows the export's inline scripts in the CSP by hash
+  inline-scripts.mjs  # Shared helper that hashes inline scripts in out/
   smoke-check.mjs     # Static export smoke checks
 ```
 
@@ -116,11 +118,19 @@ Invalid or incomplete frontmatter fails fast during build-time content loading w
 
 Every PR runs:
 - **Build** — `npm run build` (static export must succeed)
-- **Smoke** — validates the exported homepage, blog, resume PDF + redirect, RSS feed, `.png` social images, and in-page footnote links
+- **Smoke** — validates the exported homepage, blog, resume PDF + redirect, RSS feed, `.png` social images, in-page footnote links, internal links, and that every inline script is allowed by the exported CSP
 - **Lint** — ESLint
 - **Lighthouse** — SEO ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90, Performance reported (warn only). Results posted as a PR comment.
 
-Merges to `main` deploy automatically to Azure Static Web Apps.
+Merges to `main` deploy automatically to Azure Static Web Apps. Dependabot patch and minor updates are auto-merged; because merges made with `GITHUB_TOKEN` don't trigger push workflows, the auto-merge job waits for the merge and then dispatches the deploy and CodeQL workflows itself. Third-party actions are pinned to commit SHAs and kept current by Dependabot; those PRs change workflow files, which `GITHUB_TOKEN` can't merge, so they are merged by hand.
+
+### Content Security Policy
+
+`public/staticwebapp.config.json` holds the headers. A static export can't use per-request nonces, so the `postbuild` step (`scripts/csp-hashes.mjs`) hashes every inline script in `out/` and writes those hashes into the exported config's `script-src`. `'unsafe-inline'` stays only as a fallback for browsers without CSP2; any browser that understands hashes ignores it. When adding a third-party script or endpoint, add its origin to the CSP in `public/staticwebapp.config.json`.
+
+### Privacy
+
+The site sets no cookies. Umami Cloud counts visits without cookies; essay comments are hosted by GitHub through giscus; booking opens Calendly. The footer states this on every page.
 
 ## Design system
 

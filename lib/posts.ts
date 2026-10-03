@@ -165,7 +165,14 @@ function validatePostFrontmatter(data: unknown, source: string): PostFrontmatter
     throw new Error(`Invalid frontmatter in ${source}: "description" must be a non-empty string.`);
   }
 
-  if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date))) {
+  // Date.parse accepts impossible dates ("2026-02-30" becomes March 2), so the
+  // value must survive a round trip.
+  if (
+    typeof date !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+    Number.isNaN(Date.parse(date)) ||
+    new Date(date).toISOString().slice(0, 10) !== date
+  ) {
     throw new Error(`Invalid frontmatter in ${source}: "date" must use YYYY-MM-DD.`);
   }
 
@@ -199,19 +206,22 @@ function readPostFile(filename: string) {
   return { slug, content, frontmatter };
 }
 
+// Order matters: footnote definitions go before references so their URLs
+// aren't read aloud, images before links so no stray "!" is left, and list
+// markers stop at three digits so a sentence starting "2026." stays prose.
 function markdownToPlainText(md: string): string {
   return md
-    .replace(/\[\^[^\]]+\]:\s*[^\n]*(?:\n[ \t]+[^\n]*)*/gm, "")  // footnote definitions (incl. indented continuations)
-    .replace(/\[\^[^\]]+\]/g, "")           // footnote references
-    .replace(/^#{1,6}\s+/gm, "")            // headings
-    .replace(/^>[ \t]?/gm, "")              // blockquote markers
-    .replace(/^[ \t]*(?:[-*+]|\d{1,3}[.)])[ \t]+/gm, "") // list markers (years like "2026." are prose)
-    .replace(/\*{1,3}([^*\n]+)\*{1,3}/g, "$1") // bold / italic
+    .replace(/\[\^[^\]]+\]:\s*[^\n]*(?:\n[ \t]+[^\n]*)*/gm, "")
+    .replace(/\[\^[^\]]+\]/g, "")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^>[ \t]?/gm, "")
+    .replace(/^[ \t]*(?:[-*+]|\d{1,3}[.)])[ \t]+/gm, "")
+    .replace(/\*{1,3}([^*\n]+)\*{1,3}/g, "$1")
     .replace(/_{1,3}([^_\n]+)_{1,3}/g, "$1")
-    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")    // images (before links, which would leave a stray "!")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // links → label
-    .replace(/`{1,3}[^`]+`{1,3}/g, "")       // inline / fenced code
-    .replace(/^[-*_]{3,}\s*$/gm, "")         // horizontal rules
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/`{1,3}[^`]+`{1,3}/g, "")
+    .replace(/^[-*_]{3,}\s*$/gm, "")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
@@ -223,8 +233,17 @@ function computeReadingTime(markdown: string): number {
   return Math.max(1, Math.round(words / 200));
 }
 
+// Counted on the parsed tree so it matches the Notes list remark-gfm renders:
+// a definition nothing references is dropped from it.
 function countNotes(markdown: string): number {
-  return new Set(markdown.match(/^\[\^[^\]]+\]:/gm) ?? []).size;
+  const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown);
+  const defined = new Set<string>();
+  const referenced = new Set<string>();
+  visit(tree, (node) => {
+    if (node.type === "footnoteDefinition") defined.add(node.identifier);
+    if (node.type === "footnoteReference") referenced.add(node.identifier);
+  });
+  return [...defined].filter((id) => referenced.has(id)).length;
 }
 
 function toMeta(slug: string, content: string, frontmatter: PostFrontmatter): PostMeta {

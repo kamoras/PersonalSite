@@ -56,7 +56,10 @@ export default function ArticleBody({ html }: { html: string }) {
       // Wide layout (including after rotating a tablet): the margin carries the
       // notes, so drop any inline copies and the expandable state.
       prose.querySelectorAll(".inline-note").forEach((note) => note.remove());
-      for (const ref of refs) ref.removeAttribute("aria-expanded");
+      for (const ref of refs) {
+        ref.removeAttribute("aria-expanded");
+        ref.removeAttribute("aria-controls");
+      }
       const base = margin.getBoundingClientRect().top;
       let floor = 0;
       const seen = new Set<string>();
@@ -87,17 +90,23 @@ export default function ArticleBody({ html }: { html: string }) {
       if (existing) {
         existing.remove();
         ref.setAttribute("aria-expanded", "false");
+        ref.removeAttribute("aria-controls");
         return;
       }
-      const note = document.createElement("aside");
+      // role="note", not <aside>: an aside is a landmark, and every expanded
+      // note would add one (duplicates when two refs share a footnote).
+      const note = document.createElement("div");
       note.className = "inline-note";
+      note.id = `${ref.id}-note`;
       note.dataset.for = ref.id;
+      note.setAttribute("role", "note");
       note.setAttribute("aria-label", `Note ${ref.textContent ?? ""}`);
       fillNote(note, ref.textContent ?? "", footnote, true);
       // Inside a list item, so the note never becomes a direct child of <ul>/<ol>.
       if (host.tagName === "LI") host.append(note);
       else host.after(note);
       ref.setAttribute("aria-expanded", "true");
+      ref.setAttribute("aria-controls", note.id);
     };
 
     const onClick = (e: MouseEvent) => {

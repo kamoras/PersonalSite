@@ -43,6 +43,10 @@ function Fine() {
     <div className="fine meta">
       <span>© {new Date().getFullYear()} {siteConfig.name}</span>
       <span>{siteConfig.domain}</span>
+      <p className="privacy">
+        Privacy: this site sets no cookies. Umami counts visits without identifying you, essay comments are
+        hosted by GitHub through giscus, and booking a session opens Calendly, each under its own privacy policy.
+      </p>
     </div>
   );
 }

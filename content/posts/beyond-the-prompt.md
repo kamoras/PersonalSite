@@ -20,13 +20,13 @@ In early 2025, Andrej Karpathy put a name to this pattern: "vibe coding."[^1] De
 
 For personal projects, that's often enough. At professional scale, it quietly changes what an engineer actually owns.
 
-This isn't entirely new. Large systems have always outgrown any single person's understanding. That's why teams build shared mental models, why testing and monitoring exist, why rollback mechanisms are treated as essential rather than optional. Even engineers who know their systems well design for the fact that they don't know everything. It's always been this way, to some degree.
+This isn't entirely new. Large systems have always outgrown any single person's understanding. That's why teams build shared mental models, why testing and monitoring exist, why rollback mechanisms are treated as essential rather than optional. Even engineers who know their systems well design for the fact that they don't know everything.
 
 But historically, that complexity accumulated slowly. Systems became hard to understand because they were built piece by piece, over time. Even if you didn't understand everything, you remembered building most of it.
 
 AI changes the rate at which that gap can open. An engineer working with capable models can now move through weeks of implementation in a single session. Complexity arrives before understanding has any chance to catch up.
 
-When that happens, the failures that matter aren't the obvious ones. Bugs get caught. Tests fail. The real damage is structural: a change colliding with some part of the system that nobody fully mapped.
+When that happens, the failures that matter aren't the obvious ones. The obvious bugs tend to get caught. The real damage is structural: a change colliding with some part of the system that nobody fully mapped.
 
 Speed is only part of the problem. AI also removes one of the earliest signals we've always relied on: the act of writing code itself.
 
@@ -40,13 +40,13 @@ The engineers I've seen handle this well treat design as the work.
 
 They decide what should exist, how it should behave, and where it's likely to fail before the model is involved. The model handles implementation; the engineer remains responsible for the outcome.
 
-That responsibility depends on something the model doesn't have: context. You know the constraints of your deployment process. You know which parts of the system are fragile, which assumptions only hold in staging, which dependencies belong to other teams. That knowledge doesn't live in the repository. It lives in you.
+That responsibility depends on something the model doesn't have: context. You know the constraints of your deployment process. You know which parts of the system are fragile, which assumptions only hold in staging, which dependencies belong to other teams.
 
 A model doesn't know that your silent retry will trigger a double-billing event in your payment pipeline. It doesn't know your deployment window is narrow and there's no rollback. That knowledge doesn't come from the codebase. It comes from having lived with the system.
 
 What gets lost in vibe coding is exactly this moment: when someone understands the system well enough to define what should and shouldn't be built. Fast iteration without that grounding isn't just speed. It's directionless speed. You're moving quickly, but you don't actually know where you are.
 
-There's an assumption that engineers will review what comes out before it ships. But there's a difference between reviewing code and understanding it. Automation bias, the tendency to over-trust automated outputs, makes people more likely to miss errors in generated code than in code they wrote themselves.[^2]
+There's an assumption that engineers will review what comes out before it ships. But there's a difference between reviewing code and understanding it. In a Stanford study, developers with an AI assistant wrote less secure code than those without one, and were more likely to believe their code was secure.[^2]
 
 Part of the reason is that generated code doesn't look like a draft. It's clean, consistent, free of the rough edges that signal uncertainty. It looks finished.
 
@@ -60,17 +60,11 @@ There's a common assumption embedded in a lot of AI discourse: that software eng
 
 That's getting harder to believe.
 
-When a model produces the implementation, what remains is the part that was always hardest to define: judgment. Understanding what to build, deciding how it should behave, taking responsibility for the consequences.
-
-Those things don't disappear. They become visible.
-
 In a pre-AI world, thinking and doing were tightly coupled. You wrote the code, so your understanding was embedded in the act of producing it. AI pulls them apart. What remains is what you bring: context, architectural judgment, a sense of where things are likely to break.
 
 The difference between engineers is no longer hidden in how they type. It's exposed in how they think.
 
 That also changes what it means to do the job well. An engineer with real understanding can use these tools to move with a level of speed and clarity that used to require a team. Without that grounding, the same tools produce complexity just as quickly, with no one able to catch it.
-
-The tool amplifies what the engineer brings, in both directions.
 
 Speed is one way to think about what these tools offer. But there's another reading worth sitting with: if implementation takes less time, that time doesn't just disappear. It can go into understanding the problem before any code exists, or into actually testing and verifying the result before it ships. The engineers who handle this well aren't just moving faster. They're moving the time: out of implementation and into the parts of the job that mattered more anyway.
 
@@ -78,15 +72,7 @@ The people who built the foundations we rely on, the operating systems, protocol
 
 That standard has never been universal. What's new is how easy it is to bypass it.
 
-Engineers who truly understand their systems are more valuable now, not less. That means knowing not just whether tests pass, but how things behave under load, what happens when something unexpected arrives, and where the edges are. That kind of clarity can't be prompted into existence.
-
-AI doesn't answer the question of what it means to be an engineer. It sharpens it.
-
-These tools don't resolve the tension. They make it harder to ignore. They make a new level of speed and leverage possible for engineers who bring real understanding. But they also make it just as easy to build systems that outpace anyone's ability to reason about them.
-
-The question I keep coming back to is simple: does knowing what you've built still count as part of the job?
-
-And if it does, do we still insist on it?
+Knowing a system means knowing more than whether its tests pass: how it behaves under load, what happens when something unexpected arrives, where the edges are. A model will write the silent retry in seconds. Knowing that it bills the customer twice is still the job.
 
 [^1]: Andrej Karpathy, post on X, February 2, 2025. https://x.com/karpathy/status/1886192184808149383
 

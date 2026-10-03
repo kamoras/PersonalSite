@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { inlineScriptHashes } from "./inline-scripts.mjs";
 
 const rootDir = process.cwd();
 const outDir = path.join(rootDir, "out");
@@ -167,6 +168,15 @@ for (const file of listHtmlFiles(outDir)) {
     if (!candidates.some((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile())) {
       throw new Error(`Broken internal link ${href} in ${path.relative(outDir, file)}`);
     }
+  }
+}
+
+// The CSP allows inline scripts only by hash (scripts/csp-hashes.mjs, run as
+// postbuild); a script missing from it would be blocked in production.
+const scriptSrc = staticConfig.globalHeaders?.["Content-Security-Policy"]?.match(/script-src [^;]*/)?.[0] ?? "";
+for (const hash of inlineScriptHashes()) {
+  if (!scriptSrc.includes(hash)) {
+    throw new Error(`Inline script ${hash} is not allowed by the exported CSP; run the build so postbuild can hash it.`);
   }
 }
 
