@@ -40,6 +40,9 @@ export default function TopBar({ sheet }: Props) {
     };
 
     document.body.style.overflow = "hidden";
+    // The sheet covers the page; keep screen readers' browse mode out of it too.
+    const page = document.querySelector<HTMLElement>(".frame");
+    if (page) page.inert = true;
     sheetRef.current?.querySelector<HTMLElement>("a, button")?.focus({ preventScroll: true });
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -76,6 +79,7 @@ export default function TopBar({ sheet }: Props) {
     wide.addEventListener("change", onWide);
     return () => {
       document.body.style.overflow = "";
+      if (page) page.inert = false;
       document.removeEventListener("keydown", onKeyDown);
       wide.removeEventListener("change", onWide);
     };

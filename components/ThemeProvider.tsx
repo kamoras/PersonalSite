@@ -84,10 +84,13 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   );
 
   useEffect(() => {
-    document.documentElement.classList.toggle("light", theme === "light");
-    document.documentElement.style.colorScheme = theme;
+    // During hydration `theme` is still the server snapshot ("dark"); reading
+    // the live value avoids flipping a light page to dark for one frame.
+    const current = getThemeSnapshot();
+    document.documentElement.classList.toggle("light", current === "light");
+    document.documentElement.style.colorScheme = current;
 
-    const color = theme === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
+    const color = current === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     if (!meta) {
       meta = document.createElement("meta");

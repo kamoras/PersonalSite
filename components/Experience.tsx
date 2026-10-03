@@ -12,7 +12,7 @@ const experiences = [
     current: true,
     tags: ["C++", "Java", "Python"],
     description: [
-      "Continuing to work on major projects as a senior member of the Enterprise Agents engineering team.",
+      "Continuing to lead major projects as a senior member of the Enterprise Agent engineering team.",
       "Primarily work in C++, Java, and Python to deliver high-impact projects for the business. A key concern has been support for our software on new platforms and operating systems.",
       "Working cross-team and driving projects through completion are key skills in this role.",
     ],
@@ -64,7 +64,7 @@ const experiences = [
   {
     id: 5,
     title: "Staff Software Engineer",
-    company: "Capgemini Engineering",
+    company: "Altran (now Capgemini Engineering)",
     location: "Burlington, MA",
     period: "Jun 2018 – Oct 2018",
     logo: "/images/capg.jpg",

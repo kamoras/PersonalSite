@@ -12,7 +12,7 @@ import GiscusComments from "@/components/GiscusComments";
 import SiteFrame from "@/components/SiteFrame";
 import BookingLink from "@/components/BookingLink";
 import { SiteFooter } from "@/components/Footer";
-import { absoluteUrl, siteConfig } from "@/lib/site";
+import { absoluteUrl, serializeJsonLd, siteConfig } from "@/lib/site";
 import { ogImage } from "@/lib/og";
 
 function hasPost(slug: string): boolean {
@@ -40,6 +40,7 @@ export async function generateMetadata({
     keywords: post.tags,
     alternates: {
       canonical: absoluteUrl(`/blog/${slug}`),
+      types: { "application/rss+xml": absoluteUrl(siteConfig.feedPath) },
     },
     openGraph: {
       title: post.title,
@@ -75,8 +76,9 @@ export default async function PostPage({
 
   const articleJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
+    image: absoluteUrl(`/blog/${slug}/og.png`),
     description: post.description,
     author: {
       "@type": "Person",
@@ -160,11 +162,11 @@ export default async function PostPage({
     >
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
 
       <article className="read" aria-labelledby="post-title">

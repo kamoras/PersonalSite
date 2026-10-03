@@ -19,3 +19,14 @@ updates:
       # TypeScript 7, which breaks `npm run lint`. Re-enable once it supports TS 7.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
+      # Matches the Node 22 runtime (.nvmrc, CI); newer majors type APIs the
+      # build can't use.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+  # Third-party actions are pinned to commit SHAs; this keeps the pins current.
+  # These PRs edit workflow files, which auto-merge can't merge with
+  # GITHUB_TOKEN, so they are merged by hand.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
