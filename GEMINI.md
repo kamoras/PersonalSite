@@ -36,6 +36,8 @@ npm run lint     # ESLint — must be clean
 
 New posts go in `content/posts/` as Markdown with required frontmatter: `title`, `date`, `description`, `tags`, plus an optional `pullquote` (a sentence quoted verbatim from the post, shown in the margin of the Writing archive). Slug comes from the filename.
 
+**Keep the author's employer out of the blog.** Essays and essay pages don't name or highlight where the author works; the blog is personal and the employer doesn't necessarily endorse it. The employer belongs on the homepage (hero, About, Experience), not in posts, bylines or author bios.
+
 ## What to avoid
 
 - **Don't add features or abstractions beyond what's asked.** A bug fix doesn't need surrounding cleanup. Three similar lines is better than a premature abstraction.
