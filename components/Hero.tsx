@@ -10,7 +10,7 @@ const stats = [
 ];
 
 // Server-rendered and unanimated (apart from the surname's CSS shimmer), so
-// the name — the LCP element — paints with the first frame.
+// the heading paints with the first frame.
 export default function Hero() {
   const [firstName, ...rest] = siteConfig.name.split(" ");
 

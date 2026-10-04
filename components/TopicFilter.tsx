@@ -63,11 +63,17 @@ export default function TopicFilter({ topics, total }: { topics: TopicCount[]; t
       <span className="label" id="filter-label">Filter by topic</span>
       <div className="chips">
         <button type="button" className="chip" aria-pressed={topic === null} onClick={() => setTopic(null)}>
-          All <span className="c">{total}</span>
+          All <span className="c">{total}<span className="sr-only"> {total === 1 ? "essay" : "essays"}</span></span>
         </button>
         {topics.map(({ topic: t, count }) => (
-          <button key={t} type="button" className="chip" aria-pressed={topic === t} onClick={() => setTopic(t)}>
-            {t} <span className="c">{count}</span>
+          <button
+            key={t}
+            type="button"
+            className="chip"
+            aria-pressed={topic === t}
+            onClick={() => setTopic(topic === t ? null : t)}
+          >
+            {t} <span className="c">{count}<span className="sr-only"> {count === 1 ? "essay" : "essays"}</span></span>
           </button>
         ))}
       </div>

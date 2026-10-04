@@ -3,23 +3,56 @@ name: Dependabot auto-merge
 on: pull_request
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    # Both checks: Dependabot can be the actor on a PR it didn't open, and a
+    # person can push to a PR Dependabot did open.
+    if: >
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.actor == 'dependabot[bot]'
+    # A Dependabot rebase starts a new run; drop the older one so each PR
+    # dispatches the deploy once.
+    concurrency:
+      group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
     steps:
       - name: Fetch Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v3
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3
 
-      - name: Auto-merge patch and minor updates
+      # Merges made with GITHUB_TOKEN don't trigger push workflows, so the
+      # production deploy and CodeQL would never run for Dependabot merges.
+      # Enable auto-merge as before, wait for it to land, then dispatch both
+      # workflows: workflow_dispatch is the one event GITHUB_TOKEN may trigger.
+      # GITHUB_TOKEN can't merge changes to workflow files, so action
+      # updates are merged by hand.
+      - name: Auto-merge patch and minor updates, then deploy
         if: >
-          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-          steps.metadata.outputs.update-type == 'version-update:semver-minor'
-        run: gh pr merge --auto --squash "$PR_URL"
+          steps.metadata.outputs.package-ecosystem != 'github_actions' &&
+          (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor')
+        run: |
+          gh pr merge --auto --squash "$PR_URL"
+          for _ in $(seq 1 80); do
+            state=$(gh pr view "$PR_URL" --json state --jq .state || true)
+            if [ "$state" = "MERGED" ]; then
+              gh workflow run azure-static-web-apps-calm-cliff-026fb3d10.yml --ref main
+              gh workflow run codeql.yml --ref main
+              exit 0
+            fi
+            if [ "$state" = "CLOSED" ]; then exit 0; fi
+            sleep 30
+          done
+          echo "::warning::Not merged within 40 minutes; run the deploy workflow manually once it merges."
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}

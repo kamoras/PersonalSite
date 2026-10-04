@@ -8,7 +8,10 @@ import { getAllPostsMeta, getTopics } from "@/lib/posts";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { ogImage } from "@/lib/og";
 
-const blogOgImage = ogImage("/blog/og.png", `Writing | ${siteConfig.name}`);
+const blogOgImage = ogImage(
+  "/blog/og.png",
+  `Writing by ${siteConfig.name}: thoughts and perspectives on software, technology, and whatever else is worth putting into words.`
+);
 
 export const metadata: Metadata = {
   title: `Writing | ${siteConfig.name}`,

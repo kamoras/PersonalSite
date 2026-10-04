@@ -10,10 +10,13 @@ import Community from "@/components/Community";
 import { ContactFooter } from "@/components/Footer";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import { getAllPostsMeta } from "@/lib/posts";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  alternates: { canonical: absoluteUrl() },
+  alternates: {
+    canonical: absoluteUrl(),
+    types: { "application/rss+xml": absoluteUrl(siteConfig.feedPath) },
+  },
 };
 
 export default function Home() {

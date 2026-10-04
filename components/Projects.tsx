@@ -31,7 +31,7 @@ const projects: Project[] = [
     tagline: "Rebuild the Mix",
     href: "https://spliced.paramain.com",
     description:
-      "A daily music puzzle built like a tiny audio mixer. Four mystery songs are sliced into clips and shuffled across four tracks. Route every clip back into place and lock all four before your mistakes run out. Everyone gets the same byte-identical puzzle each day.",
+      "A daily music puzzle on an 80s mixing desk. Three mystery songs are cut into clips and shuffled across its channels. Listen, swap, and splice each song back onto its own channel before your mistakes run out. Everyone gets the same puzzle each day.",
     tags: ["Web Audio API", "React", "dnd-kit", "Vite", "Vercel"],
   },
 ];

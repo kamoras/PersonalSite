@@ -16,9 +16,11 @@
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "SAMEORIGIN",
     "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), usb=(), serial=(), hid=(), browsing-topics=()",
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
-    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' https://assets.calendly.com https://cloud.umami.is https://giscus.app; style-src 'self' 'unsafe-inline' https://assets.calendly.com; img-src 'self' data: https:; font-src 'self'; frame-src 'self' https://calendly.com https://giscus.app; connect-src 'self' https://calendly.com https://cloud.umami.is https://api-gateway.umami.dev https://api.github.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' https://assets.calendly.com https://cloud.umami.is; style-src 'self' 'unsafe-inline' https://assets.calendly.com; img-src 'self' data: https://assets.calendly.com; font-src 'self'; frame-src 'self' https://calendly.com https://giscus.app; connect-src 'self' https://calendly.com https://cloud.umami.is https://gateway.umami.is; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests",
+    "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+    "X-XSS-Protection": "0"
   },
   "responseOverrides": {
     "404": {

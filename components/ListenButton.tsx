@@ -39,14 +39,14 @@ export default function ListenButton({
         type="button"
         className="listen"
         data-state={state}
-        aria-label={`${label}: read this essay aloud`}
         onClick={() => toggleSpeech(text)}
       >
         <span className="pb" aria-hidden="true">
           {state === "playing" ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
         </span>
-        <span aria-hidden="true">{label}</span>
-        <span className="lm" aria-hidden="true">{minutes} min</span>
+        <span>{label}</span>{" "}
+        <span className="lm">{minutes} min</span>
+        <span className="sr-only">, read this essay aloud</span>
       </button>
       {showStop && state !== "idle" && (
         <button type="button" className="textlink" onClick={stopSpeech}>

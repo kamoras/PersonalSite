@@ -31,7 +31,9 @@
   --margin: 19rem;
   --when: 10.5rem;
   --gap: clamp(2.5rem, 4vw, 5rem);
-  --gutter: clamp(1.25rem, 5vw, 6rem);
+  /* At least the side safe-area insets, so landscape phones keep text clear
+     of the notch (viewport-fit=cover lets the page run under it). */
+  --gutter: max(clamp(1.25rem, 5vw, 6rem), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   --bar: 3.75rem;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   color-scheme: dark;
@@ -46,6 +48,24 @@ html.light {
   --gold:      #7a5712;  /*  5.7:1 */
   --success:   #036a4d;  /*  5.8:1 */
   color-scheme: light;
+}
+/* Without JavaScript the pre-paint script can't set html.light, so honour the
+   system preference directly. Keep in sync with html.light above and the
+   light .name em gradient below. */
+@media (prefers-color-scheme: light) {
+  html:not(.js) {
+    --bg:        #f5efe3;
+    --bg-raised: #ebe2d1;
+    --fg:        #1c1712;
+    --text:      #3d362d;
+    --muted:     #655c4f;
+    --gold:      #7a5712;
+    --success:   #036a4d;
+    color-scheme: light;
+  }
+  html:not(.js) .name em {
+    background-image: linear-gradient(100deg, var(--gold) 0%, #9a7520 25%, var(--gold) 50%, #5c410c 75%, var(--gold) 100%);
+  }
 }
 
 @media (min-width: 1600px) {
@@ -359,6 +379,13 @@ html.light .theme-toggle .orb { box-shadow: 0 0 0 0.14rem color-mix(in srgb, var
 }
 
 /* Mobile contents sheet */
+/* Without JavaScript nothing can close the sheet when an in-page link is
+   followed, so it opens in the page flow instead of covering it: the link
+   then scrolls to its target below the menu. */
+html:not(.js) .topbar:has(.menu[open]) { position: static; height: auto; flex-wrap: wrap; }
+html:not(.js) .menu[open] { flex-basis: 100%; }
+html:not(.js) .menu[open] > .menu-btn { margin-left: auto; }
+html:not(.js) .menu[open] .sheet { position: static; padding-inline: 0; }
 .sheet {
   position: fixed;
   inset: calc(var(--bar) + env(safe-area-inset-top, 0px)) 0 0 0;
@@ -474,7 +501,6 @@ html.pride .pride-flag { display: block; }
   letter-spacing: -0.05em;
   margin: clamp(1.25rem, 3vh, 2.25rem) 0 0 -0.055em;
   font-variation-settings: "opsz" 144;
-  white-space: nowrap;
 }
 .name em {
   font-style: italic;
@@ -651,6 +677,7 @@ html.pride.light .name em {
   border-top: 1px solid var(--rule);
   padding: 1.5rem 0 calc(2.5rem + env(safe-area-inset-bottom, 0px));
 }
+.colophon .fine .privacy { flex-basis: 100%; max-width: 44rem; font-family: var(--serif); font-size: 0.9375rem; line-height: 1.5; letter-spacing: 0; }
 .contact-h { font-family: var(--display); font-weight: 330; font-size: clamp(2.75rem, 6vw, 6rem); letter-spacing: -0.04em; line-height: 0.95; font-variation-settings: "opsz" 144; }
 .email {
   display: inline-block;
@@ -685,6 +712,7 @@ html.pride.light .name em {
   letter-spacing: -0.05em;
   margin: 1.5rem 0 0 -0.05em;
   font-variation-settings: "opsz" 144;
+  overflow-wrap: anywhere;
 }
 .intro-grid { margin-top: 2.5rem; padding-bottom: 3rem; }
 .page-intro { font-size: clamp(1.25rem, 1.6vw, 1.5rem); line-height: 1.5; color: var(--text); max-width: 36rem; }
@@ -1039,4 +1067,13 @@ html:not(.js) :is(.theme-toggle, .listen-wrap, .copy-link, .filters, .topic-tags
   .prose a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; word-break: break-all; }
   .prose h2, .prose h3 { break-after: avoid; }
   .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ─── Forced colours (Windows High Contrast) ────────────────────────────────
+   Backgrounds are replaced, so state shown only by fill needs a system colour.
+─────────────────────────────────────────────────────────────────────────────*/
+@media (forced-colors: active) {
+  .chip[aria-pressed="true"] { forced-color-adjust: none; background: Highlight; color: HighlightText; border-color: Highlight; }
+  .theme-toggle .orb { forced-color-adjust: none; background: CanvasText; box-shadow: none; }
+  .status::before { forced-color-adjust: none; background: CanvasText; }
 }
