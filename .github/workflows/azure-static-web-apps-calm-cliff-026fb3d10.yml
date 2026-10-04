@@ -186,7 +186,7 @@ jobs:
       - name: Comment PR with Lighthouse results
         if: always()
         continue-on-error: true  # write access unavailable for fork PRs; non-fatal
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           MANIFEST: ${{ steps.lhci.outputs.manifest }}
           LINKS: ${{ steps.lhci.outputs.links }}
