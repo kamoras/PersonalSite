@@ -7,7 +7,7 @@ const volunteering = [
     role: "Technology Volunteer",
     period: "Jan 2026 – Present",
     current: true,
-    description: "Providing technical support and expertise for the organization.",
+    description: "Built and maintains the organization's website.",
   },
   {
     org: "Braven",
