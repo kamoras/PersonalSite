@@ -181,8 +181,7 @@ export default async function PostPage({
               <Image src="/images/ryan.jpg" alt="" width={104} height={104} />
               <p className="meta">
                 <b>{siteConfig.name}</b>
-                {siteConfig.jobTitle},<br />
-                {siteConfig.employer}
+                {siteConfig.jobTitle}
               </p>
             </div>
           </div>
@@ -224,8 +223,8 @@ export default async function PostPage({
               <Image src="/images/ryan.jpg" alt="" width={128} height={128} />
               <div>
                 <p>
-                  <b>{siteConfig.name}</b> is a senior software engineer at {siteConfig.employer}, where he works on
-                  the Enterprise Agent. He offers free 1:1 mentorship to anyone breaking into the field.
+                  <b>{siteConfig.name}</b> is a senior software engineer. He offers free 1:1 mentorship to anyone
+                  breaking into the field. The views here are his own.
                 </p>
                 <p className="links">
                   <BookingLink className="textlink">Book a session</BookingLink>

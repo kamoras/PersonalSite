@@ -32,7 +32,7 @@ This arrangement held together for a long time. It was never fair, but it was st
 
 A piece in the New York Times this week made clear what that complacency has cost.[^7]
 
-Raffi Krikorian, the CTO of Mozilla, wrote about Anthropic's Claude Mythos, an AI model capable enough at finding software vulnerabilities that Anthropic decided not to release it publicly. Instead, it launched a defensive security initiative called Project Glasswing and gave access to its launch partners, including Amazon Web Services, Apple, Microsoft, Google, JPMorganChase, and the Linux Foundation, and to more than 40 other organizations that build or maintain critical software.[^9] (Cisco, where I work, is one of the launch partners.)
+Raffi Krikorian, the CTO of Mozilla, wrote about Anthropic's Claude Mythos, an AI model capable enough at finding software vulnerabilities that Anthropic decided not to release it publicly. Instead, it launched a defensive security initiative called Project Glasswing and gave access to its launch partners, including Amazon Web Services, Apple, Microsoft, Google, JPMorganChase, and the Linux Foundation, and to more than 40 other organizations that build or maintain critical software.[^9]
 
 What Mythos found: a 27-year-old vulnerability in OpenBSD, and a 16-year-old one in FFmpeg, in a line of code that automated testing tools had hit five million times without catching it. Both projects are maintained by small volunteer teams, who fixed the issues after being told about them. Neither team had access to Mythos when those vulnerabilities were found.
 

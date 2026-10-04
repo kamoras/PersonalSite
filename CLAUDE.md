@@ -36,6 +36,8 @@ npm run lint     # ESLint — must be clean
 
 New posts go in `content/posts/` as Markdown with required frontmatter: `title`, `date`, `description`, `tags`, plus an optional `pullquote` (a sentence quoted verbatim from the post, shown in the margin of the Writing archive). Slug comes from the filename.
 
+**Keep the author's employer out of the blog.** Essays and essay pages don't name or highlight where the author works; the blog is personal and the employer doesn't necessarily endorse it. The employer belongs on the homepage (hero, About, Experience), not in posts, bylines or author bios.
+
 **Writing quality is the top priority on this site.** A post that says one thing sharply is better than a post that says five things loosely. The specific failure modes to avoid:
 
 - **No thesis repetition** — make a point once, clearly, then move on. If the same idea appears in three paragraphs with different phrasing, cut two of them.
