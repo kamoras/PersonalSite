@@ -52,9 +52,7 @@ New posts go in `content/posts/` as Markdown with required frontmatter: `title`,
 
 ## Documentation
 
-When adding a new page, section, or user-facing feature:
-- Update `README.md` — add the feature to the project structure and any relevant sections.
-- Update the wiki (`https://github.com/kamoras/PersonalSite/wiki`) — edit or create the relevant wiki page. Wiki pages live in the `PersonalSite.wiki` git repo; clone it, edit, and push.
+When adding a new page, section, or user-facing feature, update `README.md`: add the feature to the project structure and any relevant sections. The README is the project's documentation; the GitHub wiki is no longer maintained, so don't update it.
 
 ## PR workflow
 
