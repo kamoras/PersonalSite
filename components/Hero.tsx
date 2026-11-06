@@ -27,9 +27,8 @@ export default function Hero() {
       <div className="grid-margin hero-grid">
         <div>
           <p className="lede">
-            I lead development on the <b>Enterprise Agent</b> at Cisco ThousandEyes, the product that makes network
-            visibility possible for enterprises worldwide. I also run Civitas, a scorecard for Congress, presidents,
-            and the Supreme Court, on a Raspberry Pi at home, and write about AI and open source.
+            I&rsquo;m a senior software engineer at <b>Cisco ThousandEyes</b>, building the software enterprises use to
+            see their networks. I also write about AI and open source.
           </p>
           <div className="actions">
             <a className="btn solid" href="#writing">
@@ -57,9 +56,6 @@ export default function Hero() {
           <div>
             <p className="mnote">
               <b>Patent granted</b>, Feb 24, 2026. US 12,562,955 B1, on network monitoring across vantage points.
-            </p>
-            <p className="mnote">
-              <b>M.S. Computer Science</b>, Georgia Tech, specializing in Human-Computer Interaction.
             </p>
           </div>
         </aside>
