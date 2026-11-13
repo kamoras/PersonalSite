@@ -17,7 +17,7 @@
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "js-yaml": "^5.5.0",
-    "lucide-react": "^1.67.0",
+    "lucide-react": "^1.71.0",
     "next": "^16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1",
