@@ -10,7 +10,7 @@ const experiences = [
     period: "Nov 2024 – Present",
     logo: "/images/te.jpg",
     current: true,
-    tags: ["C++", "Java", "Python"],
+    tags: ["C++", "Java", "Python", "Linux"],
     description: [
       "Continuing to lead major projects as a senior member of the Enterprise Agent engineering team.",
       "Primarily work in C++, Java, and Python to deliver high-impact projects for the business. A key concern has been support for our software on new platforms and operating systems.",

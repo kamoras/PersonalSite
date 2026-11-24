@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist_Mono, Newsreader } from "next/font/google";
 import Script from "next/script";
 import ThemeProvider from "@/components/ThemeProvider";
-import { serializeJsonLd, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 import { themeInitializationScript } from "@/lib/theme";
 import { ogImage } from "@/lib/og";
 import "./globals.css";
@@ -73,37 +73,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: siteConfig.name,
-  jobTitle: siteConfig.jobTitle,
-  description: siteConfig.description,
-  worksFor: {
-    "@type": "Organization",
-    name: siteConfig.employer,
-  },
-  alumniOf: [
-    {
-      "@type": "CollegeOrUniversity",
-      name: "Georgia Institute of Technology",
-      description: "M.S. Computer Science, Human-Computer Interaction",
-    },
-    {
-      "@type": "CollegeOrUniversity",
-      name: "University of Connecticut",
-      description: "B.S.E. Computer Science and Engineering",
-    },
-  ],
-  url: siteConfig.url,
-  email: siteConfig.email,
-  sameAs: [
-    siteConfig.links.github,
-    siteConfig.links.linkedin,
-    siteConfig.links.bluesky,
-  ],
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -115,10 +84,6 @@ export default function RootLayout({
     <html lang="en" className={`${fraunces.variable} ${newsreader.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeInitializationScript }} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-        />
         <ThemeProvider>{children}</ThemeProvider>
         {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
           <Script

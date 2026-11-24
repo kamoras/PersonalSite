@@ -54,15 +54,12 @@ export default function About() {
         <div className="reveal">
           <div className="bio">
             <p>
-              I&rsquo;m Ryan, a Senior Software Engineer at <b>Cisco ThousandEyes</b>. I lead development on the
-              Enterprise Agent, the software customers run inside their own networks to measure the paths to the apps
-              and services they depend on.
+              I lead development on the <b>Enterprise Agent</b>, the software ThousandEyes customers run inside their
+              own networks to measure the paths to the apps and services they depend on.
             </p>
             <p>
-              Over nine years across research labs, startups, and Cisco-scale infrastructure, I&rsquo;ve owned every
-              phase of the development lifecycle: inventing new systems with{" "}
-              <b>a granted patent and patents pending</b>, scaling production software to thousands of customers, and
-              mentoring the next generation of engineers.
+              Before that I wrote software for DNA sequencers, chip lithography machines, lab instruments and backup
+              systems.
             </p>
           </div>
           <ul className="practice">
